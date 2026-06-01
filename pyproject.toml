@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sparsepilot"
+version = "0.1.0"
+description = "SparsePilot RQ1 measurement pipeline"
+requires-python = ">=3.10"
+dependencies = [
+  "matplotlib",
+  "numpy",
+  "pandas",
+  "pyarrow",
+  "pymavlink",
+  "pyulog",
+  "pyyaml",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.pytest.ini_options]
+addopts = "-p no:launch_testing"
+
+[tool.setuptools.packages.find]
+where = ["src"]

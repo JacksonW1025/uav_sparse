@@ -1,0 +1,39 @@
+experiment_id: synthetic_sanity_v0
+
+input:
+  horizon_s:            5.0
+  window_s:             0.5
+  neutral_tail_s:       8.0
+  channels:             [roll, pitch, yaw, throttle]
+  min_value:            -0.7
+  max_value:            0.7
+  max_delta_per_window: 0.25
+  perturb_delta:        0.08
+
+properties:
+  post_neutral_xy_drift:    {d_max_m: 2.0}
+  post_neutral_alt_drift:   {h_max_m: 1.0}
+  post_neutral_xy_velocity: {v_max_mps: 1.0}
+
+scenarios:
+  - id: synthetic
+    platform: synthetic
+    perturb_mode: Synthetic
+    observe_mode: Synthetic
+    takeoff_alt_m: 5.0
+    properties: [post_neutral_xy_drift, post_neutral_alt_drift, post_neutral_xy_velocity]
+
+seeds: [0, 1, 2]
+
+persistence_path:
+  steps:               5
+  top_m_update_groups: 3
+  eta:                 0.06
+
+simulator:
+  synthetic:
+    manual_control_hz: 50
+
+logging:
+  level:     INFO
+  jsonl:     runs/synthetic_sanity_v0/logs/queries.jsonl

@@ -1,0 +1,12 @@
+.venv/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Experiment outputs and simulator logs
+/runs/
+*.ulg
+*.BIN
+*.parquet
+*.npz

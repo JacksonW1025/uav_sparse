@@ -1,0 +1,76 @@
+experiment_id: rq1_minimal_v0
+
+input:
+  horizon_s:            5.0
+  window_s:             0.5
+  neutral_tail_s:       8.0
+  channels:             [roll, pitch, yaw, throttle]
+  min_value:            -0.7
+  max_value:            0.7
+  max_delta_per_window: 0.25
+  perturb_delta:        0.08
+
+properties:
+  post_neutral_xy_drift:    {d_max_m: 2.0}
+  post_neutral_alt_drift:   {h_max_m: 1.0}
+  post_neutral_xy_velocity: {v_max_mps: 1.0}
+
+scenarios:
+  - id: px4_position
+    platform: px4
+    perturb_mode: Position
+    observe_mode: Position
+    takeoff_alt_m: 5.0
+    properties: [post_neutral_xy_drift, post_neutral_alt_drift, post_neutral_xy_velocity]
+
+  - id: px4_hold
+    platform: px4
+    perturb_mode: Position
+    observe_mode: Hold
+    takeoff_alt_m: 5.0
+    properties: [post_neutral_xy_drift, post_neutral_alt_drift, post_neutral_xy_velocity]
+
+  - id: px4_transition
+    platform: px4
+    perturb_mode: Position
+    observe_mode: Hold
+    takeoff_alt_m: 5.0
+    t_switch_s: 5.0
+    properties: [post_neutral_xy_drift, post_neutral_alt_drift, post_neutral_xy_velocity]
+
+  - id: ap_loiter
+    platform: ardupilot
+    perturb_mode: Loiter
+    observe_mode: Loiter
+    takeoff_alt_m: 10.0
+    properties: [post_neutral_xy_drift, post_neutral_alt_drift, post_neutral_xy_velocity]
+
+  - id: ap_althold
+    platform: ardupilot
+    perturb_mode: AltHold
+    observe_mode: AltHold
+    takeoff_alt_m: 10.0
+    properties: [post_neutral_alt_drift, post_neutral_xy_velocity]
+
+seeds: [0, 1, 2]
+
+persistence_path:
+  steps:               5
+  top_m_update_groups: 3
+  eta:                 0.06
+
+simulator:
+  px4:
+    sim_speed_factor:   5.0
+    mavlink_url:        udpin:127.0.0.1:14540
+    manual_control_hz:  50
+    cleanup_each_run:   true
+  ardupilot:
+    sim_speedup:        5.0
+    mavlink_url:        udpin:127.0.0.1:14550
+    manual_control_hz:  50
+    cleanup_each_run:   true
+
+logging:
+  level:     INFO
+  jsonl:     runs/rq1_minimal_v0/logs/queries.jsonl
