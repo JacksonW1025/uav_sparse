@@ -5,9 +5,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from sparsepilot.config import ScenarioCfg
-from sparsepilot.groups import build_groups
-from sparsepilot.vehicle.base import VehicleAdapter
+from cadet.config import ScenarioCfg
+from cadet.groups import build_groups
+from cadet.vehicle.base import VehicleAdapter
 
 
 class SyntheticAdapter(VehicleAdapter):

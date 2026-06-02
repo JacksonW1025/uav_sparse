@@ -4,10 +4,10 @@ from pathlib import Path
 
 import numpy as np
 
-from sparsepilot.config import load_config
-from sparsepilot.groups import build_groups
-from sparsepilot.input_model import project_theta
-from sparsepilot.runners.route1_h2_campaign import (
+from cadet.config import load_config
+from cadet.groups import build_groups
+from cadet.input_model import project_theta
+from cadet.runners.route1_h2_campaign import (
     BoundaryResult,
     Condition,
     _boundary_displacements,

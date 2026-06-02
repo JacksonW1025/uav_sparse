@@ -6,7 +6,7 @@ Point V boundary.
 Runner:
 
 ```bash
-python -m sparsepilot.runners.margin_stage1_redo \
+python -m cadet.runners.margin_stage1_redo \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \

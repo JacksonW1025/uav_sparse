@@ -30,7 +30,7 @@
 
 ## 2. 从未改动的实验地基
 
-这套设定在所有阶段保持固定，正是它让那些负面结果可信。代码层全部对应 `configs/rq1_minimal.yaml` 与 `src/sparsepilot/`。
+这套设定在所有阶段保持固定，正是它让那些负面结果可信。代码层全部对应 `configs/rq1_minimal.yaml` 与 `src/cadet/`。
 
 **输入参数化（`groups.py` / `input_model.py`）。**
 - 飞手输入 = 40 维向量：10 个时间窗口 × 0.5 s × 4 个通道 {roll, pitch, yaw, throttle}，覆盖 5 s 时域，随后接 8 s 回中尾段（共 13 s）。
@@ -58,7 +58,7 @@
 
 ### 3.1 第一幕 —— SPH（支撑持续性假设），以及"平台"的发现
 
-**假设。** 鲁棒度梯度的*支撑*（真正能让 ρ 移动的输入维度）在全局上稀疏，且沿搜索路径*持续*；若为真，就能一次学到支撑、复用做查询高效搜索。SPH 有三个子主张：Sparse、Mode-conditioned、Persistent（见 `RQ1_WORKPLAN`）。
+**假设。** 鲁棒度梯度的*支撑*（真正能让 ρ 移动的输入维度）在全局上稀疏，且沿搜索路径*持续*；若为真，就能一次学到支撑、复用做查询高效搜索。SPH 有三个子主张：Sparse、Mode-conditioned、Persistent。
 
 **验证方法。** 用 **reference full finite-difference**（逐 group 各做 ±δ 扰动，`g_i = (ρ(U+δeᵢ) − ρ(U−δeᵢ))/2δ`，δ=0.08）测量真支撑——刻意不用 cheap sparse probing，因为 LASSO/OMP 的 L1 先验会*人为制造*稀疏假象（`gradients.py:cheap_sparse_snapshot` 故意留 `NotImplementedError`）。代码：`runners/fd_snapshot.py`、`runners/repeated_fd.py`、`runners/persistence_pilot.py`。
 
@@ -180,11 +180,11 @@
 
 这一节是三份 md 文档里没有、但对投稿最关键的内容。
 
-### 5.1 模块地图（`src/sparsepilot/`）
+### 5.1 模块地图（`src/cadet/`）
 
 - **地基层**：`groups.py`（40 维参数化）、`input_model.py`（`project_theta` 速率限位、`theta_to_sequence`）、`properties.py`（三个 STL 鲁棒度）、`metrics.py`（topk_coverage、effective_sparsity、jaccard、mass_overlap）、`config.py`、`query.py`（带 J 次重复与缓存的评估）。
 - **仿真后端 `vehicle/`**：`px4.py`（jMAVSim SITL，含 sim_speed_factor 换算 MANUAL_CONTROL 频率）、`ardupilot.py`（AP SITL，**接口在但 CADET 主张尚未在其上跑**）、`synthetic.py`（离线合成 oracle，供 pipeline 测试，带已知 TRUE_SUPPORT）、`mavlink_common.py`、`base.py`。
-- **SPH 阶段（第一幕）**：`runners/fd_snapshot.py`、`repeated_fd.py`、`persistence_pilot.py`、`phase2_analysis.py`、`gradients.py`（cheap probing 故意 stub）。
+- **SPH 阶段（第一幕）**：`runners/fd_snapshot.py`、`repeated_fd.py`、`persistence_pilot.py`、`gradients.py`（cheap probing 故意 stub）。
 - **MarginSearch 阶段（第二幕）**：`runners/margin_stage0.py`（硬剪枝/FD interior）、`margin_stage1.py` + `margin_stage1_redo.py`（H1 边界法向，δ=0.2 通道/窗口边际）、`route1_h2_campaign.py`（H2 热启动）、`h3_transition.py`（H3 切换 bug）。
 - **CADET / 方向 A（第三幕，核心）**：`violation_search.py`（阶段 1 到达违例的粗搜索 + 包络/网格工具）、`runners/direction_a_probe.py`（三臂探针）、`runners/direction_a_ddmin.py`（ddmin 必要性基线）。
 - **测试 `tests/`**：9 个文件，覆盖输入模型、属性、度量、合成 FD、H3、三臂探针分类器、ddmin 起点选择等。
@@ -194,7 +194,7 @@
 | 叙事主张 | 关键数字 | 产生它的 runner | 阶段 |
 |---|---|---|---|
 | 安全=平台，梯度=噪声 | 有效稀疏度 ≈25（=40维纯噪声），噪声≈282×步长 | `repeated_fd` / `persistence_pilot` | SPH |
-| 持续性失败 | 质量重叠≈0.375≈随机 | `persistence_pilot` / `phase2_analysis` | SPH |
+| 持续性失败 | 质量重叠≈0.375≈随机 | `persistence_pilot` | SPH |
 | 边界通道各向异性 | roll+pitch≈86%，通道参与≈2.62/4，窗口≈7.62/10 | `margin_stage1_redo`（δ=0.2） | H1 |
 | 热启动不省查询 | 加速1.01–1.65× | `route1_h2_campaign` | H2 |
 | 切换交接干净 | 0 个鲁棒切换违例 | `h3_transition` | H3 |
@@ -203,13 +203,13 @@
 
 ### 5.3 ⚠️ 关键风险（投稿前必须正视）
 
-1. **没有任何结果数据被提交。** `.gitignore` 排除了 `/runs/`、`*.ulg`、`*.npz` 等。代码仓只是*测量 pipeline*，**所有定量数字都活在你本地的 `runs/` 里，无法从仓库复现**。后果：(a) 合作者/审稿无法独立重跑出同样的数字；(b) 一旦本地实验目录丢失，叙事里的数字就失去了底稿。**建议**：把关键 run 的 `reports/*.csv`、`*_summary.json`、`pre_registration.json`、以及最小触发的 `theta.npy` 单独存档（去掉大体积 ulg），作为论文工件附录。
+1. **小体积结果数据已归档，但 raw logs 仍在本地。** `.gitignore` 继续排除 `/runs/`、`*.ulg`、`*.npz` 等；仓库中的 `artifacts/` 只保存 seed-0 脊柱 run 的 `reports/*.csv`、`*_summary.json`、`pre_registration.json` 和关键 `theta.npy`。这足以审计当前数字，但不能替代跨 seed 重跑和 raw-log 级别复核。
 
-2. **测试硬编码了本地 run 的 eval_id。** `tests/test_direction_a_ddmin.py` 里写死了起点 eval_id `[97,107,116,119,147,150,151]` 等——这些来自一次特定本地 run。**没有那次 run 的产物，测试无法通过**，它实质是绑定到本地结果的回归测试，而非可移植单元测试。换种子/重跑后这些 id 会变。
+2. **ddmin 起点选择测试已 fixture 化为结构性质测试。** 它不再读 `runs/` 或断言具体 eval_id，但仍只覆盖选择逻辑，不覆盖 PX4 端到端重跑。
 
-3. **git 历史被压成两次提交**（`Initial commit` + `Add SparsePilot measurement pipeline`），看不出真实演化轨迹。叙事文档是唯一的演化记录来源。
+3. **git 历史被压成两次提交**（`Initial commit` + `Add CADET measurement pipeline`），看不出真实演化轨迹。叙事文档是唯一的演化记录来源。
 
-4. **仓库命名仍是 `sparsepilot` / `uav_sparse`**（SPH 时代遗留），与现在的 CADET 定位不一致；README 基本是空的。这会让任何接手的人一头雾水。
+4. **仓库名仍是 `uav_sparse`，包名已统一为 `cadet`。** 仓库名保留不改；README 和命令入口已按 CADET 叙事更新。
 
 5. **配置可行限位不统一**（§2 已述：SPH 用 ±0.7，方向 A 用 ±1.0）。
 
@@ -274,7 +274,7 @@
 - 在 `xy_drift`（+ 可选 `alt_drift`）上跑阶段 2–3，用 δ=0.2 探针验证推导出的 `A_φ` 与实测边际一致。这把"通道导向"从一个观察升级为一个*可迁移判据*。
 
 **第 3 步（3–5 周，最耗时）：ArduPilot 跨平台。**
-- 在 `vehicle/ardupilot.py` 上跑通 takeoff→Loiter→注入→回中的完整闭环（注意 §RQ1_WORKPLAN 列的 AP 坑：arm/GPS lock 等待、SIM_SPEEDUP 换算）。
+- 在 `vehicle/ardupilot.py` 上跑通 takeoff→Loiter→注入→回中的完整闭环（重点检查 arm/GPS lock 等待、SIM_SPEEDUP 换算）。
 - 重跑 RQ4（最小触发编目），如可行重跑 RQ1–RQ2。目标是把"PX4 单平台"升级为"跨平台 bug 类"。
 
 **第 4 步（1 周）：代价核算 + 负面结果定稿。**

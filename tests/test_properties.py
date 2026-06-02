@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from sparsepilot.config import load_config
-from sparsepilot.properties import compute_all_properties, compute_robustness
+from cadet.config import load_config
+from cadet.properties import compute_all_properties, compute_robustness
 
 
 def make_log():

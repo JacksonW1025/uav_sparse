@@ -10,10 +10,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from sparsepilot.config import load_config
-from sparsepilot.groups import Group, build_groups
-from sparsepilot.input_model import perturb_group, zero_theta
-from sparsepilot.query import read_parsed_log, run_query
+from cadet.config import load_config
+from cadet.groups import Group, build_groups
+from cadet.input_model import perturb_group, zero_theta
+from cadet.query import read_parsed_log, run_query
 
 
 def main() -> None:

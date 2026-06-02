@@ -6,9 +6,9 @@ from pathlib import Path
 import pandas as pd
 from pymavlink import mavutil
 
-from sparsepilot.config import ScenarioCfg
-from sparsepilot.vehicle.base import VehicleAdapter
-from sparsepilot.vehicle.mavlink_common import (
+from cadet.config import ScenarioCfg
+from cadet.vehicle.base import VehicleAdapter
+from cadet.vehicle.mavlink_common import (
     MavlinkVehicleMixin,
     copy_latest_matching,
     kill_process_patterns,

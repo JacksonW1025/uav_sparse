@@ -1,6 +1,6 @@
 import numpy as np
 
-from sparsepilot.metrics import effective_sparsity, jaccard, mass_overlap, normalized_entropy, topk_coverage
+from cadet.metrics import effective_sparsity, jaccard, mass_overlap, normalized_entropy, topk_coverage
 
 
 def test_zero_gradient_edges():

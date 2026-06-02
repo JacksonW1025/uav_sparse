@@ -10,12 +10,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from sparsepilot.config import ExperimentConfig, load_config
-from sparsepilot.groups import Group, build_groups
-from sparsepilot.input_model import project_theta, zero_theta
-from sparsepilot.query import theta_hash
-from sparsepilot.runners.fd_snapshot import _run_query_with_retry
-from sparsepilot.violation_search import generate_initial_candidates
+from cadet.config import ExperimentConfig, load_config
+from cadet.groups import Group, build_groups
+from cadet.input_model import project_theta, zero_theta
+from cadet.query import theta_hash
+from cadet.runners.fd_snapshot import _run_query_with_retry
+from cadet.violation_search import generate_initial_candidates
 
 
 TARGET_PROPERTY = "post_neutral_xy_velocity"

@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import numpy as np
 
-from sparsepilot.config import load_config
-from sparsepilot.groups import build_groups
-from sparsepilot.input_model import project_theta, zero_theta
-from sparsepilot.violation_search import generate_initial_candidates, saturation_summary
+from cadet.config import load_config
+from cadet.groups import build_groups
+from cadet.input_model import project_theta, zero_theta
+from cadet.violation_search import generate_initial_candidates, saturation_summary
 
 
 def test_violation_search_candidates_are_feasible():

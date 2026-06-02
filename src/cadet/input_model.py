@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from sparsepilot.groups import Group
+from cadet.groups import Group
 
 
 def zero_theta(groups: list[Group]) -> np.ndarray:
@@ -61,7 +61,7 @@ def theta_to_sequence(theta: np.ndarray, groups: list[Group], config) -> pd.Data
 
 
 def build_groups_from_config(config) -> list[Group]:
-    from sparsepilot.groups import build_groups
+    from cadet.groups import build_groups
 
     inp = config.input
     return build_groups(inp["horizon_s"], inp["window_s"], inp["channels"])

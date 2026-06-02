@@ -9,13 +9,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from sparsepilot.config import ScenarioCfg
-from sparsepilot.groups import build_groups
-from sparsepilot.input_model import project_theta, theta_to_sequence
-from sparsepilot.properties import compute_all_properties
-from sparsepilot.vehicle.ardupilot import ArduPilotAdapter
-from sparsepilot.vehicle.px4 import PX4Adapter
-from sparsepilot.vehicle.synthetic import SyntheticAdapter
+from cadet.config import ScenarioCfg
+from cadet.groups import build_groups
+from cadet.input_model import project_theta, theta_to_sequence
+from cadet.properties import compute_all_properties
+from cadet.vehicle.ardupilot import ArduPilotAdapter
+from cadet.vehicle.px4 import PX4Adapter
+from cadet.vehicle.synthetic import SyntheticAdapter
 
 
 @dataclass

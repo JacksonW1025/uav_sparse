@@ -1,4 +1,4 @@
-# uav_sparse / SparsePilot
+# uav_sparse / CADET
 
 Chinese version: [README_zh.md](README_zh.md)
 
@@ -8,9 +8,8 @@ This repository is the working codebase for **CADET**:
 
 CADET searches for *feasible but unsafe pilot inputs* in UAV flight
 controllers: legal, rate-limited stick sequences that violate a flight-mode
-safety contract after the pilot returns the sticks to neutral. The package name
-is still `sparsepilot` because the repository started as a sparsity-hypothesis
-project; the current research narrative is CADET.
+safety contract after the pilot returns the sticks to neutral. The Python
+package name is `cadet`; the repository name remains `uav_sparse`.
 
 Lineage: CADET is a successor to the RouthSearch style of work. RouthSearch
 used a principled stability criterion to structure PID-parameter search; CADET
@@ -68,7 +67,7 @@ The input model is a 40-dimensional vector:
 - 5 s active horizon,
 - followed by an 8 s neutral tail.
 
-The implemented contracts are in `src/sparsepilot/properties.py`:
+The implemented contracts are in `src/cadet/properties.py`:
 
 | Property | Robustness |
 | --- | --- |
@@ -128,13 +127,13 @@ directly.
 | Path | Role |
 | --- | --- |
 | `configs/` | Experiment configurations. `rq1_minimal.yaml` is the main PX4/AP config; `synthetic_sanity.yaml` is for offline checks. |
-| `src/sparsepilot/input_model.py` | Projection to stick limits and rate limits; conversion from theta to time sequence. |
-| `src/sparsepilot/groups.py` | 40 channel-time groups. |
-| `src/sparsepilot/properties.py` | Post-neutral robustness contracts. |
-| `src/sparsepilot/query.py` | Query execution, caching, logs, and adapter dispatch. |
-| `src/sparsepilot/vehicle/` | PX4, ArduPilot, and synthetic simulator adapters. |
-| `src/sparsepilot/violation_search.py` | Coarse structure-agnostic violation-boundary search. |
-| `src/sparsepilot/runners/` | Historical and current experiment runners. |
+| `src/cadet/input_model.py` | Projection to stick limits and rate limits; conversion from theta to time sequence. |
+| `src/cadet/groups.py` | 40 channel-time groups. |
+| `src/cadet/properties.py` | Post-neutral robustness contracts. |
+| `src/cadet/query.py` | Query execution, caching, logs, and adapter dispatch. |
+| `src/cadet/vehicle/` | PX4, ArduPilot, and synthetic simulator adapters. |
+| `src/cadet/violation_search.py` | Coarse structure-agnostic violation-boundary search. |
+| `src/cadet/runners/` | Historical and current experiment runners. |
 | `artifacts/` | Versioned small CSV/JSON/theta artifacts for the seed-0 CADET spine runs. |
 | `tests/` | Unit and pipeline tests for the input model, metrics, properties, synthetic FD, H3, and Direction-A logic. |
 | `scripts/start_px4.sh` | Starts PX4 jMAVSim SITL. |
@@ -145,12 +144,12 @@ directly.
 
 | Claim / Phase | Runner | Notes |
 | --- | --- | --- |
-| Safe region is a plateau; gradients are noise | `sparsepilot.runners.repeated_fd`, `sparsepilot.runners.persistence_pilot` | SPH-era finite-difference measurements. |
-| Boundary sensitivity is channel-anisotropic | `sparsepilot.runners.margin_stage1_redo` | Uses larger direction probe step `delta=0.2`; historical runner still expects earlier boundary/stage runs. |
-| Cross-condition warm start does not save queries | `sparsepilot.runners.route1_h2_campaign` | H2 negative result; default Point V anchor is now tracked under `artifacts/`. |
-| POSCTL -> LOITER transition handoff is clean | `sparsepilot.runners.h3_transition` | H3 negative result; prior theta candidates are now tracked under `artifacts/`. |
-| Random vs. channel-agnostic vs. channel-directed probe | `sparsepilot.runners.direction_a_probe` | Core Direction-A / CADET evidence; pre-registered J=5. |
-| Delta-debugging necessity baseline | `sparsepilot.runners.direction_a_ddmin` | Requires the Direction-A probe output as `--probe-dir`. |
+| Safe region is a plateau; gradients are noise | `cadet.runners.repeated_fd`, `cadet.runners.persistence_pilot` | SPH-era finite-difference measurements. |
+| Boundary sensitivity is channel-anisotropic | `cadet.runners.margin_stage1_redo` | Uses larger direction probe step `delta=0.2`; historical runner still expects earlier boundary/stage runs. |
+| Cross-condition warm start does not save queries | `cadet.runners.route1_h2_campaign` | H2 negative result; default Point V anchor is now tracked under `artifacts/`. |
+| POSCTL -> LOITER transition handoff is clean | `cadet.runners.h3_transition` | H3 negative result; prior theta candidates are now tracked under `artifacts/`. |
+| Random vs. channel-agnostic vs. channel-directed probe | `cadet.runners.direction_a_probe` | Core Direction-A / CADET evidence; pre-registered J=5. |
+| Delta-debugging necessity baseline | `cadet.runners.direction_a_ddmin` | Requires the Direction-A probe output as `--probe-dir`. |
 
 Key single-seed Direction-A numbers from the docs:
 
@@ -198,7 +197,7 @@ scripts/kill_sim.sh
 Config and parameterization dry run:
 
 ```bash
-python -m sparsepilot.runners.sanity \
+python -m cadet.runners.sanity \
   --config configs/synthetic_sanity.yaml \
   --dry-run
 ```
@@ -213,7 +212,7 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest -q
 Verified locally in this workspace:
 
 ```text
-31 passed in 23.17s
+31 passed in 22.80s
 ```
 
 ## Running PX4 Experiments
@@ -227,7 +226,7 @@ PX4_ROOT=/path/to/PX4-Autopilot scripts/start_px4.sh
 Run a PX4 smoke check in another terminal:
 
 ```bash
-python -m sparsepilot.runners.smoke \
+python -m cadet.runners.smoke \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \
@@ -237,7 +236,7 @@ python -m sparsepilot.runners.smoke \
 Run the current Direction-A / CADET three-arm probe:
 
 ```bash
-python -m sparsepilot.runners.direction_a_probe \
+python -m cadet.runners.direction_a_probe \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \
@@ -247,7 +246,7 @@ python -m sparsepilot.runners.direction_a_probe \
 Then run the ddmin necessity baseline using that probe output:
 
 ```bash
-python -m sparsepilot.runners.direction_a_ddmin \
+python -m cadet.runners.direction_a_ddmin \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \
@@ -258,7 +257,7 @@ python -m sparsepilot.runners.direction_a_ddmin \
 Run the coarse structure-agnostic boundary search:
 
 ```bash
-python -m sparsepilot.violation_search \
+python -m cadet.violation_search \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \
@@ -268,19 +267,19 @@ python -m sparsepilot.violation_search \
 Run the historical H1 boundary-anisotropy chain:
 
 ```bash
-python -m sparsepilot.runners.margin_stage0 \
+python -m cadet.runners.margin_stage0 \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \
   --run-dir runs/margin_stage0_v1
 
-python -m sparsepilot.runners.margin_stage1 \
+python -m cadet.runners.margin_stage1 \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \
   --run-dir runs/margin_stage1_v1
 
-python -m sparsepilot.runners.margin_stage1_redo \
+python -m cadet.runners.margin_stage1_redo \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \
@@ -290,7 +289,7 @@ python -m sparsepilot.runners.margin_stage1_redo \
 Run the H2 cross-condition warm-start pilot from the archived Point V anchor:
 
 ```bash
-python -m sparsepilot.runners.route1_h2_campaign \
+python -m cadet.runners.route1_h2_campaign \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \
@@ -301,7 +300,7 @@ python -m sparsepilot.runners.route1_h2_campaign \
 Run the H3 POSCTL-to-LOITER transition probe from archived prior candidates:
 
 ```bash
-python -m sparsepilot.runners.h3_transition \
+python -m cadet.runners.h3_transition \
   --config configs/rq1_minimal.yaml \
   --seed 0 \
   --run-dir runs/h3_transition_seed0_v1
@@ -390,4 +389,3 @@ Engineering caveats:
   reachable. Paper text should use one explicit feasibility convention.
 - `runs/`, `*.ulg`, `*.parquet`, and `*.npz` are ignored. This keeps the repo
   small but means claims and local artifacts must be curated deliberately.
-- The public package name is `sparsepilot`; `CADET` is the current method name.

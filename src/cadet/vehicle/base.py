@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from sparsepilot.config import ScenarioCfg
+from cadet.config import ScenarioCfg
 
 
 class VehicleAdapter(ABC):

@@ -11,11 +11,11 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from sparsepilot.config import ExperimentConfig, load_config
-from sparsepilot.groups import Group, build_groups
-from sparsepilot.input_model import project_theta
-from sparsepilot.query import theta_hash
-from sparsepilot.runners.direction_a_probe import (
+from cadet.config import ExperimentConfig, load_config
+from cadet.groups import Group, build_groups
+from cadet.input_model import project_theta
+from cadet.query import theta_hash
+from cadet.runners.direction_a_probe import (
     CHANNEL_RELEVANT_SET,
     J_REPEATS,
     ROBUST_SIGMA_MULTIPLIER,

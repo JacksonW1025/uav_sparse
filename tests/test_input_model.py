@@ -1,8 +1,8 @@
 import numpy as np
 
-from sparsepilot.config import load_config
-from sparsepilot.groups import build_groups
-from sparsepilot.input_model import perturb_group, project_theta, theta_to_sequence, zero_theta
+from cadet.config import load_config
+from cadet.groups import build_groups
+from cadet.input_model import perturb_group, project_theta, theta_to_sequence, zero_theta
 
 
 def cfg():

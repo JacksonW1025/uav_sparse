@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 
-from sparsepilot.runners.direction_a_ddmin import CLEAN_CHANNELS, _is_clean, select_starting_points
+from cadet.runners.direction_a_ddmin import CLEAN_CHANNELS, _is_clean, select_starting_points
 
 
 def test_select_starting_points_uses_all_interiors_then_densest_moderates(tmp_path: Path):

@@ -6,7 +6,7 @@ candidate.
 Runner:
 
 ```bash
-python -m sparsepilot.violation_search \
+python -m cadet.violation_search \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import numpy as np
 
-from sparsepilot.config import load_config
-from sparsepilot.groups import build_groups
-from sparsepilot.runners.h3_transition import (
+from cadet.config import load_config
+from cadet.groups import build_groups
+from cadet.runners.h3_transition import (
     PROPERTIES,
     CandidateU,
     _classify_pair,

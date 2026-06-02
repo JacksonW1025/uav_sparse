@@ -5,13 +5,13 @@ from pathlib import Path
 
 import numpy as np
 
-from sparsepilot.config import load_config
-from sparsepilot.gradients import finite_difference_snapshot
-from sparsepilot.groups import build_groups
-from sparsepilot.input_model import zero_theta
-from sparsepilot.metrics import mass_overlap
-from sparsepilot.support import topk_support
-from sparsepilot.vehicle.synthetic import SyntheticAdapter
+from cadet.config import load_config
+from cadet.gradients import finite_difference_snapshot
+from cadet.groups import build_groups
+from cadet.input_model import zero_theta
+from cadet.metrics import mass_overlap
+from cadet.support import topk_support
+from cadet.vehicle.synthetic import SyntheticAdapter
 
 
 def main() -> None:

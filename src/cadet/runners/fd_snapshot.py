@@ -8,12 +8,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from sparsepilot.config import load_config
-from sparsepilot.groups import Group, build_groups
-from sparsepilot.input_model import perturb_group, zero_theta
-from sparsepilot.metrics import effective_sparsity, topk_coverage
-from sparsepilot.plots import plot_gradient_heatmap
-from sparsepilot.query import QueryResult, read_parsed_log, run_query, theta_hash
+from cadet.config import load_config
+from cadet.groups import Group, build_groups
+from cadet.input_model import perturb_group, zero_theta
+from cadet.metrics import effective_sparsity, topk_coverage
+from cadet.plots import plot_gradient_heatmap
+from cadet.query import QueryResult, read_parsed_log, run_query, theta_hash
 
 
 PRIMARY_PROPERTIES = {

@@ -5,7 +5,7 @@ RQ: preliminary boundary point used as an H3 prior candidate.
 Runner:
 
 ```bash
-python -m sparsepilot.runners.margin_stage0 \
+python -m cadet.runners.margin_stage0 \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \

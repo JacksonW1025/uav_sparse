@@ -10,14 +10,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from sparsepilot.config import ExperimentConfig, load_config
-from sparsepilot.groups import Group, build_groups
-from sparsepilot.input_model import project_theta
-from sparsepilot.metrics import effective_sparsity, topk_coverage
-from sparsepilot.query import theta_hash
-from sparsepilot.runners.fd_snapshot import _run_query_with_retry
-from sparsepilot.runners.margin_stage0 import _curve_shape, _fd_interior_summary, _load_candidate_theta
-from sparsepilot.runners.repeated_fd import run_repeated_snapshot
+from cadet.config import ExperimentConfig, load_config
+from cadet.groups import Group, build_groups
+from cadet.input_model import project_theta
+from cadet.metrics import effective_sparsity, topk_coverage
+from cadet.query import theta_hash
+from cadet.runners.fd_snapshot import _run_query_with_retry
+from cadet.runners.margin_stage0 import _curve_shape, _fd_interior_summary, _load_candidate_theta
+from cadet.runners.repeated_fd import run_repeated_snapshot
 
 
 POINT_PROPS = {

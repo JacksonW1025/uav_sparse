@@ -6,7 +6,7 @@ delta-debugged into the same clean roll/pitch trigger class found by CADET.
 Runner:
 
 ```bash
-python -m sparsepilot.runners.direction_a_ddmin \
+python -m cadet.runners.direction_a_ddmin \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \

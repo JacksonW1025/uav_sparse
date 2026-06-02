@@ -7,10 +7,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from sparsepilot.config import ScenarioCfg
-from sparsepilot.groups import build_groups
-from sparsepilot.input_model import perturb_group
-from sparsepilot.query import run_query, theta_hash
+from cadet.config import ScenarioCfg
+from cadet.groups import build_groups
+from cadet.input_model import perturb_group
+from cadet.query import run_query, theta_hash
 
 
 @dataclass

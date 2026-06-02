@@ -13,12 +13,12 @@ import numpy as np
 import pandas as pd
 from pyulog import ULog
 
-from sparsepilot.config import ExperimentConfig, ScenarioCfg, load_config
-from sparsepilot.groups import Group, build_groups
-from sparsepilot.input_model import project_theta, theta_to_sequence, zero_theta
-from sparsepilot.query import QueryResult, read_parsed_log, theta_hash
-from sparsepilot.runners.fd_snapshot import _run_query_with_retry
-from sparsepilot.violation_search import (
+from cadet.config import ExperimentConfig, ScenarioCfg, load_config
+from cadet.groups import Group, build_groups
+from cadet.input_model import project_theta, theta_to_sequence, zero_theta
+from cadet.query import QueryResult, read_parsed_log, theta_hash
+from cadet.runners.fd_snapshot import _run_query_with_retry
+from cadet.violation_search import (
     grid_to_theta,
     random_block_theta,
     random_walk_theta,

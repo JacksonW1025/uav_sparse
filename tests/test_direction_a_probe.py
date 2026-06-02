@@ -5,10 +5,10 @@ from pathlib import Path
 
 import numpy as np
 
-from sparsepilot.config import load_config
-from sparsepilot.groups import build_groups
-from sparsepilot.input_model import project_theta
-from sparsepilot.runners.direction_a_probe import (
+from cadet.config import load_config
+from cadet.groups import build_groups
+from cadet.input_model import project_theta
+from cadet.runners.direction_a_probe import (
     INTERIOR_MAX_ABS,
     SATURATED_MIN_ABS,
     EnvelopeSpec,

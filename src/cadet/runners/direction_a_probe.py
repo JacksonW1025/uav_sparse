@@ -11,12 +11,12 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from sparsepilot.config import ExperimentConfig, load_config
-from sparsepilot.groups import Group, build_groups
-from sparsepilot.input_model import project_theta, zero_theta
-from sparsepilot.query import QueryResult, run_query, theta_hash
-from sparsepilot.runners.route1_h2_campaign import _sample_uniform_feasible
-from sparsepilot.violation_search import grid_to_theta, window_count
+from cadet.config import ExperimentConfig, load_config
+from cadet.groups import Group, build_groups
+from cadet.input_model import project_theta, zero_theta
+from cadet.query import QueryResult, run_query, theta_hash
+from cadet.runners.route1_h2_campaign import _sample_uniform_feasible
+from cadet.violation_search import grid_to_theta, window_count
 
 
 TARGET_PROPERTY = "post_neutral_xy_velocity"

@@ -9,13 +9,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from sparsepilot.config import load_config
-from sparsepilot.groups import build_groups
-from sparsepilot.input_model import project_theta, zero_theta
-from sparsepilot.metrics import effective_sparsity, jaccard, mass_overlap, normalized_entropy, topk_coverage
-from sparsepilot.query import QueryResult, theta_hash
-from sparsepilot.runners.fd_snapshot import _query_row, _run_query_with_retry
-from sparsepilot.runners.repeated_fd import run_repeated_snapshot
+from cadet.config import load_config
+from cadet.groups import build_groups
+from cadet.input_model import project_theta, zero_theta
+from cadet.metrics import effective_sparsity, jaccard, mass_overlap, normalized_entropy, topk_coverage
+from cadet.query import QueryResult, theta_hash
+from cadet.runners.fd_snapshot import _query_row, _run_query_with_retry
+from cadet.runners.repeated_fd import run_repeated_snapshot
 
 
 PATHS = {

@@ -7,7 +7,7 @@ boundary probing, and channel-directed roll/pitch probing for
 Runner:
 
 ```bash
-python -m sparsepilot.runners.direction_a_probe \
+python -m cadet.runners.direction_a_probe \
   --config configs/rq1_minimal.yaml \
   --scenario px4_position \
   --seed 0 \
