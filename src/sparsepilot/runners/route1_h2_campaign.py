@@ -20,6 +20,7 @@ from sparsepilot.violation_search import generate_initial_candidates
 
 TARGET_PROPERTY = "post_neutral_xy_velocity"
 ACTIVE_CHANNELS = ["roll", "pitch"]
+DEFAULT_THETA_V_PATH = Path("artifacts/margin_stage1_redo_v1/theta_V.npy")
 
 
 @dataclass(frozen=True)
@@ -158,7 +159,7 @@ def main() -> None:
     parser.add_argument("--scenario", default="px4_position")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--run-dir", default="runs/route1_h2_px4_position_seed0_vmax_pilot_v0")
-    parser.add_argument("--theta-v", default="runs/margin_stage1_v1/point_V/theta.npy")
+    parser.add_argument("--theta-v", default=str(DEFAULT_THETA_V_PATH))
     parser.add_argument("--v-max", action="append", type=float, default=None)
     parser.add_argument("--rng-seed", type=int, default=20260530)
     parser.add_argument("--structured-random-count", type=int, default=52)
@@ -209,11 +210,10 @@ def main() -> None:
 
     theta_v_path = Path(args.theta_v)
     if not theta_v_path.exists():
-        fallback = Path("runs/margin_stage1_redo_v1/theta_V.npy")
-        if fallback.exists():
-            theta_v_path = fallback
-        else:
-            raise FileNotFoundError(args.theta_v)
+        raise FileNotFoundError(
+            f"--theta-v path does not exist: {theta_v_path}. "
+            f"Use the tracked artifact at {DEFAULT_THETA_V_PATH} or pass a rerun output theta."
+        )
     theta_v = project_theta(np.load(theta_v_path), conditions[0].config)
     np.save(output_dir / "theta_V_condition1_anchor.npy", theta_v)
 

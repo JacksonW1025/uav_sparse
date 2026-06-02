@@ -33,6 +33,11 @@ PROPERTIES = ["post_neutral_xy_drift", "post_neutral_alt_drift", "post_neutral_x
 DEFAULT_T_GRID = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
 AUTO_LOITER_NAV_STATE = 4
 POSCTL_NAV_STATE = 2
+H3_PRIOR_THETA_PATHS = [
+    Path("artifacts/margin_stage1_redo_v1/theta_V.npy"),
+    Path("artifacts/rq1_boundary_v0/theta_boundary.npy"),
+    Path("artifacts/margin_stage0_v1/theta_117.npy"),
+]
 
 
 @dataclass(frozen=True)
@@ -851,11 +856,7 @@ def _stage_a_candidates(
         seen.add(thash)
         candidates.append(CandidateU(label, projected, source))
 
-    for path in [
-        Path("runs/margin_stage1_redo_v1/theta_V.npy"),
-        Path("runs/rq1_boundary_v0/theta_boundary.npy"),
-        Path("runs/margin_stage0_v1/theta_117.npy"),
-    ]:
+    for path in H3_PRIOR_THETA_PATHS:
         if path.exists():
             base = np.load(path)
             for scale in [0.35, 0.50, 0.65]:

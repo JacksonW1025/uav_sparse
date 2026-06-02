@@ -620,6 +620,7 @@ def main() -> None:
 
 
 def select_starting_points(probe_dir: Path, *, moderate_starts: int, max_starts: int) -> list[StartingPoint]:
+    probe_dir = Path(probe_dir)
     point_df = pd.read_csv(Path(probe_dir) / "reports" / "point_evaluations.csv")
     b_robust = point_df[(point_df["arm"] == "B") & (point_df["robustness_class"] == "robust_violation")].copy()
     interior = b_robust[b_robust["amplitude_class"] == "interior"].sort_values("eval_id").copy()
@@ -635,7 +636,7 @@ def select_starting_points(probe_dir: Path, *, moderate_starts: int, max_starts:
     selected = selected.head(int(max_starts)).copy()
     starts: list[StartingPoint] = []
     for idx, row in selected.iterrows():
-        theta_path = Path(row["theta_path"])
+        theta_path = _resolve_probe_theta_path(probe_dir, Path(row["theta_path"]))
         theta = np.load(theta_path)
         starts.append(
             StartingPoint(
@@ -656,6 +657,15 @@ def select_starting_points(probe_dir: Path, *, moderate_starts: int, max_starts:
             )
         )
     return starts
+
+
+def _resolve_probe_theta_path(probe_dir: Path, theta_path: Path) -> Path:
+    if theta_path.exists():
+        return theta_path
+    artifact_path = probe_dir / "thetas" / theta_path.name
+    if artifact_path.exists():
+        return artifact_path
+    raise FileNotFoundError(f"theta file not found: {theta_path}; also checked {artifact_path}")
 
 
 def build_summary(
