@@ -26,6 +26,7 @@ CAVEAT_ZH = (
 
 BANNED_SUFFIXES = {".ulg", ".bin", ".parquet", ".npz"}
 MAX_COPY_BYTES = 5 * 1024 * 1024
+TEXT_SUFFIXES = {".csv", ".json", ".md", ".svg"}
 
 
 def ensure_clean_small_file(src: Path) -> None:
@@ -40,6 +41,15 @@ def copy_file(src: Path, dst: Path) -> None:
     ensure_clean_small_file(src)
     dst.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(src, dst)
+    normalize_text_file(dst)
+
+
+def normalize_text_file(path: Path) -> None:
+    if path.suffix.lower() not in TEXT_SUFFIXES:
+        return
+    text = path.read_text(encoding="utf-8")
+    normalized = "\n".join(line.rstrip() for line in text.splitlines()) + "\n"
+    path.write_text(normalized, encoding="utf-8")
 
 
 def copy_reports(src_run: Path, dst_run: Path) -> None:
@@ -67,6 +77,7 @@ def save_figure(fig: plt.Figure, path_no_suffix: Path) -> None:
     fig.tight_layout()
     fig.savefig(path_no_suffix.with_suffix(".png"), dpi=180)
     fig.savefig(path_no_suffix.with_suffix(".svg"))
+    normalize_text_file(path_no_suffix.with_suffix(".svg"))
     plt.close(fig)
 
 
