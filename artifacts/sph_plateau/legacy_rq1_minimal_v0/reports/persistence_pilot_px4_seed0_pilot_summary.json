@@ -1,0 +1,59 @@
+{
+  "decision": "not_persistent",
+  "elapsed_wall_time_s": 31396.013836537997,
+  "median_mass_overlap_top16": 0.375410262484114,
+  "outputs": {
+    "robustness": "runs/rq1_minimal_v0/reports/persistence_pilot_px4_seed0_robustness.csv",
+    "snapshot_validation": "runs/rq1_minimal_v0/reports/persistence_pilot_px4_seed0_snapshot_validation.csv",
+    "step_metrics": "runs/rq1_minimal_v0/reports/persistence_pilot_px4_seed0_step_metrics.csv",
+    "transitions": "runs/rq1_minimal_v0/reports/persistence_pilot_px4_seed0_transitions.csv",
+    "updates": "runs/rq1_minimal_v0/reports/persistence_pilot_px4_seed0_updates.csv"
+  },
+  "path_summaries": [
+    {
+      "path_id": "path_xy_drift",
+      "property": "post_neutral_xy_drift",
+      "robustness": [
+        1.9553308674258991,
+        1.9340932049690134,
+        1.9532721737272578
+      ],
+      "snapshots": [
+        "runs/rq1_minimal_v0/snapshots/px4_position_seed0_7b6436b0c98f6238_phase2_px4_seed0_j5_denoise_j5",
+        "runs/rq1_minimal_v0/snapshots/px4_position_seed0_f57e94771b411317_persistence_pilot_px4_seed0_path_xy_drift_step1_j5",
+        "runs/rq1_minimal_v0/snapshots/px4_position_seed0_33ae3b03811ce339_persistence_pilot_px4_seed0_path_xy_drift_step2_j5"
+      ],
+      "theta_hashes": [
+        "7b6436b0c98f6238",
+        "f57e94771b411317",
+        "33ae3b03811ce339"
+      ]
+    },
+    {
+      "path_id": "path_xy_velocity",
+      "property": "post_neutral_xy_velocity",
+      "robustness": [
+        0.9692366424291636,
+        0.9728156006544364,
+        0.9707033602263455
+      ],
+      "snapshots": [
+        "runs/rq1_minimal_v0/snapshots/px4_position_seed0_7b6436b0c98f6238_phase2_px4_seed0_j5_denoise_j5",
+        "runs/rq1_minimal_v0/snapshots/px4_position_seed0_4174721f147657a2_persistence_pilot_px4_seed0_path_xy_velocity_step1_j5",
+        "runs/rq1_minimal_v0/snapshots/px4_position_seed0_6922c2be677851b4_persistence_pilot_px4_seed0_path_xy_velocity_step2_j5"
+      ],
+      "theta_hashes": [
+        "7b6436b0c98f6238",
+        "4174721f147657a2",
+        "6922c2be677851b4"
+      ]
+    }
+  ],
+  "paths_root": "runs/rq1_minimal_v0/paths/px4_position_seed0_persistence_pilot_px4_seed0",
+  "phase_tag": "persistence_pilot_px4_seed0",
+  "repeats": 5,
+  "scenario_id": "px4_position",
+  "seed": 0,
+  "steps": 3,
+  "theta0_snapshot": "runs/rq1_minimal_v0/snapshots/px4_position_seed0_7b6436b0c98f6238_phase2_px4_seed0_j5_denoise_j5"
+}

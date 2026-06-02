@@ -1,0 +1,7 @@
+scenario_id,property,seed,repeat_count,groups_abs_mean_ge_2se,groups_abs_mean_ge_3se,count_abs_mean_ge_2se,count_abs_mean_ge_3se,mass_retained_2se,mass_retained_3se,top4_coverage_masked_2se,top8_coverage_masked_2se,top4_coverage_masked_3se,top8_coverage_masked_3se
+px4_position,post_neutral_xy_drift,0,5,"7,11,23,27",,4,0,0.22524063614865403,0.0,1.0,1.0,0.0,0.0
+px4_position,post_neutral_alt_drift,0,5,"19,23,25,30,34,38,39","19,25,34,38,39",7,5,0.42048315298073274,0.33251543260714095,0.6714035876932719,1.0,0.8490249467891315,1.0
+px4_position,post_neutral_xy_velocity,0,5,"20,22,29",,3,0,0.24099350694827326,0.0,1.0,1.0,0.0,0.0
+px4_hold,post_neutral_xy_drift,0,5,"1,11,20,23,29","11,20,23",5,3,0.24260669403351365,0.1709707755823797,0.8929211820247525,1.0,1.0,1.0
+px4_hold,post_neutral_alt_drift,0,5,"6,13,19,37","13,37",4,2,0.1761479398049856,0.1256568977674241,1.0,1.0,1.0,1.0
+px4_hold,post_neutral_xy_velocity,0,5,"11,20,23",,3,0,0.21021503333942754,0.0,1.0,1.0,0.0,0.0

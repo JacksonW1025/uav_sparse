@@ -1,0 +1,7 @@
+path_id,step_r,snapshot_dir,reused_theta0,query_rows,unique_query_ids,unique_repeat_cache_tags,manual_perturb_abs_max_min,manual_perturb_abs_max_max,manual_tail_abs_max_min,manual_tail_abs_max_max,median_total_wall_time_s,settled_tail_mode_value_counts,settled_tail_main_value_counts,settled_tail_sub_value_counts
+path_xy_drift,0,runs/rq1_minimal_v0/snapshots/px4_position_seed0_7b6436b0c98f6238_phase2_px4_seed0_j5_denoise_j5,True,400,400,5,0.08,0.08,0.0,0.0,18.170490355503716,POSCTL:400,3:400,0:400
+path_xy_drift,1,runs/rq1_minimal_v0/snapshots/px4_position_seed0_f57e94771b411317_persistence_pilot_px4_seed0_path_xy_drift_step1_j5,False,400,400,5,0.06,0.14,0.0,0.0,20.151694054497057,POSCTL:400,3:400,0:400
+path_xy_drift,2,runs/rq1_minimal_v0/snapshots/px4_position_seed0_33ae3b03811ce339_persistence_pilot_px4_seed0_path_xy_drift_step2_j5,False,400,400,5,0.06,0.14,0.0,0.0,20.142698932992065,POSCTL:400,3:400,0:400
+path_xy_velocity,0,runs/rq1_minimal_v0/snapshots/px4_position_seed0_7b6436b0c98f6238_phase2_px4_seed0_j5_denoise_j5,True,400,400,5,0.08,0.08,0.0,0.0,18.170490355503716,POSCTL:400,3:400,0:400
+path_xy_velocity,1,runs/rq1_minimal_v0/snapshots/px4_position_seed0_4174721f147657a2_persistence_pilot_px4_seed0_path_xy_velocity_step1_j5,False,400,400,5,0.06,0.14,0.0,0.0,18.451227427511185,POSCTL:400,3:400,0:400
+path_xy_velocity,2,runs/rq1_minimal_v0/snapshots/px4_position_seed0_6922c2be677851b4_persistence_pilot_px4_seed0_path_xy_velocity_step2_j5,False,400,400,5,0.06,0.14,0.0,0.0,18.246633999006008,POSCTL:400,3:400,0:400

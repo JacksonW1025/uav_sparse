@@ -1,0 +1,56 @@
+{
+  "elapsed_wall_time_s": 6010.504528902005,
+  "outcome": "stage_a_failed_no_robust_transition_violation",
+  "repeats": 5,
+  "scenario": "px4_transition",
+  "seed": 0,
+  "stage0": {
+    "eval_ids": {
+      "maneuver_posctl": 4,
+      "maneuver_switch_t4p00": 3,
+      "neutral_auto_loiter": 1,
+      "neutral_posctl": 0,
+      "neutral_switch_t5": 2
+    },
+    "gate_pass": true,
+    "maneuver_induced_motion": true,
+    "neutral_safe_2std": true,
+    "switch_clean": true,
+    "switched_run_differs_from_posctl": true,
+    "trajectory_difference": {
+      "max_alt_delta_m": 0.3125580151875811,
+      "max_xy_delta_m": 0.32356280910342194,
+      "posctl_max_xy_speed_mps": 0.3427611873347834,
+      "posctl_speed_at_switch_mps": 0.3427611873347834,
+      "posctl_xy_span_m": 0.20810556208283607,
+      "rho_mean_delta": {
+        "post_neutral_alt_drift": 0.002438735961914129,
+        "post_neutral_xy_drift": -0.005546984642116115,
+        "post_neutral_xy_velocity": -0.043797655078827935
+      }
+    },
+    "transition_validation_rows": "runs/h3_transition_seed0_v1/reports/stage0_transition_validation.csv"
+  },
+  "stage_a": {
+    "cluster_rows": "runs/h3_transition_seed0_v1/reports/stageA_robust_clusters.csv",
+    "distinct_cluster_count": 0,
+    "joint_random_probe_hit_count": 0,
+    "noise_straddle_not_counted_count": 21,
+    "pair_rows": "runs/h3_transition_seed0_v1/reports/stageA_pair_classification.csv",
+    "query_count_after_stage_a": 325,
+    "raw_robust_pair_count_before_t_specific_filter": 0,
+    "robust_transition_violation_count": 0,
+    "weak_1std_candidate_count": 0
+  },
+  "stage_b_query_budget": 120,
+  "t_grid": [
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    7.0
+  ],
+  "total_query_count": 325
+}
