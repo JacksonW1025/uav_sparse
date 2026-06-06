@@ -6,6 +6,7 @@ import math
 import time
 from dataclasses import dataclass, replace
 from pathlib import Path
+from itertools import product
 from typing import Any
 
 import numpy as np
@@ -14,19 +15,46 @@ import pandas as pd
 from cadet.config import ExperimentConfig, load_config
 from cadet.groups import Group, build_groups
 from cadet.input_model import project_theta, zero_theta
-from cadet.query import QueryResult, run_query, theta_hash
+from cadet.properties import (
+    compute_residual_rate_metrics,
+    is_residual_rate_property,
+    summarize_residual_rate_repeats,
+)
+from cadet.query import QueryResult, read_parsed_log, run_query, theta_hash
 from cadet.runners.route1_h2_campaign import _sample_uniform_feasible
 from cadet.violation_search import grid_to_theta, window_count
 
 
 TARGET_PROPERTY = "post_neutral_xy_velocity"
 REPORT_PROPERTIES = ["post_neutral_xy_velocity", "post_neutral_xy_drift", "post_neutral_alt_drift"]
-CHANNEL_RELEVANT_SET = ["roll", "pitch"]
 J_REPEATS = 5
 INTERIOR_MAX_ABS = 0.5
 SATURATED_MIN_ABS = 0.9
 SUPPORT_THRESHOLD = 0.1
 ROBUST_SIGMA_MULTIPLIER = 2.0
+DEFAULT_RNG_SEED = 20260530
+
+
+def derive_A_phi(property_name: str) -> list[str]:
+    """Return the control-allocation predicted active channel set for a property."""
+    # Multirotor manual-control allocation gives roll/pitch direct authority over
+    # lateral acceleration, so post-neutral xy velocity is predicted to live on
+    # {roll,pitch}. Vertical thrust is allocated directly through collective
+    # throttle; roll/pitch affect altitude only through a second-order tilt/cos
+    # loss that POSCTL tends to compensate, so alt_drift predicts {throttle}.
+    # PX4 manual vertical control maps collective throttle to climb/descent
+    # velocity through MPC_Z_VEL_MAX_UP/DN, so climb-rate residuals predict
+    # {throttle}. PX4 manual yaw maps yaw stick to yawspeed through
+    # MPC_MAN_Y_MAX, so yaw-rate residuals predict {yaw}.
+    if property_name == "post_neutral_xy_velocity":
+        return ["roll", "pitch"]
+    if property_name == "post_neutral_alt_drift":
+        return ["throttle"]
+    if property_name == "post_neutral_climb_rate":
+        return ["throttle"]
+    if property_name == "post_neutral_yaw_rate":
+        return ["yaw"]
+    raise ValueError(f"No control-allocation A_phi rule registered for property: {property_name}")
 
 
 @dataclass(frozen=True)
@@ -43,16 +71,44 @@ class EnvelopeSpec:
         return f"env{self.index:04d}_deg{deg:03d}_w{self.onset_window:02d}_d{self.duration_windows:02d}"
 
 
+@dataclass(frozen=True)
+class DirectedEnvelopeSpec:
+    index: int
+    channels: tuple[str, ...]
+    signs: tuple[int, ...]
+    amplitude: float
+    onset_window: int
+    duration_windows: int
+
+    @property
+    def label(self) -> str:
+        sign_text = "".join("p" if sign > 0 else "m" for sign in self.signs)
+        channel_text = "-".join(self.channels)
+        return f"swp{self.index:04d}_{channel_text}_{sign_text}_w{self.onset_window:02d}_d{self.duration_windows:02d}"
+
+    @property
+    def signature(self) -> str:
+        return envelope_signature(self.channels, self.signs, self.onset_window, self.duration_windows)
+
+
 class DuplicatePointError(RuntimeError):
     pass
 
 
 class DirectionAProbeEvaluator:
-    def __init__(self, scenario_id: str, seed: int, output_dir: Path, groups: list[Group]):
+    def __init__(
+        self,
+        scenario_id: str,
+        seed: int,
+        output_dir: Path,
+        groups: list[Group],
+        target_property: str = TARGET_PROPERTY,
+    ):
         self.scenario_id = scenario_id
         self.seed = int(seed)
         self.output_dir = Path(output_dir)
         self.groups = groups
+        self.target_property = str(target_property)
         self.reports_dir = self.output_dir / "reports"
         self.thetas_dir = self.output_dir / "thetas"
         self.reports_dir.mkdir(parents=True, exist_ok=True)
@@ -86,6 +142,7 @@ class DirectionAProbeEvaluator:
         label: str,
         repeats: int,
         gate_candidate: bool = True,
+        distinct_signature: str = "",
     ) -> dict[str, Any]:
         projected = project_theta(np.asarray(theta, dtype=float), config)
         thash = theta_hash(projected)
@@ -97,6 +154,7 @@ class DirectionAProbeEvaluator:
         point_index = self.arm_eval_count(arm)
         self.eval_counter += 1
         values: dict[str, list[float]] = {prop: [] for prop in scenario.properties}
+        residual_repeat_metrics: list[dict[str, Any]] = []
         point_start = time.monotonic()
         for repeat_idx in range(repeats):
             cache_tag = _safe_label(
@@ -118,6 +176,11 @@ class DirectionAProbeEvaluator:
             self.timeout_retry_count += retry_count
             for prop, value in result.robustness.items():
                 values[prop].append(float(value))
+            residual_metrics: dict[str, Any] = {}
+            if is_residual_rate_property(self.target_property):
+                parsed_log = read_parsed_log(result.parsed_log_path)
+                residual_metrics = compute_residual_rate_metrics(parsed_log, self.target_property, config)
+                residual_repeat_metrics.append(residual_metrics)
             row: dict[str, Any] = {
                 "eval_id": eval_id,
                 "point_index": point_index,
@@ -133,13 +196,18 @@ class DirectionAProbeEvaluator:
             }
             for prop, value in result.robustness.items():
                 row[f"robustness_{prop}"] = float(value)
+            for key, value in residual_metrics.items():
+                if key in {"property", "unit"}:
+                    row[f"residual_rate_{key}"] = value
+                else:
+                    row[f"residual_rate_{key}_{self.target_property}"] = value
             for key, value in result.metadata.items():
                 row[f"meta_{key}"] = value
             self.query_rows.append(row)
         point_elapsed = time.monotonic() - point_start
 
         stats = _property_stats(values)
-        target = stats[TARGET_PROPERTY]
+        target = stats[self.target_property]
         robustness_class = classify_robustness(target["mean"], target["std"])
         rejected_by_gate = bool(gate_candidate and target["mean"] < 0.0 and robustness_class != "robust_violation")
         if rejected_by_gate:
@@ -165,7 +233,19 @@ class DirectionAProbeEvaluator:
             "active_channels_abs_gt_0p1": ",".join(support["active_channels"]),
             "robustness_class": robustness_class,
             "negative_mean_rejected_by_2sigma_gate": rejected_by_gate,
+            "distinct_signature": distinct_signature,
         }
+        point_row.update(_signature_columns(distinct_signature))
+        if is_residual_rate_property(self.target_property):
+            point_row.update(
+                _residual_rate_point_columns(
+                    summarize_residual_rate_repeats(
+                        residual_repeat_metrics,
+                        sigma_multiplier=ROBUST_SIGMA_MULTIPLIER,
+                    ),
+                    self.target_property,
+                )
+            )
         for prop, prop_stats in stats.items():
             for key, value in prop_stats.items():
                 point_row[f"rho_{key}_{prop}"] = value
@@ -198,23 +278,39 @@ def main() -> None:
     parser.add_argument("--scenario", default="px4_position")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--run-dir", default="runs/direction_a_px4_position_seed0_v0")
-    parser.add_argument("--rng-seed", type=int, default=20260530)
+    parser.add_argument("--property", default=TARGET_PROPERTY)
+    parser.add_argument(
+        "--active-channels",
+        default=None,
+        help="Optional comma-separated A_phi override, used only for pre-registered narrowed continuations.",
+    )
+    parser.add_argument("--rng-seed", type=int, default=DEFAULT_RNG_SEED)
     parser.add_argument("--points-per-arm", type=int, default=80)
     parser.add_argument("--repeats", type=int, default=J_REPEATS)
     parser.add_argument("--stick-limit", type=float, default=1.0)
     parser.add_argument("--bisection-iters", type=int, default=7)
+    parser.add_argument(
+        "--allow-nonzero-seed",
+        action="store_true",
+        help="Explicitly unlock nonzero seed replication while keeping all pre-registered thresholds fixed.",
+    )
     args = parser.parse_args()
 
     if args.scenario != "px4_position":
         raise ValueError("Direction-A probe is frozen to px4_position")
-    if int(args.seed) != 0:
-        raise ValueError("Direction-A probe is frozen to seed 0")
+    nonzero_seed_unlocked = bool(int(args.seed) != 0 and args.allow_nonzero_seed)
+    if int(args.seed) != 0 and not args.allow_nonzero_seed:
+        raise ValueError("Direction-A probe is frozen to seed 0 unless --allow-nonzero-seed is passed")
+    if int(args.seed) != 0 and int(args.rng_seed) == DEFAULT_RNG_SEED:
+        raise ValueError("Nonzero seed replication must pass a seed-specific --rng-seed")
     if int(args.repeats) != J_REPEATS:
         raise ValueError("Direction-A probe is pre-registered to J=5 repeats")
     if int(args.points_per_arm) <= 0:
         raise ValueError("--points-per-arm must be positive")
     if float(args.stick_limit) <= SATURATED_MIN_ABS:
         raise ValueError("stick limit must exceed 0.9 so the pre-registered saturated class is reachable")
+    target_property = str(args.property)
+    active_channels = _parse_channels_arg(args.active_channels) if args.active_channels else derive_A_phi(target_property)
 
     run_start = time.monotonic()
     output_dir = Path(args.run_dir)
@@ -224,8 +320,8 @@ def main() -> None:
     base_config = load_config(args.config)
     config = _config_for_probe(base_config, output_dir, float(args.stick_limit))
     scenario = config.scenario_by_id(args.scenario)
-    if TARGET_PROPERTY not in scenario.properties:
-        raise ValueError(f"{TARGET_PROPERTY} must be enabled for {args.scenario}")
+    if target_property not in scenario.properties:
+        raise ValueError(f"{target_property} must be enabled for {args.scenario}")
     for prop in REPORT_PROPERTIES:
         if prop not in scenario.properties:
             raise ValueError(f"{prop} must be enabled for {args.scenario}")
@@ -235,15 +331,18 @@ def main() -> None:
         raise ValueError(f"Frozen D=40 parameterization expected 40 groups, found {len(groups)}")
     pd.DataFrame([group.__dict__ for group in groups]).to_csv(output_dir / "groups.csv", index=False)
 
-    preregistration = _pre_registration(args, config, groups)
+    preregistration = _pre_registration(args, config, groups, target_property, active_channels)
     _write_json(reports_dir / "pre_registration.json", preregistration)
 
     rng = np.random.default_rng(args.rng_seed)
-    evaluator = DirectionAProbeEvaluator(args.scenario, args.seed, output_dir, groups)
+    evaluator = DirectionAProbeEvaluator(args.scenario, args.seed, output_dir, groups, target_property=target_property)
     arm_details: dict[str, dict[str, Any]] = {}
     print(
         f"direction_a_start scenario={args.scenario} seed={args.seed} "
-        f"N={args.points_per_arm} J={args.repeats} run_dir={output_dir}",
+        f"property={target_property} A_phi={','.join(active_channels)} "
+        f"rng_seed={args.rng_seed} N={args.points_per_arm} J={args.repeats} "
+        f"nonzero_seed_unlocked={nonzero_seed_unlocked} "
+        f"thresholds_frozen_from_seed0={nonzero_seed_unlocked} run_dir={output_dir}",
         flush=True,
     )
 
@@ -268,6 +367,8 @@ def main() -> None:
         int(args.repeats),
         int(args.bisection_iters),
         float(args.stick_limit),
+        target_property,
+        active_channels,
     )
 
     evaluator.write_rows()
@@ -280,7 +381,10 @@ def main() -> None:
         output_dir=output_dir,
         preregistration=preregistration,
         arm_details=arm_details,
+        target_property=target_property,
+        active_channels=active_channels,
         elapsed_wall_time_s=time.monotonic() - run_start,
+        nonzero_seed_unlocked=nonzero_seed_unlocked,
     )
     _write_json(reports_dir / "direction_a_summary.json", summary)
     _write_report(reports_dir / "direction_a_report.md", summary)
@@ -375,6 +479,7 @@ def run_arm_b(
                 points_per_arm=points_per_arm,
                 repeats=repeats,
                 bisection_iters=bisection_iters,
+                target_property=evaluator.target_property,
             )
     return details
 
@@ -389,13 +494,16 @@ def run_arm_c(
     repeats: int,
     bisection_iters: int,
     stick_limit: float,
+    target_property: str,
+    active_channels: list[str],
 ) -> dict[str, Any]:
     details: dict[str, Any] = {
         "envelope_candidates_attempted": 0,
         "robust_unsafe_endpoints": 0,
         "amplitude_brackets_started": 0,
         "zero_anchor_class": "",
-        "channel_relevant_set": CHANNEL_RELEVANT_SET,
+        "channel_relevant_set": list(active_channels),
+        "channel_relevant_source": "derive_A_phi" if list(active_channels) == derive_A_phi(target_property) else "h1_narrowed_override",
     }
     zero = zero_theta(groups)
     zero_eval = evaluator.eval_j5(
@@ -409,6 +517,43 @@ def run_arm_c(
         gate_candidate=False,
     )
     details["zero_anchor_class"] = zero_eval["robustness_class"]
+
+    if target_property != "post_neutral_xy_velocity":
+        details["sweep_design"] = "duration d=1..10, start-window sweep, per-envelope amplitude bisection"
+        details["sweep_order"] = "round-robin over start rank then d=1..10 to expose all durations within N=80"
+        specs = _duration_sweep_envelope_specs(config, active_channels, stick_limit)
+        spec_index = 0
+        while evaluator.arm_eval_count("C") < points_per_arm and spec_index < len(specs):
+            spec = specs[spec_index]
+            spec_index += 1
+            details["envelope_candidates_attempted"] += 1
+            theta = directed_envelope_theta(spec, config, groups)
+            if not evaluator.can_eval("C", theta, config):
+                continue
+            row = evaluator.eval_j5(
+                theta,
+                scenario,
+                config,
+                arm="C",
+                stage="duration_sweep_endpoint",
+                label=spec.label,
+                repeats=repeats,
+                distinct_signature=spec.signature,
+            )
+            if zero_eval["robustness_class"] == "robust_safe" and row["robustness_class"] == "robust_violation":
+                details["robust_unsafe_endpoints"] += 1
+                details["amplitude_brackets_started"] += 1
+                _run_directed_envelope_bisection(
+                    evaluator,
+                    scenario,
+                    config,
+                    groups,
+                    spec,
+                    points_per_arm=points_per_arm,
+                    repeats=repeats,
+                    bisection_iters=bisection_iters,
+                )
+        return details
 
     spec_index = 0
     initial_specs = _initial_envelope_specs(config, rng, stick_limit)
@@ -459,6 +604,7 @@ def _run_scale_bisection(
     points_per_arm: int,
     repeats: int,
     bisection_iters: int,
+    target_property: str,
 ) -> None:
     low_alpha = 0.0
     high_alpha = 1.0
@@ -478,7 +624,7 @@ def _run_scale_bisection(
             label=f"{label}_iter{iteration:02d}_a{_scale_label(mid_alpha)}",
             repeats=repeats,
         )
-        low_alpha, high_alpha = _update_bracket_from_row(row, low_alpha, high_alpha, mid_alpha)
+        low_alpha, high_alpha = _update_bracket_from_row(row, low_alpha, high_alpha, mid_alpha, target_property)
 
 
 def _run_envelope_bisection(
@@ -511,15 +657,62 @@ def _run_envelope_bisection(
             label=f"{spec.label}_iter{iteration:02d}_a{_scale_label(mid_amp)}",
             repeats=repeats,
         )
-        low_amp, high_amp = _update_bracket_from_row(row, low_amp, high_amp, mid_amp)
+        low_amp, high_amp = _update_bracket_from_row(row, low_amp, high_amp, mid_amp, evaluator.target_property)
 
 
-def _update_bracket_from_row(row: dict[str, Any], low: float, high: float, mid: float) -> tuple[float, float]:
+def _run_directed_envelope_bisection(
+    evaluator: DirectionAProbeEvaluator,
+    scenario,
+    config: ExperimentConfig,
+    groups: list[Group],
+    spec: DirectedEnvelopeSpec,
+    *,
+    points_per_arm: int,
+    repeats: int,
+    bisection_iters: int,
+) -> None:
+    low_amp = 0.0
+    high_amp = float(spec.amplitude)
+    for iteration in range(bisection_iters):
+        if evaluator.arm_eval_count("C") >= points_per_arm:
+            return
+        mid_amp = 0.5 * (low_amp + high_amp)
+        mid_spec = DirectedEnvelopeSpec(
+            spec.index,
+            spec.channels,
+            spec.signs,
+            mid_amp,
+            spec.onset_window,
+            spec.duration_windows,
+        )
+        theta = directed_envelope_theta(mid_spec, config, groups)
+        if not evaluator.can_eval("C", theta, config):
+            return
+        row = evaluator.eval_j5(
+            theta,
+            scenario,
+            config,
+            arm="C",
+            stage="amplitude_bisection",
+            label=f"{spec.label}_iter{iteration:02d}_a{_scale_label(mid_amp)}",
+            repeats=repeats,
+            distinct_signature=spec.signature,
+        )
+        low_amp, high_amp = _update_bracket_from_row(row, low_amp, high_amp, mid_amp, evaluator.target_property)
+
+
+def _update_bracket_from_row(
+    row: dict[str, Any],
+    low: float,
+    high: float,
+    mid: float,
+    target_property: str = TARGET_PROPERTY,
+) -> tuple[float, float]:
     if row["robustness_class"] == "robust_violation":
         return low, mid
     if row["robustness_class"] == "robust_safe":
         return mid, high
-    mean = float(row[f"rho_mean_{TARGET_PROPERTY}"])
+    mean = float(row[f"rho_mean_{target_property}"])
     if mean < 0.0:
         return low, mid
     return mid, high
@@ -566,6 +759,133 @@ def envelope_theta(spec: EnvelopeSpec, config: ExperimentConfig, groups: list[Gr
     return project_theta(grid_to_theta(grid, config, groups), config)
 
 
+def directed_envelope_theta(spec: DirectedEnvelopeSpec, config: ExperimentConfig, groups: list[Group]) -> np.ndarray:
+    channels = list(config.input["channels"])
+    n_windows = window_count(config)
+    grid = np.zeros((n_windows, len(channels)), dtype=float)
+    start = max(0, int(spec.onset_window))
+    stop = min(n_windows, start + max(1, int(spec.duration_windows)))
+    for channel, sign in zip(spec.channels, spec.signs):
+        if channel not in channels:
+            raise ValueError(f"Directed envelope channel is absent from config: {channel}")
+        grid[start:stop, channels.index(channel)] = float(spec.amplitude) * float(sign)
+    return project_theta(grid_to_theta(grid, config, groups), config)
+
+
+def envelope_signature(
+    channels: tuple[str, ...] | list[str],
+    signs: tuple[int, ...] | list[int],
+    onset_window: int,
+    duration_windows: int,
+) -> str:
+    ordered = sorted(zip(channels, signs), key=lambda item: item[0])
+    channel_text = ",".join(channel for channel, _ in ordered)
+    sign_text = "|".join(f"{channel}:{'+' if int(sign) > 0 else '-'}" for channel, sign in ordered)
+    start = int(onset_window)
+    stop = start + max(1, int(duration_windows)) - 1
+    return f"channels={channel_text};time=w{start:02d}-w{stop:02d};signs={sign_text}"
+
+
+def _signature_columns(signature: str) -> dict[str, str]:
+    if not signature:
+        return {
+            "signature_active_channels": "",
+            "signature_window_band": "",
+            "signature_channel_signs": "",
+        }
+    pieces = dict(piece.split("=", 1) for piece in signature.split(";") if "=" in piece)
+    return {
+        "signature_active_channels": pieces.get("channels", ""),
+        "signature_window_band": pieces.get("time", ""),
+        "signature_channel_signs": pieces.get("signs", ""),
+    }
+
+
+def _residual_rate_point_columns(summary: dict[str, Any], target_property: str) -> dict[str, Any]:
+    if not summary:
+        return {}
+    columns: dict[str, Any] = {
+        "tier1_robustness_class": summary["tier1_robustness_class"],
+        "tier2_robustness_class": summary["tier2_robustness_class"],
+        "tier2_nondecay_robust": summary["tier2_nondecay_robust"],
+        "tier2_nondecay_ratio_robust": summary["tier2_nondecay_ratio_robust"],
+        "tier2_nondecay_slope_robust": summary["tier2_nondecay_slope_robust"],
+        "tier2_nondecay_ratio": summary["tier2_nondecay_ratio"],
+        "residual_rate_unit": summary["residual_rate_unit"],
+    }
+    metric_keys = [
+        "threshold",
+        "tail_start_peak_abs_rate",
+        "terminal_peak_abs_rate",
+        "rho_tier1",
+        "nondecay_ratio_margin",
+        "nondecay_slope_margin",
+    ]
+    for key in metric_keys:
+        for stat in ["mean", "std", "min", "max"]:
+            summary_key = f"{key}_{stat}"
+            columns[f"{summary_key}_{target_property}"] = summary.get(summary_key)
+    return columns
+
+
+def _duration_sweep_envelope_specs(
+    config: ExperimentConfig,
+    active_channels: list[str],
+    stick_limit: float,
+) -> list[DirectedEnvelopeSpec]:
+    n_windows = window_count(config)
+    channels = tuple(active_channels)
+    specs: list[DirectedEnvelopeSpec] = []
+    for start_rank in range(n_windows):
+        for duration in range(1, n_windows + 1):
+            if start_rank > n_windows - duration:
+                continue
+            for signs in product([-1, 1], repeat=len(channels)):
+                specs.append(
+                    DirectedEnvelopeSpec(
+                        index=len(specs),
+                        channels=channels,
+                        signs=tuple(int(sign) for sign in signs),
+                        amplitude=float(stick_limit),
+                        onset_window=start_rank,
+                        duration_windows=duration,
+                    )
+                )
+    return specs
+
+
+def _parse_channels_arg(value: str) -> list[str]:
+    channels = [item.strip() for item in str(value).split(",") if item.strip()]
+    if not channels:
+        raise ValueError("--active-channels cannot be empty")
+    return channels
+
+
+def trigger_signature_from_theta(
+    theta: np.ndarray,
+    groups: list[Group],
+    threshold: float = SUPPORT_THRESHOLD,
+) -> str:
+    theta = np.asarray(theta, dtype=float)
+    active = [
+        (group.channel, group.window_id, float(theta[group.group_id]))
+        for group in groups
+        if abs(float(theta[group.group_id])) > threshold
+    ]
+    if not active:
+        return "channels=none;time=none;signs=none"
+    channels = sorted({channel for channel, _, _ in active})
+    windows = [window for _, window, _ in active]
+    signs = []
+    for channel in channels:
+        channel_values = [value for row_channel, _, value in active if row_channel == channel]
+        has_pos = any(value > 0.0 for value in channel_values)
+        has_neg = any(value < 0.0 for value in channel_values)
+        sign = "mixed" if has_pos and has_neg else ("+" if has_pos else "-")
+        signs.append(f"{channel}:{sign}")
+    return f"channels={','.join(channels)};time=w{min(windows):02d}-w{max(windows):02d};signs={'|'.join(signs)}"
+
+
 def build_summary(
     *,
     point_df: pd.DataFrame,
@@ -575,12 +895,19 @@ def build_summary(
     output_dir: Path,
     preregistration: dict[str, Any],
     arm_details: dict[str, dict[str, Any]],
+    target_property: str,
+    active_channels: list[str],
     elapsed_wall_time_s: float,
+    nonzero_seed_unlocked: bool,
 ) -> dict[str, Any]:
-    arm_metrics = [_arm_metrics(point_df, arm, evaluator.gate_rejects_by_arm[arm]) for arm in ["A", "B", "C"]]
+    arm_metrics = [
+        _arm_metrics(point_df, arm, evaluator.gate_rejects_by_arm[arm], target_property)
+        for arm in ["A", "B", "C"]
+    ]
+    reported_properties = list(dict.fromkeys([target_property] + REPORT_PROPERTIES))
     robust = point_df[point_df["robustness_class"] == "robust_violation"].copy()
     interior = robust[robust["amplitude_class"] == "interior"].copy()
-    overall_gentlest = _row_with_theta(_gentlest_row(robust))
+    overall_gentlest = _row_with_theta(_gentlest_row(robust), target_property=target_property)
     decision_inputs = _decision_inputs(arm_metrics)
 
     robust.to_csv(output_dir / "reports" / "robust_violations.csv", index=False)
@@ -592,13 +919,31 @@ def build_summary(
             "status": "complete",
             "scenario_id": scenario_id,
             "seed": seed,
-            "property": TARGET_PROPERTY,
-            "reported_properties": REPORT_PROPERTIES,
+            "property": target_property,
+            "reported_properties": reported_properties,
             "pre_registration": preregistration,
+            "derived_A_phi": {
+                "property": target_property,
+                "active_channels": list(active_channels),
+                "source": "derive_A_phi" if list(active_channels) == derive_A_phi(target_property) else "h1_narrowed_override",
+            },
+            "seed_freeze_control": {
+                "nonzero_seed_unlocked": bool(nonzero_seed_unlocked),
+                "allow_nonzero_seed_flag": bool(preregistration["seed_freeze_control"]["allow_nonzero_seed_flag"]),
+                "statement": (
+                    "Seed was explicitly unlocked for replication; all pre-registered thresholds and budgets "
+                    "remain identical to the seed-0 probe."
+                    if nonzero_seed_unlocked
+                    else "Seed-0 frozen run or no nonzero seed override was used."
+                ),
+            },
             "arm_details": arm_details,
             "arm_metrics": arm_metrics,
+            "overall_gentlest_robust_violation": overall_gentlest,
             "overall_gentlest_xy_velocity_robust_violation": overall_gentlest,
-            "interior_violations": [_interior_detail(row) for _, row in interior.iterrows()],
+            "interior_violations": [
+                _interior_detail(row, target_property=target_property) for _, row in interior.iterrows()
+            ],
             "decision_inputs": decision_inputs,
             "successful_query_count": evaluator.successful_query_count,
             "timeout_retry_count": evaluator.timeout_retry_count,
@@ -621,10 +966,15 @@ def build_summary(
     )
 
 
-def _arm_metrics(point_df: pd.DataFrame, arm: str, gate_reject_count: int) -> dict[str, Any]:
+def _arm_metrics(
+    point_df: pd.DataFrame,
+    arm: str,
+    gate_reject_count: int,
+    target_property: str = TARGET_PROPERTY,
+) -> dict[str, Any]:
     df = point_df[point_df["arm"] == arm].copy()
     robust = df[df["robustness_class"] == "robust_violation"].copy()
-    gentlest = _row_with_theta(_gentlest_row(robust), include_theta=False)
+    gentlest = _row_with_theta(_gentlest_row(robust), include_theta=False, target_property=target_property)
     return {
         "arm": arm,
         "j5_point_count": int(len(df)),
@@ -641,7 +991,8 @@ def _arm_metrics(point_df: pd.DataFrame, arm: str, gate_reject_count: int) -> di
         else {},
         "gentlest_robust_violation": gentlest,
         "interior_violation_supports": [
-            _interior_detail(row) for _, row in robust[robust["amplitude_class"] == "interior"].iterrows()
+            _interior_detail(row, target_property=target_property)
+            for _, row in robust[robust["amplitude_class"] == "interior"].iterrows()
         ],
     }
 
@@ -691,7 +1042,7 @@ def _best_interior(arm_metric: dict[str, Any]) -> dict[str, Any] | None:
     return min(rows, key=lambda row: (row["max_abs_theta"], row["support_size_abs_gt_0p1"]))
 
 
-def _interior_detail(row: pd.Series) -> dict[str, Any]:
+def _interior_detail(row: pd.Series, target_property: str = TARGET_PROPERTY) -> dict[str, Any]:
     return {
         "arm": row["arm"],
         "eval_id": int(row["eval_id"]),
@@ -700,8 +1051,12 @@ def _interior_detail(row: pd.Series) -> dict[str, Any]:
         "max_abs_theta": float(row["max_abs_theta"]),
         "support_size_abs_gt_0p1": int(row["support_size_abs_gt_0p1"]),
         "active_channels_abs_gt_0p1": row["active_channels_abs_gt_0p1"],
-        "rho_mean_post_neutral_xy_velocity": float(row[f"rho_mean_{TARGET_PROPERTY}"]),
-        "rho_std_post_neutral_xy_velocity": float(row[f"rho_std_{TARGET_PROPERTY}"]),
+        f"rho_mean_{target_property}": float(row[f"rho_mean_{target_property}"]),
+        f"rho_std_{target_property}": float(row[f"rho_std_{target_property}"]),
+        "distinct_signature": row.get("distinct_signature", ""),
+        "signature_active_channels": row.get("signature_active_channels", ""),
+        "signature_window_band": row.get("signature_window_band", ""),
+        "signature_channel_signs": row.get("signature_channel_signs", ""),
     }
 
 
@@ -712,7 +1067,12 @@ def _gentlest_row(df: pd.DataFrame) -> pd.Series | None:
     return ordered.iloc[0]
 
 
-def _row_with_theta(row: pd.Series | None, *, include_theta: bool = True) -> dict[str, Any] | None:
+def _row_with_theta(
+    row: pd.Series | None,
+    *,
+    include_theta: bool = True,
+    target_property: str = TARGET_PROPERTY,
+) -> dict[str, Any] | None:
     if row is None:
         return None
     result = {
@@ -727,9 +1087,12 @@ def _row_with_theta(row: pd.Series | None, *, include_theta: bool = True) -> dic
         "support_size_abs_gt_0p1": int(row["support_size_abs_gt_0p1"]),
         "active_channels_abs_gt_0p1": row["active_channels_abs_gt_0p1"],
     }
-    for prop in REPORT_PROPERTIES:
-        result[f"rho_mean_{prop}"] = float(row[f"rho_mean_{prop}"])
-        result[f"rho_std_{prop}"] = float(row[f"rho_std_{prop}"])
+    for prop in list(dict.fromkeys([target_property] + REPORT_PROPERTIES)):
+        mean_key = f"rho_mean_{prop}"
+        std_key = f"rho_std_{prop}"
+        if mean_key in row and std_key in row:
+            result[mean_key] = float(row[mean_key])
+            result[std_key] = float(row[std_key])
     if include_theta:
         result["theta"] = np.load(row["theta_path"]).astype(float).tolist()
     return result
@@ -824,13 +1187,21 @@ def _config_for_probe(config: ExperimentConfig, output_dir: Path, stick_limit: f
     return replace(config, experiment_id=Path(output_dir).name, input=input_cfg, logging=logging)
 
 
-def _pre_registration(args: argparse.Namespace, config: ExperimentConfig, groups: list[Group]) -> dict[str, Any]:
+def _pre_registration(
+    args: argparse.Namespace,
+    config: ExperimentConfig,
+    groups: list[Group],
+    target_property: str = TARGET_PROPERTY,
+    active_channels: list[str] | None = None,
+) -> dict[str, Any]:
+    derived_channels = derive_A_phi(target_property)
+    active_channels = list(active_channels) if active_channels is not None else derived_channels
     return {
         "scope": {
             "scenario": args.scenario,
             "seed": int(args.seed),
-            "primary_property": TARGET_PROPERTY,
-            "reported_cross_properties": ["post_neutral_xy_drift", "post_neutral_alt_drift"],
+            "primary_property": target_property,
+            "reported_cross_properties": [prop for prop in REPORT_PROPERTIES if prop != target_property],
             "D": len(groups),
             "pid_firmware_sensors": "frozen by simulator/config; runner only overrides stick min/max for this probe",
         },
@@ -848,7 +1219,16 @@ def _pre_registration(args: argparse.Namespace, config: ExperimentConfig, groups
             "moderate_interval": "(0.5, 0.9]",
             "support_abs_threshold": SUPPORT_THRESHOLD,
         },
-        "channel_relevant_set_for_xy_velocity": CHANNEL_RELEVANT_SET,
+        "derive_A_phi": {
+            "rule": "control-allocation predicted active channels",
+            "xy_velocity": derive_A_phi("post_neutral_xy_velocity"),
+            "alt_drift": derive_A_phi("post_neutral_alt_drift"),
+            "climb_rate": derive_A_phi("post_neutral_climb_rate"),
+            "yaw_rate": derive_A_phi("post_neutral_yaw_rate"),
+            "active_for_primary_property": active_channels,
+            "active_source": "derive_A_phi" if active_channels == derived_channels else "h1_narrowed_override",
+        },
+        "channel_relevant_set_for_xy_velocity": derive_A_phi("post_neutral_xy_velocity"),
         "input": {
             "horizon_s": float(config.input["horizon_s"]),
             "window_s": float(config.input["window_s"]),
@@ -860,6 +1240,14 @@ def _pre_registration(args: argparse.Namespace, config: ExperimentConfig, groups
         },
         "rng_seed": int(args.rng_seed),
         "bisection_iters": int(args.bisection_iters),
+        "seed_freeze_control": {
+            "allow_nonzero_seed_flag": bool(getattr(args, "allow_nonzero_seed", False)),
+            "nonzero_seed_unlocked": bool(int(args.seed) != 0 and getattr(args, "allow_nonzero_seed", False)),
+            "discipline_statement": (
+                "Nonzero seed replication is allowed only through an explicit flag; constants remain frozen "
+                "to the seed-0 pre-registration."
+            ),
+        },
     }
 
 
@@ -932,10 +1320,11 @@ def _write_report(path: Path, summary: dict[str, Any]) -> None:
             f"p95={dist['p95']:.3f}, max={dist['max']:.3f}."
         )
 
-    gentlest = summary["overall_gentlest_xy_velocity_robust_violation"]
-    lines.extend(["", "## Gentlest XY-Velocity Violation", ""])
+    target_property = summary["property"]
+    gentlest = summary["overall_gentlest_robust_violation"]
+    lines.extend(["", "## Gentlest Robust Violation", ""])
     if gentlest is None:
-        lines.append("No robust xy-velocity violation was found by any arm.")
+        lines.append(f"No robust {target_property} violation was found by any arm.")
     else:
         lines.extend(
             [
@@ -947,9 +1336,11 @@ def _write_report(path: Path, summary: dict[str, Any]) -> None:
                 f"- active channels: `{gentlest['active_channels_abs_gt_0p1']}`",
                 (
                     "- cross-property rho means: "
-                    f"xy_velocity={gentlest['rho_mean_post_neutral_xy_velocity']:.6f}, "
-                    f"xy_drift={gentlest['rho_mean_post_neutral_xy_drift']:.6f}, "
-                    f"alt_drift={gentlest['rho_mean_post_neutral_alt_drift']:.6f}"
+                    + ", ".join(
+                        f"{prop}={gentlest[f'rho_mean_{prop}']:.6f}"
+                        for prop in summary.get("reported_properties", REPORT_PROPERTIES)
+                        if f"rho_mean_{prop}" in gentlest
+                    )
                 ),
                 "",
                 "Theta (D=40 group order):",
@@ -975,8 +1366,8 @@ def _write_report(path: Path, summary: dict[str, Any]) -> None:
             lines.append(
                 f"| {row['arm']} | {row['eval_id']} | {row['max_abs_theta']:.6f} | "
                 f"{row['support_size_abs_gt_0p1']} | {row['active_channels_abs_gt_0p1']} | "
-                f"{row['rho_mean_post_neutral_xy_velocity']:.6f} | "
-                f"{row['rho_std_post_neutral_xy_velocity']:.6f} | {row['theta_hash']} |"
+                f"{row[f'rho_mean_{target_property}']:.6f} | "
+                f"{row[f'rho_std_{target_property}']:.6f} | {row['theta_hash']} |"
             )
 
     decision = summary["decision_inputs"]

@@ -33,6 +33,9 @@ class TelemetrySample:
     roll_rad: float
     pitch_rad: float
     yaw_rad: float
+    roll_rate_rps: float
+    pitch_rate_rps: float
+    yaw_rate_rps: float
     mode: str
     autopilot: int | None
     base_mode: int | None
@@ -368,6 +371,9 @@ class MavlinkVehicleMixin:
                 "roll_rad": float(msg.roll),
                 "pitch_rad": float(msg.pitch),
                 "yaw_rad": float(msg.yaw),
+                "roll_rate_rps": float(getattr(msg, "rollspeed", 0.0)),
+                "pitch_rate_rps": float(getattr(msg, "pitchspeed", 0.0)),
+                "yaw_rate_rps": float(getattr(msg, "yawspeed", 0.0)),
             }
             return None
         if msg_type != "LOCAL_POSITION_NED":
@@ -377,7 +383,18 @@ class MavlinkVehicleMixin:
         if self.boot_zero_s == 0.0:
             self.boot_zero_s = boot_s
         time_s = max(0.0, boot_s - self.boot_zero_s)
-        attitude = getattr(self, "last_attitude", {"roll_rad": 0.0, "pitch_rad": 0.0, "yaw_rad": 0.0})
+        attitude = getattr(
+            self,
+            "last_attitude",
+            {
+                "roll_rad": 0.0,
+                "pitch_rad": 0.0,
+                "yaw_rad": 0.0,
+                "roll_rate_rps": 0.0,
+                "pitch_rate_rps": 0.0,
+                "yaw_rate_rps": 0.0,
+            },
+        )
         sample = TelemetrySample(
             time_s=time_s,
             x_m=float(msg.y),
@@ -390,6 +407,9 @@ class MavlinkVehicleMixin:
             roll_rad=attitude["roll_rad"],
             pitch_rad=attitude["pitch_rad"],
             yaw_rad=attitude["yaw_rad"],
+            roll_rate_rps=attitude.get("roll_rate_rps", 0.0),
+            pitch_rate_rps=attitude.get("pitch_rate_rps", 0.0),
+            yaw_rate_rps=attitude.get("yaw_rate_rps", 0.0),
             mode=self.last_mode,
             autopilot=self.last_autopilot,
             base_mode=self.last_base_mode,

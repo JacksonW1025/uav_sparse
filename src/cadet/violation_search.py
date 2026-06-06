@@ -23,6 +23,8 @@ PROPERTY_CEILING_KEYS = {
     "post_neutral_xy_drift": "d_max_m",
     "post_neutral_alt_drift": "h_max_m",
     "post_neutral_xy_velocity": "v_max_mps",
+    "post_neutral_climb_rate": "rate_max_mps",
+    "post_neutral_yaw_rate": "rate_max_radps",
 }
 
 

@@ -16,6 +16,7 @@ from cadet.runners.direction_a_probe import (
     _pre_registration,
     classify_amplitude,
     classify_robustness,
+    derive_A_phi,
     envelope_theta,
     support_summary,
 )
@@ -48,6 +49,13 @@ def test_support_summary_reports_size_and_channels():
     assert summary["support_size"] == 2
     assert summary["active_channels"] == ["pitch", "roll"]
     assert summary["active_group_ids"] == [0, 1]
+
+
+def test_derive_a_phi_includes_residual_rate_channels():
+    assert derive_A_phi("post_neutral_xy_velocity") == ["roll", "pitch"]
+    assert derive_A_phi("post_neutral_alt_drift") == ["throttle"]
+    assert derive_A_phi("post_neutral_climb_rate") == ["throttle"]
+    assert derive_A_phi("post_neutral_yaw_rate") == ["yaw"]
 
 
 def test_probe_config_uses_stick_limit_without_mutating_base(tmp_path: Path):

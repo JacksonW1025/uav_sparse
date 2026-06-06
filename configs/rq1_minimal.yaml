@@ -14,6 +14,8 @@ properties:
   post_neutral_xy_drift:    {d_max_m: 2.0}
   post_neutral_alt_drift:   {h_max_m: 1.0}
   post_neutral_xy_velocity: {v_max_mps: 1.0}
+  post_neutral_climb_rate:  {rate_max_mps: 0.3}
+  post_neutral_yaw_rate:    {rate_max_radps: 0.261799388}
 
 scenarios:
   - id: px4_position
@@ -21,7 +23,7 @@ scenarios:
     perturb_mode: Position
     observe_mode: Position
     takeoff_alt_m: 5.0
-    properties: [post_neutral_xy_drift, post_neutral_alt_drift, post_neutral_xy_velocity]
+    properties: [post_neutral_xy_drift, post_neutral_alt_drift, post_neutral_xy_velocity, post_neutral_climb_rate, post_neutral_yaw_rate]
 
   - id: px4_hold
     platform: px4

@@ -16,7 +16,7 @@ from cadet.groups import Group, build_groups
 from cadet.input_model import project_theta
 from cadet.query import theta_hash
 from cadet.runners.direction_a_probe import (
-    CHANNEL_RELEVANT_SET,
+    INTERIOR_MAX_ABS,
     J_REPEATS,
     ROBUST_SIGMA_MULTIPLIER,
     SUPPORT_THRESHOLD,
@@ -28,15 +28,14 @@ from cadet.runners.direction_a_probe import (
     _safe_label,
     _write_json,
     classify_robustness,
+    derive_A_phi,
     support_summary,
 )
 
 
-CLEAN_CHANNELS = set(CHANNEL_RELEVANT_SET)
+CLEAN_CHANNELS = set(derive_A_phi(TARGET_PROPERTY))
 DEFAULT_PROBE_DIR = Path("runs/direction_a_px4_position_seed0_v0")
 DEFAULT_RUN_DIR = Path("runs/direction_a_ddmin_px4_position_seed0_v0")
-ARM_C_J5_POINTS = 80
-ARM_C_INTERIOR_TRIGGERS = 18
 
 
 @dataclass(frozen=True)
@@ -537,12 +536,22 @@ def main() -> None:
     parser.add_argument("--max-starts", type=int, default=10)
     parser.add_argument("--amplitude-iters", type=int, default=7)
     parser.add_argument("--max-outer-passes", type=int, default=4)
+    parser.add_argument(
+        "--allow-nonzero-seed",
+        action="store_true",
+        help="Explicitly unlock nonzero seed replication while keeping all pre-registered thresholds fixed.",
+    )
     args = parser.parse_args()
 
     if args.scenario != "px4_position":
         raise ValueError("Direction-A ddmin test is frozen to px4_position")
-    if int(args.seed) != 0:
-        raise ValueError("Direction-A ddmin test is frozen to seed 0")
+    nonzero_seed_unlocked = bool(int(args.seed) != 0 and args.allow_nonzero_seed)
+    if int(args.seed) != 0 and not args.allow_nonzero_seed:
+        raise ValueError("Direction-A ddmin test is frozen to seed 0 unless --allow-nonzero-seed is passed")
+    if int(args.seed) != 0 and Path(args.probe_dir) == DEFAULT_PROBE_DIR:
+        raise ValueError("Nonzero seed ddmin replication must read that seed's --probe-dir, not the seed-0 default")
+    if int(args.seed) != 0 and Path(args.run_dir) == DEFAULT_RUN_DIR:
+        raise ValueError("Nonzero seed ddmin replication must write a seed-specific --run-dir")
     if int(args.repeats) != J_REPEATS:
         raise ValueError("Direction-A ddmin test is pre-registered to J=5 repeats")
     if float(args.stick_limit) != 1.0:
@@ -576,7 +585,8 @@ def main() -> None:
 
     print(
         f"ddmin_start scenario={args.scenario} seed={args.seed} starts={len(starting_points)} "
-        f"budget_j5_per_start={args.budget_j5_points} run_dir={output_dir}",
+        f"budget_j5_per_start={args.budget_j5_points} nonzero_seed_unlocked={nonzero_seed_unlocked} "
+        f"thresholds_frozen_from_seed0={nonzero_seed_unlocked} probe_dir={args.probe_dir} run_dir={output_dir}",
         flush=True,
     )
 
@@ -608,6 +618,7 @@ def main() -> None:
         evaluator=evaluator,
         args=args,
         elapsed_wall_time_s=time.monotonic() - run_start,
+        nonzero_seed_unlocked=nonzero_seed_unlocked,
     )
     _write_json(reports_dir / "direction_a_ddmin_summary.json", summary)
     _write_report(reports_dir / "direction_a_ddmin_report.md", summary)
@@ -677,13 +688,16 @@ def build_summary(
     evaluator: DdminEvaluator,
     args: argparse.Namespace,
     elapsed_wall_time_s: float,
+    nonzero_seed_unlocked: bool,
 ) -> dict[str, Any]:
     arm_c = _arm_c_comparison(Path(probe_dir))
     clean_df = final_df[final_df["is_clean"]].copy()
     total_j5 = int(final_df["j5_points_used"].sum()) if not final_df.empty else 0
     clean_count = int(len(clean_df))
     ddmin_cost_per_clean = float(total_j5 / clean_count) if clean_count else math.inf
-    arm_c_cost_per_interior = float(ARM_C_J5_POINTS / ARM_C_INTERIOR_TRIGGERS)
+    arm_c_interior_count = int(arm_c["interior_trigger_count"])
+    arm_c_j5_points = int(arm_c["j5_point_count"])
+    arm_c_cost_per_interior = float(arm_c_j5_points / arm_c_interior_count) if arm_c_interior_count else math.inf
     support_values = final_df["final_support_size_abs_gt_0p1"].to_numpy(dtype=float) if not final_df.empty else np.array([])
     max_abs_values = final_df["final_max_abs_theta"].to_numpy(dtype=float) if not final_df.empty else np.array([])
     decision = _decision(final_df, ddmin_cost_per_clean, arm_c_cost_per_interior)
@@ -702,6 +716,16 @@ def build_summary(
                     "global amplitude bisection toward zero",
                     "alternate support and amplitude passes within budget",
                 ],
+            },
+            "seed_freeze_control": {
+                "nonzero_seed_unlocked": bool(nonzero_seed_unlocked),
+                "allow_nonzero_seed_flag": bool(getattr(args, "allow_nonzero_seed", False)),
+                "statement": (
+                    "Seed was explicitly unlocked for replication; all pre-registered thresholds and budgets "
+                    "remain identical to the seed-0 ddmin baseline."
+                    if nonzero_seed_unlocked
+                    else "Seed-0 frozen run or no nonzero seed override was used."
+                ),
             },
             "starting_trigger_count": int(len(starting_points)),
             "starting_points": [_starting_point_row(point) for point in starting_points],
@@ -767,6 +791,7 @@ def _pre_registration(args: argparse.Namespace, config: ExperimentConfig, groups
         "thresholds": {
             "robust_violation": "rho_mean + 2*rho_std < 0",
             "sigma_multiplier": ROBUST_SIGMA_MULTIPLIER,
+            "interior_max_abs_theta": INTERIOR_MAX_ABS,
             "support_abs_threshold": SUPPORT_THRESHOLD,
             "clean_support_max": 8,
             "clean_active_channels_subset": sorted(CLEAN_CHANNELS),
@@ -783,6 +808,14 @@ def _pre_registration(args: argparse.Namespace, config: ExperimentConfig, groups
         "decision_rule": {
             "replaceable": "majority of starts become clean robust triggers at cost comparable to Arm C",
             "necessary_or_better": "fails cleanliness, reliability, or cost comparison",
+        },
+        "seed_freeze_control": {
+            "allow_nonzero_seed_flag": bool(getattr(args, "allow_nonzero_seed", False)),
+            "nonzero_seed_unlocked": bool(int(args.seed) != 0 and getattr(args, "allow_nonzero_seed", False)),
+            "discipline_statement": (
+                "Nonzero seed replication is allowed only through an explicit flag; constants remain frozen "
+                "to the seed-0 pre-registration."
+            ),
         },
     }
 
@@ -849,11 +882,10 @@ def _write_report(path: Path, summary: dict[str, Any]) -> None:
             "",
             f"- ddmin J=5 points used: {summary['total_ddmin_j5_points_used']}",
             f"- ddmin J=5 points per clean trigger: {_fmt_float(summary['ddmin_j5_points_per_clean_trigger'])}",
-            (
-                f"- Arm C amortized J=5 points per interior violation: "
-                f"{summary['arm_c_amortized_j5_points_per_interior_trigger']:.3f} "
-                f"({ARM_C_J5_POINTS}/{ARM_C_INTERIOR_TRIGGERS})"
-            ),
+            f"- Arm C amortized J=5 points per interior violation: "
+            f"{summary['arm_c_amortized_j5_points_per_interior_trigger']:.3f} "
+            f"({summary['arm_c_comparison']['j5_point_count']}/"
+            f"{summary['arm_c_comparison']['interior_trigger_count']})",
             f"- cost ratio ddmin/Arm C: {_fmt_float(summary['cost_ratio_ddmin_per_clean_vs_arm_c_per_interior'])}",
             "",
             "## Robustness",
@@ -883,8 +915,11 @@ def _write_report(path: Path, summary: dict[str, Any]) -> None:
 
 def _arm_c_comparison(probe_dir: Path) -> dict[str, Any]:
     interior = pd.read_csv(probe_dir / "reports" / "interior_violations.csv")
+    arm_metrics = pd.read_csv(probe_dir / "reports" / "arm_metrics.csv")
     arm_c = interior[interior["arm"] == "C"].copy()
+    arm_c_metric = arm_metrics[arm_metrics["arm"] == "C"].iloc[0].to_dict()
     return {
+        "j5_point_count": int(arm_c_metric["j5_point_count"]),
         "interior_trigger_count": int(len(arm_c)),
         "support_distribution": _distribution(arm_c["support_size_abs_gt_0p1"].to_numpy(dtype=float)),
         "max_abs_theta_distribution": _distribution(arm_c["max_abs_theta"].to_numpy(dtype=float)),
