@@ -1,0 +1,12 @@
+parameter_name,parameter_value,parameter_units,source_default,source_units,source_path,contract,measured_axis,derived_threshold,threshold_units,derivation
+MPC_HOLD_DZ,0.1,scalar,0.1,,/home/car/PX4-Autopilot/build/px4_sitl_default/parameters.json,centered-stick neutral provenance for C1/C2/C4,stick_deadzone,0.1,normalized_stick,compiled default
+MPC_VEL_MANUAL,10.0,m/s,10.0,m/s,/home/car/PX4-Autopilot/build/px4_sitl_default/parameters.json,C1 Brake,xy_velocity,1.0,m/s,0.10*MPC_VEL_MANUAL
+MPC_Z_VEL_MAX_UP,3.0,m/s,3.0,m/s,/home/car/PX4-Autopilot/build/px4_sitl_default/parameters.json,C1 Brake,climb_rate,0.30000000000000004,m/s,0.10*MPC_Z_VEL_MAX_UP
+MPC_MAN_Y_MAX,2.6179938779914944,rad/s,150.0,deg/s,/home/car/PX4-Autopilot/build/px4_sitl_default/parameters.json,C1 Brake,yaw_rate,0.26179938779914946,rad/s,0.10*MPC_MAN_Y_MAX
+MPC_MAN_TILT_MAX,0.6108652381980153,rad,35.0,deg,/home/car/PX4-Autopilot/build/px4_sitl_default/parameters.json,C2 Level,tilt,0.061086523819801536,rad,0.10*MPC_MAN_TILT_MAX
+MPC_XY_VEL_MAX,12.0,m/s,12.0,m/s,/home/car/PX4-Autopilot/build/px4_sitl_default/parameters.json,C3 Envelope,v_xy,12.0,m/s,MPC_XY_VEL_MAX
+MPC_MAN_TILT_MAX,0.6108652381980153,rad,35.0,deg,/home/car/PX4-Autopilot/build/px4_sitl_default/parameters.json,C3 Envelope,tilt,0.6108652381980153,rad,MPC_MAN_TILT_MAX
+MPC_Z_VEL_MAX_UP,3.0,m/s,3.0,m/s,/home/car/PX4-Autopilot/build/px4_sitl_default/parameters.json,C3 Envelope,climb_rate_up,3.0,m/s,MPC_Z_VEL_MAX_UP
+MPC_Z_VEL_MAX_DN,1.5,m/s,1.5,m/s,/home/car/PX4-Autopilot/build/px4_sitl_default/parameters.json,C3 Envelope,climb_rate_down,1.5,m/s,MPC_Z_VEL_MAX_DN
+MPC_VEL_MANUAL,10.0,m/s,10.0,m/s,/home/car/PX4-Autopilot/build/px4_sitl_default/parameters.json,C4 Coupling,xy_velocity,1.0,m/s,0.10*MPC_VEL_MANUAL
+MPC_Z_VEL_MAX_UP,3.0,m/s,3.0,m/s,/home/car/PX4-Autopilot/build/px4_sitl_default/parameters.json,C4 Coupling,climb_rate,0.30000000000000004,m/s,0.10*MPC_Z_VEL_MAX_UP

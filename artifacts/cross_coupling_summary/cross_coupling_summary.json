@@ -1,0 +1,195 @@
+{
+  "artifacts": {
+    "arm_purity_tier1": "artifacts/cross_coupling_summary/arm_purity_tier1.csv",
+    "arm_purity_tier2": "artifacts/cross_coupling_summary/arm_purity_tier2.csv",
+    "candidates": "artifacts/cross_coupling_summary/candidates.csv",
+    "groups": "artifacts/cross_coupling_summary/groups.csv",
+    "interaction_matrix": "artifacts/cross_coupling_summary/interaction_matrix.csv",
+    "point_evaluations": "artifacts/cross_coupling_summary/stepA_point_evaluations.csv",
+    "pre_registration_copy": "artifacts/cross_coupling_summary/cross_coupling_prereg.md",
+    "query_repeats": "artifacts/cross_coupling_summary/stepA_query_repeats.csv",
+    "report": "artifacts/cross_coupling_summary/cross_coupling_report.md",
+    "rga": "artifacts/cross_coupling_summary/rga.csv",
+    "signatures": "artifacts/cross_coupling_summary/signatures.csv",
+    "summary": "artifacts/cross_coupling_summary/cross_coupling_summary.json"
+  },
+  "base_amplitude": 0.5,
+  "candidates": [
+    {
+      "candidate_id": "C000",
+      "candidate_type": "cross_coupling",
+      "criterion": "row_abs_share>=0.20;abs(lambda)>=0.30",
+      "h_rga_1_component": true,
+      "input": "throttle",
+      "input_set": "throttle",
+      "lambda": 0.3780233425118512,
+      "max_abs_lambda": 0.3780233425118512,
+      "min_lambda": 0.3780233425118512,
+      "natural_input": "roll",
+      "output": "vx",
+      "row_abs_share": 0.23627097692144886,
+      "step_b_status": "not_run_stepA_gate",
+      "triggered_entries": "vx:throttle=0.378023"
+    },
+    {
+      "candidate_id": "C001",
+      "candidate_type": "cross_coupling",
+      "criterion": "abs(lambda)>=0.30",
+      "h_rga_1_component": true,
+      "input": "throttle",
+      "input_set": "throttle",
+      "lambda": -0.4006367356258092,
+      "max_abs_lambda": 0.4006367356258092,
+      "min_lambda": -0.4006367356258092,
+      "natural_input": "pitch",
+      "output": "vy",
+      "row_abs_share": 0.13597716321649447,
+      "step_b_status": "not_run_stepA_gate",
+      "triggered_entries": "vy:throttle=-0.400637"
+    },
+    {
+      "candidate_id": "C002",
+      "candidate_type": "interaction",
+      "criterion": "any relevant lambda abs>=1.5 or <=0",
+      "h_rga_1_component": true,
+      "input": "",
+      "input_set": "pitch+yaw",
+      "lambda": NaN,
+      "max_abs_lambda": 1.1222323803452683,
+      "min_lambda": -0.1350143827356547,
+      "natural_input": "",
+      "output": "",
+      "row_abs_share": NaN,
+      "step_b_status": "not_run_stepA_gate",
+      "triggered_entries": "yaw_rate:pitch=-0.135014"
+    },
+    {
+      "candidate_id": "C003",
+      "candidate_type": "interaction",
+      "criterion": "any relevant lambda abs>=1.5 or <=0",
+      "h_rga_1_component": true,
+      "input": "",
+      "input_set": "pitch+throttle",
+      "lambda": NaN,
+      "max_abs_lambda": 1.1222323803452683,
+      "min_lambda": -0.4006367356258092,
+      "natural_input": "",
+      "output": "",
+      "row_abs_share": NaN,
+      "step_b_status": "not_run_stepA_gate",
+      "triggered_entries": "vy:throttle=-0.400637;vz:pitch=-0.0159559"
+    }
+  ],
+  "cross_coupling_candidate_count": 2,
+  "delta_probe": 0.2,
+  "duration_windows": 4,
+  "elapsed_wall_time_s": 341.3585135529938,
+  "g_matrix": {
+    "vx": {
+      "pitch": -0.0103533292691856,
+      "roll": 0.09850768884546342,
+      "throttle": 0.04078992880039288,
+      "yaw": -0.022989507413608008
+    },
+    "vy": {
+      "pitch": 0.1236081829575441,
+      "roll": 0.03469434081303676,
+      "throttle": 0.026441288198726688,
+      "yaw": 0.009710077001949318
+    },
+    "vz": {
+      "pitch": 0.0019067301621522236,
+      "roll": 0.009877022976072507,
+      "throttle": 0.00795787024703464,
+      "yaw": 0.018240890422026305
+    },
+    "yaw_rate": {
+      "pitch": -0.0029953868965224427,
+      "roll": 0.0009116921525697812,
+      "throttle": -0.0013365773385172134,
+      "yaw": 1.4943711878509871e-05
+    }
+  },
+  "h_rga_1": true,
+  "input_order": [
+    "roll",
+    "pitch",
+    "yaw",
+    "throttle"
+  ],
+  "interaction_candidate_count": 2,
+  "lambda_matrix": {
+    "vx": {
+      "pitch": 0.02873787342284462,
+      "roll": 0.4500833547382458,
+      "throttle": 0.3780233425118512,
+      "yaw": 0.14315542932705835
+    },
+    "vy": {
+      "pitch": 1.1222323803452683,
+      "roll": 0.2633416175084525,
+      "throttle": -0.4006367356258092,
+      "yaw": 0.015062737772088062
+    },
+    "vz": {
+      "pitch": -0.015955871032458564,
+      "roll": 0.014553813812168389,
+      "throttle": 0.16133655624016816,
+      "yaw": 0.8400655009801219
+    },
+    "yaw_rate": {
+      "pitch": -0.1350143827356547,
+      "roll": 0.2720212139411334,
+      "throttle": 0.8612768368737898,
+      "yaw": 0.0017163319207315988
+    }
+  },
+  "natural_input_by_output": {
+    "vx": "roll",
+    "vy": "pitch",
+    "vz": "throttle",
+    "yaw_rate": "yaw"
+  },
+  "onset_window": 3,
+  "output_order": [
+    "vx",
+    "vy",
+    "vz",
+    "yaw_rate"
+  ],
+  "phase": "Step A",
+  "platform": "px4",
+  "property": "post_neutral_xy_velocity",
+  "protocol_label": "exploratory-hypothesis with frozen local protocol copy",
+  "protocol_provenance_gap": "artifacts/cross_coupling_prereg.md was absent at task start and was generated from the operator protocol before cross-coupling data collection; the generated horizontal natural-pair labels were corrected after an aborted initial runner start, so conclusions are labeled exploratory-hypothesis",
+  "query_attempt_count_including_timeout_retries": 40,
+  "repeats": 5,
+  "rga_summary": {
+    "column_sums": {
+      "pitch": 0.9999999999999998,
+      "roll": 1.0,
+      "throttle": 0.9999999999999999,
+      "yaw": 0.9999999999999999
+    },
+    "condition_number": 98.65254455364648,
+    "inverse_error": "",
+    "inverse_method": "exact_inverse",
+    "row_sums": {
+      "vx": 1.0,
+      "vy": 0.9999999999999996,
+      "vz": 0.9999999999999999,
+      "yaw_rate": 1.0
+    }
+  },
+  "scenario_id": "px4_position",
+  "seed": 0,
+  "status": "complete",
+  "step_a_go_no_go": "go_step_b_candidates_present",
+  "successful_query_count": 40,
+  "terminal_window_absolute_s": [
+    11.0,
+    13.0
+  ],
+  "tier_scope": "Step A structural matrix only; Tier 1/Tier 2 violation evidence requires Step B",
+  "timeout_retry_count": 0
+}

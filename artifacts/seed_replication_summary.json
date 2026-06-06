@@ -1,0 +1,169 @@
+{
+  "criteria": [
+    {
+      "arm_a_zero_interior": true,
+      "arm_c_channels_subset_roll_pitch": true,
+      "arm_c_count_exceeds_arm_b": true,
+      "arm_c_support_4_to_8": true,
+      "ddmin_failure_relative_to_arm_c": true,
+      "seed": 0,
+      "summary": "pass=arm_a_zero_interior,arm_c_count_exceeds_arm_b,arm_c_support_4_to_8,arm_c_channels_subset_roll_pitch,ddmin_failure_relative_to_arm_c; fail=none"
+    },
+    {
+      "arm_a_zero_interior": true,
+      "arm_c_channels_subset_roll_pitch": true,
+      "arm_c_count_exceeds_arm_b": true,
+      "arm_c_support_4_to_8": false,
+      "ddmin_failure_relative_to_arm_c": false,
+      "seed": 1,
+      "summary": "pass=arm_a_zero_interior,arm_c_count_exceeds_arm_b,arm_c_channels_subset_roll_pitch; fail=arm_c_support_4_to_8,ddmin_failure_relative_to_arm_c"
+    },
+    {
+      "arm_a_zero_interior": true,
+      "arm_c_channels_subset_roll_pitch": true,
+      "arm_c_count_exceeds_arm_b": false,
+      "arm_c_support_4_to_8": false,
+      "ddmin_failure_relative_to_arm_c": true,
+      "seed": 2,
+      "summary": "pass=arm_a_zero_interior,arm_c_channels_subset_roll_pitch,ddmin_failure_relative_to_arm_c; fail=arm_c_count_exceeds_arm_b,arm_c_support_4_to_8"
+    }
+  ],
+  "distinct_costs": [
+    {
+      "clean_trigger_count": 18,
+      "distinct_clean_trigger_count": 7,
+      "j5_points_per_clean_trigger": 4.444444444444445,
+      "j5_points_per_distinct_clean_trigger": 11.428571428571429,
+      "method": "CADET_arm_C",
+      "seed": 0,
+      "signatures": "channels=pitch,roll;time=w06-w09;shape=pitch:0,0,0,0,0,0,m1,m2,m2,m2|roll:0,0,0,0,0,0,p1,p2,p2,p2; channels=pitch,roll;time=w06-w09;shape=pitch:0,0,0,0,0,0,p1,p2,p2,p2|roll:0,0,0,0,0,0,p1,p2,p2,p2; channels=pitch,roll;time=w07-w09;shape=pitch:0,0,0,0,0,0,0,p1,p2,p2|roll:0,0,0,0,0,0,0,p1,p2,p2; channels=pitch;time=w04-w09;shape=pitch:0,0,0,0,m1,m2,m2,m2,m2,m1; channels=pitch;time=w06-w09;shape=pitch:0,0,0,0,0,0,p1,p2,p2,p2; channels=roll;time=w04-w09;shape=roll:0,0,0,0,p1,p2,p2,p2,p2,p1; channels=roll;time=w06-w09;shape=roll:0,0,0,0,0,0,m1,m2,m2,m2",
+      "total_j5_points": 80
+    },
+    {
+      "clean_trigger_count": 4,
+      "distinct_clean_trigger_count": 4,
+      "j5_points_per_clean_trigger": 98.25,
+      "j5_points_per_distinct_clean_trigger": 98.25,
+      "method": "ddmin",
+      "seed": 0,
+      "signatures": "channels=pitch,roll;time=w05-w09;shape=pitch:0,0,0,0,0,0,m1,m1,m2,m2|roll:0,0,0,0,0,m1,0,m1,m2,m1; channels=pitch,roll;time=w06-w09;shape=pitch:0,0,0,0,0,0,m1,m2,m2,m2|roll:0,0,0,0,0,0,0,0,0,m1; channels=pitch,roll;time=w07-w09;shape=pitch:0,0,0,0,0,0,0,p1,p2,p2|roll:0,0,0,0,0,0,0,p1,p2,p2; channels=roll;time=w06-w09;shape=roll:0,0,0,0,0,0,p1,p2,p2,p3",
+      "total_j5_points": 393
+    },
+    {
+      "clean_trigger_count": 0,
+      "distinct_clean_trigger_count": 0,
+      "j5_points_per_clean_trigger": "inf",
+      "j5_points_per_distinct_clean_trigger": "inf",
+      "method": "CADET_arm_C",
+      "seed": 1,
+      "signatures": "",
+      "total_j5_points": 80
+    },
+    {
+      "clean_trigger_count": 2,
+      "distinct_clean_trigger_count": 2,
+      "j5_points_per_clean_trigger": 185.5,
+      "j5_points_per_distinct_clean_trigger": 185.5,
+      "method": "ddmin",
+      "seed": 1,
+      "signatures": "channels=pitch,roll;time=w05-w09;shape=pitch:0,0,0,0,0,m1,m2,m2,m2,m2|roll:0,0,0,0,0,0,0,m1,m2,m1; channels=pitch;time=w04-w09;shape=pitch:0,0,0,0,p1,p2,p2,p2,p2,p1",
+      "total_j5_points": 371
+    },
+    {
+      "clean_trigger_count": 3,
+      "distinct_clean_trigger_count": 1,
+      "j5_points_per_clean_trigger": 26.666666666666668,
+      "j5_points_per_distinct_clean_trigger": 80.0,
+      "method": "CADET_arm_C",
+      "seed": 2,
+      "signatures": "channels=pitch;time=w04-w09;shape=pitch:0,0,0,0,p1,p2,p2,p2,p2,p1",
+      "total_j5_points": 80
+    },
+    {
+      "clean_trigger_count": 4,
+      "distinct_clean_trigger_count": 4,
+      "j5_points_per_clean_trigger": 90.25,
+      "j5_points_per_distinct_clean_trigger": 90.25,
+      "method": "ddmin",
+      "seed": 2,
+      "signatures": "channels=pitch,roll;time=w02-w09;shape=pitch:0,0,p1,p1,0,0,0,0,0,0|roll:0,0,0,0,p1,p1,p1,p2,p2,p2; channels=pitch,roll;time=w04-w09;shape=pitch:0,0,0,0,0,0,0,p1,0,p1|roll:0,0,0,0,m1,m1,m1,m2,m2,m2; channels=pitch,roll;time=w05-w09;shape=pitch:0,0,0,0,0,p1,p1,0,p1,p1|roll:0,0,0,0,0,0,p1,p2,p2,p2; channels=roll;time=w05-w09;shape=roll:0,0,0,0,0,p1,p2,p2,p2,p2",
+      "total_j5_points": 361
+    }
+  ],
+  "signature_definition": {
+    "active_channels": "sorted active channel set for |theta| > 0.1",
+    "envelope_shape": "per-active-channel 10-window sign and amplitude-bin sequence; bins are <=0.33, <=0.66, >0.66",
+    "time_band": "min/max active window id"
+  },
+  "table": [
+    {
+      "arm_a_interior": 0,
+      "arm_b_active_channels": "pitch,roll,throttle,yaw",
+      "arm_b_interior": 7,
+      "arm_b_support_median": 27.0,
+      "arm_c_active_channels": "pitch;pitch,roll;roll",
+      "arm_c_interior": 18,
+      "arm_c_support_max": 8.0,
+      "arm_c_support_median": 6.0,
+      "arm_c_support_min": 4.0,
+      "cadet_distinct_clean_triggers": 7,
+      "cadet_j5_per_distinct_clean_trigger": 11.428571428571429,
+      "criteria_summary": "pass=arm_a_zero_interior,arm_c_count_exceeds_arm_b,arm_c_support_4_to_8,arm_c_channels_subset_roll_pitch,ddmin_failure_relative_to_arm_c; fail=none",
+      "ddmin_clean_ratio": "4/10",
+      "ddmin_clean_yield": 0.4,
+      "ddmin_dir": "artifacts/direction_a_ddmin_px4_position_seed0_v1",
+      "ddmin_distinct_clean_triggers": 4,
+      "ddmin_j5_per_distinct_clean_trigger": 98.25,
+      "ddmin_support_median": 14.5,
+      "ddmin_throttle_yaw_residual_ratio": "5/10",
+      "probe_dir": "artifacts/direction_a_px4_position_seed0_v0",
+      "seed": 0
+    },
+    {
+      "arm_a_interior": 0,
+      "arm_b_active_channels": "pitch,roll,throttle,yaw;pitch,throttle,yaw",
+      "arm_b_interior": 10,
+      "arm_b_support_median": 25.5,
+      "arm_c_active_channels": "pitch,roll;roll",
+      "arm_c_interior": 12,
+      "arm_c_support_max": 20.0,
+      "arm_c_support_median": 18.0,
+      "arm_c_support_min": 10.0,
+      "cadet_distinct_clean_triggers": 0,
+      "cadet_j5_per_distinct_clean_trigger": "inf",
+      "criteria_summary": "pass=arm_a_zero_interior,arm_c_count_exceeds_arm_b,arm_c_channels_subset_roll_pitch; fail=arm_c_support_4_to_8,ddmin_failure_relative_to_arm_c",
+      "ddmin_clean_ratio": "2/10",
+      "ddmin_clean_yield": 0.2,
+      "ddmin_dir": "artifacts/direction_a_ddmin_px4_position_seed1_v0",
+      "ddmin_distinct_clean_triggers": 2,
+      "ddmin_j5_per_distinct_clean_trigger": 185.5,
+      "ddmin_support_median": 10.5,
+      "ddmin_throttle_yaw_residual_ratio": "2/10",
+      "probe_dir": "artifacts/direction_a_px4_position_seed1_v0",
+      "seed": 1
+    },
+    {
+      "arm_a_interior": 0,
+      "arm_b_active_channels": "pitch,roll,throttle,yaw",
+      "arm_b_interior": 11,
+      "arm_b_support_median": 27.0,
+      "arm_c_active_channels": "pitch;pitch,roll;roll",
+      "arm_c_interior": 6,
+      "arm_c_support_max": 18.0,
+      "arm_c_support_median": 7.5,
+      "arm_c_support_min": 6.0,
+      "cadet_distinct_clean_triggers": 1,
+      "cadet_j5_per_distinct_clean_trigger": 80.0,
+      "criteria_summary": "pass=arm_a_zero_interior,arm_c_channels_subset_roll_pitch,ddmin_failure_relative_to_arm_c; fail=arm_c_count_exceeds_arm_b,arm_c_support_4_to_8",
+      "ddmin_clean_ratio": "4/10",
+      "ddmin_clean_yield": 0.4,
+      "ddmin_dir": "artifacts/direction_a_ddmin_px4_position_seed2_v0",
+      "ddmin_distinct_clean_triggers": 4,
+      "ddmin_j5_per_distinct_clean_trigger": 90.25,
+      "ddmin_support_median": 9.5,
+      "ddmin_throttle_yaw_residual_ratio": "2/10",
+      "probe_dir": "artifacts/direction_a_px4_position_seed2_v0",
+      "seed": 2
+    }
+  ]
+}

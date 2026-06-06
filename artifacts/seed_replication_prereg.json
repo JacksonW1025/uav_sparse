@@ -1,0 +1,47 @@
+{
+  "created_before_nonzero_seed_runs": true,
+  "scope": {
+    "scenario": "px4_position",
+    "property": "post_neutral_xy_velocity",
+    "replication_seeds": [1, 2],
+    "baseline_seed": 0,
+    "purpose": "Pre-register qualitative multi-seed replication criteria for the Direction-A spine before running seed > 0."
+  },
+  "frozen_constants": {
+    "J_REPEATS": 5,
+    "ROBUST_SIGMA_MULTIPLIER": 2.0,
+    "INTERIOR_MAX_ABS": 0.5,
+    "SATURATED_MIN_ABS": 0.9,
+    "CHANNEL_RELEVANT_SET": ["roll", "pitch"],
+    "points_per_arm": 80,
+    "stick_limit": 1.0,
+    "ddmin_budget_j5_points_per_start": 40,
+    "ddmin_moderate_starts": 3,
+    "ddmin_max_starts": 10,
+    "ddmin_amplitude_iters": 7,
+    "ddmin_max_outer_passes": 4
+  },
+  "replication_success_criteria": {
+    "arm_a": {
+      "criterion": "Arm A remains approximately zero interior robust violations.",
+      "interpretation": "Uniform random may find moderate or saturated violations, but should continue to miss the thin interior target at this budget."
+    },
+    "arm_c_vs_arm_b": {
+      "criterion": "Arm C interior robust-violation count is directionally and materially larger than Arm B, and Arm C clean trigger supports remain in the rough 4-8 range.",
+      "interpretation": "The comparison is qualitative and order-of-magnitude, not exact point-estimate matching to seed 0."
+    },
+    "arm_c_channels": {
+      "criterion": "Arm C interior robust violations use only the relevant channel set {roll,pitch}.",
+      "interpretation": "Single-channel roll or pitch triggers are acceptable because they are subsets of the pre-registered relevant channel set."
+    },
+    "ddmin_necessity": {
+      "criterion": "ddmin remains a failure relative to Arm C: clean yield is lower than Arm C's explainable output, final support median is materially higher than Arm C's clean-support range, and J=5 cost per distinct clean trigger is materially higher.",
+      "interpretation": "A seed is a deviation if ddmin reliably produces mostly clean, low-support roll/pitch-only triggers at cost comparable to Arm C."
+    },
+    "distinct_trigger_cost": {
+      "criterion": "Cost is reported per distinct clean trigger signature, where a signature discretizes active channel set, active time band, and envelope shape.",
+      "interpretation": "This replaces a single amortized seed-0 cost ratio with a per-seed distribution across seeds 0/1/2."
+    }
+  },
+  "non_tuning_statement": "No pre-registered thresholds, property definitions, feasible limits, or CADET five-stage logic may be adjusted to make seed 1 or seed 2 match seed 0."
+}

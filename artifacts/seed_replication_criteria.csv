@@ -1,0 +1,4 @@
+seed,arm_a_zero_interior,arm_c_count_exceeds_arm_b,arm_c_support_4_to_8,arm_c_channels_subset_roll_pitch,ddmin_failure_relative_to_arm_c,summary
+0,True,True,True,True,True,"pass=arm_a_zero_interior,arm_c_count_exceeds_arm_b,arm_c_support_4_to_8,arm_c_channels_subset_roll_pitch,ddmin_failure_relative_to_arm_c; fail=none"
+1,True,True,False,True,False,"pass=arm_a_zero_interior,arm_c_count_exceeds_arm_b,arm_c_channels_subset_roll_pitch; fail=arm_c_support_4_to_8,ddmin_failure_relative_to_arm_c"
+2,True,False,False,True,True,"pass=arm_a_zero_interior,arm_c_channels_subset_roll_pitch,ddmin_failure_relative_to_arm_c; fail=arm_c_count_exceeds_arm_b,arm_c_support_4_to_8"

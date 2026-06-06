@@ -1,0 +1,396 @@
+{
+  "arm_details": {
+    "A": {
+      "uniform_draw_attempts": 80
+    },
+    "B": {
+      "random_draw_attempts": 79,
+      "robust_unsafe_endpoints": 0,
+      "scale_brackets_started": 0,
+      "zero_anchor_class": "robust_safe"
+    },
+    "C": {
+      "amplitude_brackets_started": 4,
+      "channel_relevant_set": [
+        "throttle"
+      ],
+      "channel_relevant_source": "derive_A_phi",
+      "envelope_candidates_attempted": 54,
+      "robust_unsafe_endpoints": 4,
+      "sweep_design": "duration d=1..10, start-window sweep, per-envelope amplitude bisection",
+      "sweep_order": "round-robin over start rank then d=1..10 to expose all durations within N=80",
+      "zero_anchor_class": "robust_safe"
+    }
+  },
+  "arm_metrics": [
+    {
+      "amplitude_distribution_robust_violations": {
+        "max": 0.9951752851471565,
+        "median": 0.9951752851471565,
+        "min": 0.9951752851471565,
+        "p05": 0.9951752851471565,
+        "p10": 0.9951752851471565,
+        "p25": 0.9951752851471565,
+        "p75": 0.9951752851471565,
+        "p90": 0.9951752851471565,
+        "p95": 0.9951752851471565
+      },
+      "arm": "A",
+      "gentlest_robust_violation": {
+        "active_channels_abs_gt_0p1": "pitch,roll,throttle,yaw",
+        "amplitude_class": "saturated",
+        "arm": "A",
+        "eval_id": 11,
+        "label": "sample0012",
+        "max_abs_theta": 0.9951752851471565,
+        "rho_mean_post_neutral_alt_drift": -1.260100746154785,
+        "rho_mean_post_neutral_xy_drift": -1.8322698145780607,
+        "rho_mean_post_neutral_xy_velocity": -1.9535926418322014,
+        "rho_std_post_neutral_alt_drift": 0.07039676201576014,
+        "rho_std_post_neutral_xy_drift": 0.07803905995144311,
+        "rho_std_post_neutral_xy_velocity": 0.027692079029699404,
+        "stage": "uniform_random",
+        "support_size_abs_gt_0p1": 32,
+        "theta_hash": "cc54059b56a47e7d",
+        "theta_path": "artifacts/alt_drift_seed0_v0/thetas/A_00011_cc54059b56a47e7d.npy"
+      },
+      "interior_robust_violation_count": 0,
+      "interior_violation_supports": [],
+      "j5_point_count": 80,
+      "moderate_robust_violation_count": 0,
+      "negative_mean_rejected_by_2sigma_gate_count": 0,
+      "noise_band_count": 0,
+      "robust_safe_count": 79,
+      "robust_violation_count": 1,
+      "saturated_robust_violation_count": 1,
+      "successful_query_count": 400
+    },
+    {
+      "amplitude_distribution_robust_violations": {},
+      "arm": "B",
+      "gentlest_robust_violation": null,
+      "interior_robust_violation_count": 0,
+      "interior_violation_supports": [],
+      "j5_point_count": 80,
+      "moderate_robust_violation_count": 0,
+      "negative_mean_rejected_by_2sigma_gate_count": 1,
+      "noise_band_count": 2,
+      "robust_safe_count": 78,
+      "robust_violation_count": 0,
+      "saturated_robust_violation_count": 0,
+      "successful_query_count": 400
+    },
+    {
+      "amplitude_distribution_robust_violations": {
+        "max": 1.0,
+        "median": 0.875,
+        "min": 0.8125,
+        "p05": 0.8125,
+        "p10": 0.8125,
+        "p25": 0.828125,
+        "p75": 1.0,
+        "p90": 1.0,
+        "p95": 1.0
+      },
+      "arm": "C",
+      "gentlest_robust_violation": {
+        "active_channels_abs_gt_0p1": "throttle",
+        "amplitude_class": "moderate",
+        "arm": "C",
+        "eval_id": 239,
+        "label": "swp0053_throttle_p_w02_d08_iter03_a0p8125",
+        "max_abs_theta": 0.8125,
+        "rho_mean_post_neutral_alt_drift": -0.0676915168762207,
+        "rho_mean_post_neutral_xy_drift": 1.957330108717374,
+        "rho_mean_post_neutral_xy_velocity": 0.9540355075969661,
+        "rho_std_post_neutral_alt_drift": 0.024105912969965324,
+        "rho_std_post_neutral_xy_drift": 0.011508581416891251,
+        "rho_std_post_neutral_xy_velocity": 0.012141985216355745,
+        "stage": "amplitude_bisection",
+        "support_size_abs_gt_0p1": 8,
+        "theta_hash": "ab680a7d086a96ea",
+        "theta_path": "artifacts/alt_drift_seed0_v0/thetas/C_00239_ab680a7d086a96ea.npy"
+      },
+      "interior_robust_violation_count": 0,
+      "interior_violation_supports": [],
+      "j5_point_count": 80,
+      "moderate_robust_violation_count": 6,
+      "negative_mean_rejected_by_2sigma_gate_count": 6,
+      "noise_band_count": 11,
+      "robust_safe_count": 59,
+      "robust_violation_count": 10,
+      "saturated_robust_violation_count": 4,
+      "successful_query_count": 400
+    }
+  ],
+  "artifacts": {
+    "arm_metrics": "artifacts/alt_drift_seed0_v0/reports/arm_metrics.csv",
+    "groups": "artifacts/alt_drift_seed0_v0/groups.csv",
+    "interior_violations": "artifacts/alt_drift_seed0_v0/reports/interior_violations.csv",
+    "point_evaluations": "artifacts/alt_drift_seed0_v0/reports/point_evaluations.csv",
+    "pre_registration": "artifacts/alt_drift_seed0_v0/reports/pre_registration.json",
+    "query_repeats": "artifacts/alt_drift_seed0_v0/reports/query_repeats.csv",
+    "report": "artifacts/alt_drift_seed0_v0/reports/direction_a_report.md",
+    "robust_violations": "artifacts/alt_drift_seed0_v0/reports/robust_violations.csv",
+    "summary": "artifacts/alt_drift_seed0_v0/reports/direction_a_summary.json"
+  },
+  "decision_inputs": {
+    "arm_b_gentlest_interior_violation": null,
+    "arm_b_gentlest_robust_violation": null,
+    "arm_c_gentlest_interior_violation": null,
+    "arm_c_gentlest_robust_violation": {
+      "active_channels_abs_gt_0p1": "throttle",
+      "amplitude_class": "moderate",
+      "arm": "C",
+      "eval_id": 239,
+      "label": "swp0053_throttle_p_w02_d08_iter03_a0p8125",
+      "max_abs_theta": 0.8125,
+      "rho_mean_post_neutral_alt_drift": -0.0676915168762207,
+      "rho_mean_post_neutral_xy_drift": 1.957330108717374,
+      "rho_mean_post_neutral_xy_velocity": 0.9540355075969661,
+      "rho_std_post_neutral_alt_drift": 0.024105912969965324,
+      "rho_std_post_neutral_xy_drift": 0.011508581416891251,
+      "rho_std_post_neutral_xy_velocity": 0.012141985216355745,
+      "stage": "amplitude_bisection",
+      "support_size_abs_gt_0p1": 8,
+      "theta_hash": "ab680a7d086a96ea",
+      "theta_path": "artifacts/alt_drift_seed0_v0/thetas/C_00239_ab680a7d086a96ea.npy"
+    },
+    "channel_reduction_cleaner_than_arm_b": false,
+    "channel_reduction_gentler_than_arm_b": false,
+    "channel_reduction_value_condition": false,
+    "full_direction_a_confirmed_strict_no_interior_arm_a": false,
+    "interior_targeting_value_condition": false,
+    "note": "The pre-registered decision language is qualitative for 'few/readily/clearly'; this block exposes exact inputs without retuning thresholds.",
+    "premise_arm_a_amplitude_distribution": {
+      "max": 0.9951752851471565,
+      "median": 0.9951752851471565,
+      "min": 0.9951752851471565,
+      "p05": 0.9951752851471565,
+      "p10": 0.9951752851471565,
+      "p25": 0.9951752851471565,
+      "p75": 0.9951752851471565,
+      "p90": 0.9951752851471565,
+      "p95": 0.9951752851471565
+    },
+    "premise_arm_a_interior_robust_violation_count": 0,
+    "premise_arm_a_robust_violation_count": 1
+  },
+  "derived_A_phi": {
+    "active_channels": [
+      "throttle"
+    ],
+    "property": "post_neutral_alt_drift",
+    "source": "derive_A_phi"
+  },
+  "elapsed_wall_time_s": 23865.272211236006,
+  "interior_violations": [],
+  "overall_gentlest_robust_violation": {
+    "active_channels_abs_gt_0p1": "throttle",
+    "amplitude_class": "moderate",
+    "arm": "C",
+    "eval_id": 239,
+    "label": "swp0053_throttle_p_w02_d08_iter03_a0p8125",
+    "max_abs_theta": 0.8125,
+    "rho_mean_post_neutral_alt_drift": -0.0676915168762207,
+    "rho_mean_post_neutral_xy_drift": 1.957330108717374,
+    "rho_mean_post_neutral_xy_velocity": 0.9540355075969661,
+    "rho_std_post_neutral_alt_drift": 0.024105912969965324,
+    "rho_std_post_neutral_xy_drift": 0.011508581416891251,
+    "rho_std_post_neutral_xy_velocity": 0.012141985216355745,
+    "stage": "amplitude_bisection",
+    "support_size_abs_gt_0p1": 8,
+    "theta": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.25,
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      0.0,
+      0.0,
+      0.0,
+      0.75,
+      0.0,
+      0.0,
+      0.0,
+      0.8125,
+      0.0,
+      0.0,
+      0.0,
+      0.8125,
+      0.0,
+      0.0,
+      0.0,
+      0.8125,
+      0.0,
+      0.0,
+      0.0,
+      0.8125,
+      0.0,
+      0.0,
+      0.0,
+      0.8125
+    ],
+    "theta_hash": "ab680a7d086a96ea",
+    "theta_path": "artifacts/alt_drift_seed0_v0/thetas/C_00239_ab680a7d086a96ea.npy"
+  },
+  "overall_gentlest_xy_velocity_robust_violation": {
+    "active_channels_abs_gt_0p1": "throttle",
+    "amplitude_class": "moderate",
+    "arm": "C",
+    "eval_id": 239,
+    "label": "swp0053_throttle_p_w02_d08_iter03_a0p8125",
+    "max_abs_theta": 0.8125,
+    "rho_mean_post_neutral_alt_drift": -0.0676915168762207,
+    "rho_mean_post_neutral_xy_drift": 1.957330108717374,
+    "rho_mean_post_neutral_xy_velocity": 0.9540355075969661,
+    "rho_std_post_neutral_alt_drift": 0.024105912969965324,
+    "rho_std_post_neutral_xy_drift": 0.011508581416891251,
+    "rho_std_post_neutral_xy_velocity": 0.012141985216355745,
+    "stage": "amplitude_bisection",
+    "support_size_abs_gt_0p1": 8,
+    "theta": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.25,
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      0.0,
+      0.0,
+      0.0,
+      0.75,
+      0.0,
+      0.0,
+      0.0,
+      0.8125,
+      0.0,
+      0.0,
+      0.0,
+      0.8125,
+      0.0,
+      0.0,
+      0.0,
+      0.8125,
+      0.0,
+      0.0,
+      0.0,
+      0.8125,
+      0.0,
+      0.0,
+      0.0,
+      0.8125
+    ],
+    "theta_hash": "ab680a7d086a96ea",
+    "theta_path": "artifacts/alt_drift_seed0_v0/thetas/C_00239_ab680a7d086a96ea.npy"
+  },
+  "pre_registration": {
+    "bisection_iters": 7,
+    "channel_relevant_set_for_xy_velocity": [
+      "roll",
+      "pitch"
+    ],
+    "derive_A_phi": {
+      "active_for_primary_property": [
+        "throttle"
+      ],
+      "active_source": "derive_A_phi",
+      "alt_drift": [
+        "throttle"
+      ],
+      "rule": "control-allocation predicted active channels",
+      "xy_velocity": [
+        "roll",
+        "pitch"
+      ]
+    },
+    "input": {
+      "channels": [
+        "roll",
+        "pitch",
+        "yaw",
+        "throttle"
+      ],
+      "horizon_s": 5.0,
+      "max_delta_per_window": 0.25,
+      "max_value": 1.0,
+      "min_value": -1.0,
+      "neutral_tail_s": 8.0,
+      "window_s": 0.5
+    },
+    "matched_budget": {
+      "arms": [
+        "A_uniform_random",
+        "B_random_interior_bracketing",
+        "C_channel_directed"
+      ],
+      "j5_points_per_arm": 80,
+      "repeats_per_point": 5
+    },
+    "rng_seed": 20260530,
+    "scope": {
+      "D": 40,
+      "pid_firmware_sensors": "frozen by simulator/config; runner only overrides stick min/max for this probe",
+      "primary_property": "post_neutral_alt_drift",
+      "reported_cross_properties": [
+        "post_neutral_xy_velocity",
+        "post_neutral_xy_drift"
+      ],
+      "scenario": "px4_position",
+      "seed": 0
+    },
+    "seed_freeze_control": {
+      "allow_nonzero_seed_flag": false,
+      "discipline_statement": "Nonzero seed replication is allowed only through an explicit flag; constants remain frozen to the seed-0 pre-registration.",
+      "nonzero_seed_unlocked": false
+    },
+    "thresholds": {
+      "interior_max_abs_theta": 0.5,
+      "moderate_interval": "(0.5, 0.9]",
+      "robust_safe": "rho_mean - 2*rho_std > 0",
+      "robust_violation": "rho_mean + 2*rho_std < 0",
+      "saturated_min_abs_theta": 0.9,
+      "sigma_multiplier": 2.0,
+      "support_abs_threshold": 0.1
+    }
+  },
+  "property": "post_neutral_alt_drift",
+  "query_attempt_count_including_timeout_retries": 1208,
+  "replication_caveat": "Single seed/scenario probe only; replicate across seeds before any paper claim.",
+  "reported_properties": [
+    "post_neutral_xy_velocity",
+    "post_neutral_xy_drift",
+    "post_neutral_alt_drift"
+  ],
+  "scenario_id": "px4_position",
+  "seed": 0,
+  "seed_freeze_control": {
+    "allow_nonzero_seed_flag": false,
+    "nonzero_seed_unlocked": false,
+    "statement": "Seed-0 frozen run or no nonzero seed override was used."
+  },
+  "status": "complete",
+  "successful_query_count": 1200,
+  "timeout_retry_count": 8
+}

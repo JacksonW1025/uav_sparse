@@ -1,0 +1,142 @@
+{
+  "artifacts": {
+    "boundary_points": "artifacts/alt_drift_seed0_v0/reports/h_alt_1_boundary_points.csv",
+    "boundary_query_repeats": "artifacts/alt_drift_seed0_v0/reports/h_alt_1_boundary_query_repeats.csv",
+    "channel_mass": "artifacts/alt_drift_seed0_v0/reports/h_alt_1_channel_mass.csv",
+    "pre_registration": "artifacts/alt_drift_seed0_v0/reports/h_alt_1_pre_registration.json",
+    "pre_registration_copy": "artifacts/alt_drift_seed0_v0/reports/alt_drift_prereg.md",
+    "probe_groups": "artifacts/alt_drift_seed0_v0/reports/h_alt_1_probe_groups.csv",
+    "probe_raw": "artifacts/alt_drift_seed0_v0/reports/h_alt_1_probe_raw.csv",
+    "report": "artifacts/alt_drift_seed0_v0/reports/h_alt_1_report.md",
+    "summary": "artifacts/alt_drift_seed0_v0/reports/h_alt_1_summary.json"
+  },
+  "boundary": {
+    "active_channels_abs_gt_0p1": "throttle",
+    "amplitude_class": "moderate",
+    "label": "boundary_bisect_iter06",
+    "max_abs_theta": 0.7890625,
+    "point_elapsed_wall_time_s": 96.70013142400012,
+    "repeats": 5,
+    "rho_margin_2sigma_post_neutral_alt_drift": 0.0728084652379011,
+    "rho_max_post_neutral_alt_drift": 0.05805778503417969,
+    "rho_max_post_neutral_xy_drift": 1.9704174360062845,
+    "rho_max_post_neutral_xy_velocity": 0.9771107039405896,
+    "rho_mean_post_neutral_alt_drift": 0.015530014038085937,
+    "rho_mean_post_neutral_xy_drift": 1.9558578630380037,
+    "rho_mean_post_neutral_xy_velocity": 0.9697805549129697,
+    "rho_min_post_neutral_alt_drift": -0.006270408630371094,
+    "rho_min_post_neutral_xy_drift": 1.9206069235496837,
+    "rho_min_post_neutral_xy_velocity": 0.9587322386783552,
+    "rho_nonpositive_post_neutral_alt_drift": 3,
+    "rho_nonpositive_post_neutral_xy_drift": 0,
+    "rho_nonpositive_post_neutral_xy_velocity": 0,
+    "rho_std_post_neutral_alt_drift": 0.028639225599907583,
+    "rho_std_post_neutral_xy_drift": 0.020590575340997102,
+    "rho_std_post_neutral_xy_velocity": 0.007923920102077788,
+    "robustness_class": "noise_band",
+    "stage": "boundary_bisection",
+    "support_size_abs_gt_0p1": 10,
+    "theta_hash": "8da972d72aa8c361",
+    "theta_path": "artifacts/alt_drift_seed0_v0/thetas/h1_boundary_bisect_iter06_8da972d72aa8c361.npy"
+  },
+  "channel_mass": [
+    {
+      "channel": "throttle",
+      "share": 0.9103644202531659,
+      "weight": 8.260758638381958
+    },
+    {
+      "channel": "yaw",
+      "share": 0.036811235421889285,
+      "weight": 0.3340296745300293
+    },
+    {
+      "channel": "pitch",
+      "share": 0.02714272314260543,
+      "weight": 0.24629640579223633
+    },
+    {
+      "channel": "roll",
+      "share": 0.0256816211823394,
+      "weight": 0.23303818702697754
+    }
+  ],
+  "confirmatory_label": "confirmatory PX4 alt_drift",
+  "delta_probe": 0.2,
+  "derived_A_phi": [
+    "throttle"
+  ],
+  "elapsed_wall_time_s": 8675.508996288,
+  "h_alt_1_decision": {
+    "decision": "confirm",
+    "largest_tilt_channel": "pitch",
+    "largest_tilt_share": 0.02714272314260543,
+    "recommended_A_alt": [
+      "throttle"
+    ],
+    "rule": "confirm if throttle is top and share>=0.50; narrow if throttle top and share in [0.30,0.50) or throttle+largest tilt>=0.70; falsify if throttle is not top",
+    "throttle_plus_largest_tilt_share": 0.9375071433957713,
+    "throttle_share": 0.9103644202531659,
+    "top_channel": "throttle"
+  },
+  "phase": "Phase 1 H-alt-1",
+  "property": "post_neutral_alt_drift",
+  "query_attempt_count_including_timeout_retries": 447,
+  "scenario_id": "px4_position",
+  "seed": 0,
+  "status": "complete",
+  "successful_query_count": 445,
+  "timeout_retry_count": 2,
+  "window_mass": [
+    {
+      "share": 0.7348690988325425,
+      "weight": 6.66829252243042,
+      "window_id": 9
+    },
+    {
+      "share": 0.1628513466893924,
+      "weight": 1.4777331352233887,
+      "window_id": 8
+    },
+    {
+      "share": 0.02163363122552689,
+      "weight": 0.1963062286376953,
+      "window_id": 1
+    },
+    {
+      "share": 0.017521715266280834,
+      "weight": 0.15899419784545898,
+      "window_id": 3
+    },
+    {
+      "share": 0.015801730074622374,
+      "weight": 0.1433868408203125,
+      "window_id": 7
+    },
+    {
+      "share": 0.014744494363187454,
+      "weight": 0.13379335403442386,
+      "window_id": 5
+    },
+    {
+      "share": 0.012209629993775556,
+      "weight": 0.11079168319702148,
+      "window_id": 4
+    },
+    {
+      "share": 0.008956787020788169,
+      "weight": 0.08127498626708984,
+      "window_id": 2
+    },
+    {
+      "share": 0.006592208069284962,
+      "weight": 0.05981850624084473,
+      "window_id": 6
+    },
+    {
+      "share": 0.004819358464598841,
+      "weight": 0.0437314510345459,
+      "window_id": 0
+    }
+  ]
+}

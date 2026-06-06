@@ -1,0 +1,4 @@
+seed,probe_dir,label,max_abs_theta,support,active_channels,active_channel_count,duration_support_over_active_channels_windows,duration_label_d_windows,duration_crosscheck_match,rho_mean_xy_velocity,rho_std_xy_velocity,arm_c_amp_dist_min,arm_c_amp_dist_p25,arm_c_amp_dist_median,arm_c_amp_dist_max,probe_groups_csv_present
+0,artifacts/direction_a_px4_position_seed0_v0,env0161_deg045_w06_d04_iter04_a0p4062,0.40625,8,"pitch,roll",2,4.0,4,True,-0.09229208495793513,0.02120639924320243,0.40625,0.46875,0.5,1.0,False
+1,artifacts/direction_a_px4_position_seed1_v0,env0221_deg225_w00_d10_iter04_a0p2812,0.28125,20,"pitch,roll",2,10.0,10,True,-0.0484001339572326,0.02353733743466496,0.28125,0.4140625,0.6171875,1.0,True
+2,artifacts/direction_a_px4_position_seed2_v0,env0186_deg090_w04_d05_iter06_a0p4453,0.4453125,6,pitch,1,6.0,5,False,-0.022429553675112547,0.009564925649428018,0.4453125,0.578125,0.75,1.0,True

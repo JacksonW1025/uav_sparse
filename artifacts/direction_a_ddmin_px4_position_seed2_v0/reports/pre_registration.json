@@ -1,0 +1,52 @@
+{
+  "ddmin_budget": {
+    "amplitude_bisection_iters_per_pass": 7,
+    "j5_points_per_start": 40,
+    "max_outer_passes": 4,
+    "max_starts": 10,
+    "moderate_starts": 3,
+    "repeats_per_point": 5,
+    "support_pass_reserves_amplitude_points": true
+  },
+  "decision_rule": {
+    "necessary_or_better": "fails cleanliness, reliability, or cost comparison",
+    "replaceable": "majority of starts become clean robust triggers at cost comparable to Arm C"
+  },
+  "input": {
+    "channels": [
+      "roll",
+      "pitch",
+      "yaw",
+      "throttle"
+    ],
+    "horizon_s": 5.0,
+    "max_delta_per_window": 0.25,
+    "max_value": 1.0,
+    "min_value": -1.0,
+    "neutral_tail_s": 8.0,
+    "window_s": 0.5
+  },
+  "scope": {
+    "D": 40,
+    "primary_property": "post_neutral_xy_velocity",
+    "scenario": "px4_position",
+    "seed": 2,
+    "starting_points": "cached Arm B robust violations from Direction-A probe"
+  },
+  "seed_freeze_control": {
+    "allow_nonzero_seed_flag": true,
+    "discipline_statement": "Nonzero seed replication is allowed only through an explicit flag; constants remain frozen to the seed-0 pre-registration.",
+    "nonzero_seed_unlocked": true
+  },
+  "thresholds": {
+    "clean_active_channels_subset": [
+      "pitch",
+      "roll"
+    ],
+    "clean_support_max": 8,
+    "interior_max_abs_theta": 0.5,
+    "robust_violation": "rho_mean + 2*rho_std < 0",
+    "sigma_multiplier": 2.0,
+    "support_abs_threshold": 0.1
+  }
+}

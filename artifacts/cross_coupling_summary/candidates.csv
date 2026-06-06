@@ -1,0 +1,5 @@
+candidate_id,candidate_type,input_set,input,output,natural_input,criterion,row_abs_share,lambda,max_abs_lambda,min_lambda,triggered_entries,h_rga_1_component,step_b_status
+C000,cross_coupling,throttle,throttle,vx,roll,row_abs_share>=0.20;abs(lambda)>=0.30,0.23627097692144886,0.3780233425118512,0.3780233425118512,0.3780233425118512,vx:throttle=0.378023,True,not_run_stepA_gate
+C001,cross_coupling,throttle,throttle,vy,pitch,abs(lambda)>=0.30,0.13597716321649447,-0.4006367356258092,0.4006367356258092,-0.4006367356258092,vy:throttle=-0.400637,True,not_run_stepA_gate
+C002,interaction,pitch+yaw,,,,any relevant lambda abs>=1.5 or <=0,,,1.1222323803452683,-0.1350143827356547,yaw_rate:pitch=-0.135014,True,not_run_stepA_gate
+C003,interaction,pitch+throttle,,,,any relevant lambda abs>=1.5 or <=0,,,1.1222323803452683,-0.4006367356258092,vy:throttle=-0.400637;vz:pitch=-0.0159559,True,not_run_stepA_gate

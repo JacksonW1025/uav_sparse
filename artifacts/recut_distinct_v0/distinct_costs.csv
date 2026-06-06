@@ -1,0 +1,10 @@
+seed,method,D,total_j5,j5_per_distinct,raw_count,raw_j5_per_raw_output,raw_count_over_distinct_D,distinct_cost_over_raw_cost,raw_cost_understatement_factor,raw_vs_distinct_note,raw_cost_source
+0,CADET_arm_C,7,80,11.428571428571429,18,4.444444444444445,2.5714285714285716,2.571428571428571,2.571428571428571,Arm C fixed 80 J5 points; D is main envelope distinct signature.,recut_channel_gentle_v0/channel_purity_costs.csv
+0,ddmin_direct,5,393,78.6,5,78.6,1.0,1.0,1.0,Only is_roll_pitch_only minimized triggers; total is ddmin J5 points.,recut_channel_gentle_v0/channel_purity_costs.csv
+0,ddmin_e2e,5,473,94.6,5,94.6,1.0,1.0,1.0,End-to-end total adds the 80 J5 Arm B starting-point budget.,recut_channel_gentle_v0/channel_purity_costs.csv
+1,CADET_arm_C,4,80,20.0,12,6.666666666666667,3.0,3.0,3.0,Arm C fixed 80 J5 points; D is main envelope distinct signature.,recut_channel_gentle_v0/channel_purity_costs.csv
+1,ddmin_direct,7,371,53.0,8,46.375,1.1428571428571428,1.1428571428571428,1.1428571428571428,Only is_roll_pitch_only minimized triggers; total is ddmin J5 points.,recut_channel_gentle_v0/channel_purity_costs.csv
+1,ddmin_e2e,7,451,64.42857142857143,8,56.375,1.1428571428571428,1.1428571428571428,1.1428571428571428,End-to-end total adds the 80 J5 Arm B starting-point budget.,recut_channel_gentle_v0/channel_purity_costs.csv
+2,CADET_arm_C,3,80,26.666666666666668,6,13.333333333333334,2.0,2.0,2.0,Arm C fixed 80 J5 points; D is main envelope distinct signature.,recut_channel_gentle_v0/channel_purity_costs.csv
+2,ddmin_direct,8,361,45.125,8,45.125,1.0,1.0,1.0,Only is_roll_pitch_only minimized triggers; total is ddmin J5 points.,recut_channel_gentle_v0/channel_purity_costs.csv
+2,ddmin_e2e,8,441,55.125,8,55.125,1.0,1.0,1.0,End-to-end total adds the 80 J5 Arm B starting-point budget.,recut_channel_gentle_v0/channel_purity_costs.csv

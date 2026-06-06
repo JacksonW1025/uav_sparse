@@ -1,0 +1,41 @@
+{
+  "bisection_iters": 7,
+  "discipline_statement": "No thresholds are changed after seeing alt_drift data.",
+  "input": {
+    "channels": [
+      "roll",
+      "pitch",
+      "yaw",
+      "throttle"
+    ],
+    "horizon_s": 5.0,
+    "max_delta_per_window": 0.25,
+    "max_value": 1.0,
+    "min_value": -1.0,
+    "neutral_tail_s": 8.0,
+    "window_s": 0.5
+  },
+  "phase": "Phase 1 H-alt-1",
+  "scope": {
+    "A_alt": [
+      "throttle"
+    ],
+    "D": 40,
+    "primary_property": "post_neutral_alt_drift",
+    "scenario": "px4_position",
+    "seed": 0
+  },
+  "source": "artifacts/alt_drift_prereg.md",
+  "thresholds": {
+    "delta_probe": 0.2,
+    "h_alt_1_confirm": "throttle top channel and throttle share >= 0.50",
+    "h_alt_1_falsify": "throttle is not top channel",
+    "h_alt_1_narrow": "throttle top and share in [0.30,0.50) or throttle+largest tilt >= 0.70",
+    "interior_max_abs_theta": 0.5,
+    "robust_safe": "rho_mean - 2*rho_std > 0",
+    "robust_violation": "rho_mean + 2*rho_std < 0",
+    "saturated_min_abs_theta": 0.9,
+    "sigma_multiplier": 2.0,
+    "support_abs_threshold": 0.1
+  }
+}

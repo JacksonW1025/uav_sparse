@@ -1,0 +1,17 @@
+{
+  "artifacts": {
+    "arm_purity": "artifacts/alt_drift_summary/arm_purity.csv",
+    "channel_mass": "artifacts/alt_drift_summary/channel_mass.csv",
+    "report": "artifacts/alt_drift_summary/alt_drift_report.md",
+    "signatures_seed0": "artifacts/alt_drift_summary/signatures_seed0.csv"
+  },
+  "context": "confirmatory PX4 alt_drift",
+  "derived_A_alt": [
+    "throttle"
+  ],
+  "go_no_go": "no_go_phase2",
+  "h_alt_1_decision": "confirm",
+  "h_alt_2_decision": "falsify",
+  "phase0_decision": "confirm",
+  "status": "phase1_complete"
+}

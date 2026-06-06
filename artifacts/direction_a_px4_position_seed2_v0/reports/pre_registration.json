@@ -1,0 +1,56 @@
+{
+  "bisection_iters": 7,
+  "channel_relevant_set_for_xy_velocity": [
+    "roll",
+    "pitch"
+  ],
+  "input": {
+    "channels": [
+      "roll",
+      "pitch",
+      "yaw",
+      "throttle"
+    ],
+    "horizon_s": 5.0,
+    "max_delta_per_window": 0.25,
+    "max_value": 1.0,
+    "min_value": -1.0,
+    "neutral_tail_s": 8.0,
+    "window_s": 0.5
+  },
+  "matched_budget": {
+    "arms": [
+      "A_uniform_random",
+      "B_random_interior_bracketing",
+      "C_channel_directed"
+    ],
+    "j5_points_per_arm": 80,
+    "repeats_per_point": 5
+  },
+  "rng_seed": 20260532,
+  "scope": {
+    "D": 40,
+    "pid_firmware_sensors": "frozen by simulator/config; runner only overrides stick min/max for this probe",
+    "primary_property": "post_neutral_xy_velocity",
+    "reported_cross_properties": [
+      "post_neutral_xy_drift",
+      "post_neutral_alt_drift"
+    ],
+    "scenario": "px4_position",
+    "seed": 2
+  },
+  "seed_freeze_control": {
+    "allow_nonzero_seed_flag": true,
+    "discipline_statement": "Nonzero seed replication is allowed only through an explicit flag; constants remain frozen to the seed-0 pre-registration.",
+    "nonzero_seed_unlocked": true
+  },
+  "thresholds": {
+    "interior_max_abs_theta": 0.5,
+    "moderate_interval": "(0.5, 0.9]",
+    "robust_safe": "rho_mean - 2*rho_std > 0",
+    "robust_violation": "rho_mean + 2*rho_std < 0",
+    "saturated_min_abs_theta": 0.9,
+    "sigma_multiplier": 2.0,
+    "support_abs_threshold": 0.1
+  }
+}

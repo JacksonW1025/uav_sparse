@@ -1,0 +1,13 @@
+provenance_label,phase,scenario,seed,cell_id,input,contract,contract_id,commanded_channels,measured_axis,status,phase1_eligible
+exploratory-hypothesis,Phase-0,px4_position,0,G01,I1,C1 Brake,C1,roll,xy_velocity,robust_safe,False
+exploratory-hypothesis,Phase-0,px4_position,0,G02,I1,C1 Brake,C1,pitch,xy_velocity,robust_safe,False
+exploratory-hypothesis,Phase-0,px4_position,0,G03,I1,C1 Brake,C1,throttle,climb_rate,robust_safe,False
+exploratory-hypothesis,Phase-0,px4_position,0,G04,I1,C1 Brake,C1,yaw,yaw_rate,robust_safe,False
+exploratory-hypothesis,Phase-0,px4_position,0,G05,I1,C2 Level,C2,roll,tilt,noise_band,False
+exploratory-hypothesis,Phase-0,px4_position,0,G06,I1,C2 Level,C2,pitch,tilt,noise_band,False
+exploratory-hypothesis,Phase-0,px4_position,0,G07,I2,C3 Envelope,C3,roll,"v_xy,tilt",robust_safe,False
+exploratory-hypothesis,Phase-0,px4_position,0,G08,I2,C3 Envelope,C3,pitch,"v_xy,tilt",robust_safe,False
+exploratory-hypothesis,Phase-0,px4_position,0,G09,I2,C3 Envelope,C3,throttle,"climb_rate_up,climb_rate_down",noise_band,False
+exploratory-hypothesis,Phase-0,px4_position,0,G10,I3,C4 Coupling,C4,throttle,xy_velocity,robust_safe,False
+exploratory-hypothesis,Phase-0,px4_position,0,G11,I3,C4 Coupling,C4,roll+throttle,"xy_velocity,climb_rate",robust_safe,False
+exploratory-hypothesis,Phase-0,px4_position,0,G12,I3,C4 Coupling,C4,pitch+throttle,"xy_velocity,climb_rate",robust_safe,False
