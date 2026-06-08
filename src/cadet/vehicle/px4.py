@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+import math
 from pathlib import Path
 
 import pandas as pd
@@ -14,6 +16,19 @@ from cadet.vehicle.mavlink_common import (
     start_process,
 )
 
+PX4_PARAM_TYPE_BY_METADATA = {
+    "FLOAT": mavutil.mavlink.MAV_PARAM_TYPE_REAL32,
+    "DOUBLE": mavutil.mavlink.MAV_PARAM_TYPE_REAL32,
+    "INT32": mavutil.mavlink.MAV_PARAM_TYPE_INT32,
+    "UINT32": mavutil.mavlink.MAV_PARAM_TYPE_UINT32,
+    "INT16": mavutil.mavlink.MAV_PARAM_TYPE_INT16,
+    "UINT16": mavutil.mavlink.MAV_PARAM_TYPE_UINT16,
+    "INT8": mavutil.mavlink.MAV_PARAM_TYPE_INT8,
+    "UINT8": mavutil.mavlink.MAV_PARAM_TYPE_UINT8,
+    "BOOL": mavutil.mavlink.MAV_PARAM_TYPE_INT32,
+    "BOOLEAN": mavutil.mavlink.MAV_PARAM_TYPE_INT32,
+}
+
 
 class PX4Adapter(MavlinkVehicleMixin, VehicleAdapter):
     def __init__(self, config):
@@ -23,6 +38,7 @@ class PX4Adapter(MavlinkVehicleMixin, VehicleAdapter):
         self.log_dir = Path("runs") / config.experiment_id / "sim_logs"
         self.process = None
         self.timing = {}
+        self._parameter_metadata_by_name: dict[str, dict] | None = None
 
     def prepare(self, scenario: ScenarioCfg, seed: int) -> None:
         self.timing = {}
@@ -43,6 +59,7 @@ class PX4Adapter(MavlinkVehicleMixin, VehicleAdapter):
         self._request_message_interval(mavutil.mavlink.MAVLINK_MSG_ID_HEARTBEAT, 2)
         self._set_param("COM_RC_IN_MODE", 1, mavutil.mavlink.MAV_PARAM_TYPE_INT32)
         self._set_param("MIS_TAKEOFF_ALT", float(scenario.takeoff_alt_m), mavutil.mavlink.MAV_PARAM_TYPE_REAL32)
+        self._apply_param_overrides(scenario)
         self._arm()
         mav.set_mode("TAKEOFF")
         self._wait_altitude(float(scenario.takeoff_alt_m), tolerance_m=0.8, timeout_s=60)
@@ -85,3 +102,52 @@ class PX4Adapter(MavlinkVehicleMixin, VehicleAdapter):
         if mode == "Hold":
             return "LOITER"
         return mode
+
+    def _apply_param_overrides(self, scenario: ScenarioCfg) -> None:
+        overrides = dict(getattr(scenario, "param_overrides", {}) or {})
+        for name, value in overrides.items():
+            metadata = self._parameter_metadata(name)
+            if bool(metadata.get("rebootRequired", False)):
+                raise RuntimeError(f"PX4 parameter {name} requires reboot; per-run override cannot guarantee effect")
+            param_type = self._param_type_from_metadata(name, metadata)
+            if param_type != mavutil.mavlink.MAV_PARAM_TYPE_REAL32 and not math.isclose(
+                float(value),
+                float(int(value)),
+                rel_tol=0.0,
+                abs_tol=0.0,
+            ):
+                raise RuntimeError(f"PX4 parameter {name} has integer type but override value is non-integral: {value}")
+            set_ok = self._set_param(name, float(value), param_type)
+            if not set_ok:
+                raise RuntimeError(f"PX4 parameter override failed to set {name}={value}")
+            actual, actual_type = self._read_param(name)
+            self._verify_param_value(name, value, actual)
+            safe_name = "".join(ch if ch.isalnum() else "_" for ch in name)
+            self.timing[f"param_override_{safe_name}_target"] = float(value)
+            self.timing[f"param_override_{safe_name}_readback"] = float(actual)
+            self.timing[f"param_override_{safe_name}_param_type"] = int(actual_type)
+            self.timing[f"param_override_{safe_name}_reboot_required"] = bool(metadata.get("rebootRequired", False))
+
+    def _parameter_metadata(self, name: str) -> dict:
+        metadata = self._load_parameter_metadata()
+        if name not in metadata:
+            raise RuntimeError(f"PX4 parameter metadata not found for override: {name}")
+        return metadata[name]
+
+    def _load_parameter_metadata(self) -> dict[str, dict]:
+        if self._parameter_metadata_by_name is not None:
+            return self._parameter_metadata_by_name
+        path = Path(self.sim_cfg.get("parameters_json", self.px4_root / "build/px4_sitl_default/parameters.json"))
+        if not path.exists():
+            raise RuntimeError(f"PX4 parameter metadata file not found: {path}")
+        with path.open("r", encoding="utf-8") as f:
+            raw = json.load(f)
+        parameters = raw.get("parameters", [])
+        self._parameter_metadata_by_name = {str(row["name"]): dict(row) for row in parameters if "name" in row}
+        return self._parameter_metadata_by_name
+
+    def _param_type_from_metadata(self, name: str, metadata: dict) -> int:
+        type_name = str(metadata.get("type", "Float")).upper()
+        if type_name not in PX4_PARAM_TYPE_BY_METADATA:
+            raise RuntimeError(f"Unsupported PX4 parameter type for {name}: {metadata.get('type')}")
+        return PX4_PARAM_TYPE_BY_METADATA[type_name]

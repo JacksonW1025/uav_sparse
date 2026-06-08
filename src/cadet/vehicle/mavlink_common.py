@@ -130,6 +130,33 @@ class MavlinkVehicleMixin:
                     return True
         return False
 
+    def _read_param(self, name: str, timeout_s: float = 5.0) -> tuple[float | int, int]:
+        if self.mav is None:
+            raise RuntimeError("Cannot read parameter without an active MAVLink connection")
+        encoded = name.encode("utf-8")
+        self.mav.mav.param_request_read_send(
+            self.mav.target_system,
+            mavutil.mavlink.MAV_COMP_ID_AUTOPILOT1,
+            encoded,
+            -1,
+        )
+        deadline = time.monotonic() + timeout_s
+        while time.monotonic() < deadline:
+            msg = self.mav.recv_match(type="PARAM_VALUE", blocking=True, timeout=0.5)
+            if msg is None:
+                continue
+            param_id = msg.param_id
+            if isinstance(param_id, bytes):
+                param_id = param_id.decode("utf-8", errors="ignore")
+            if str(param_id).rstrip("\x00") == name:
+                param_type = int(getattr(msg, "param_type", mavutil.mavlink.MAV_PARAM_TYPE_REAL32))
+                return _decode_param_value(float(msg.param_value), param_type), param_type
+        raise TimeoutError(f"Timed out reading parameter {name}")
+
+    def _verify_param_value(self, name: str, expected: float | int, actual: float | int, tolerance: float = 1e-4) -> None:
+        if not math.isclose(float(actual), float(expected), rel_tol=tolerance, abs_tol=tolerance):
+            raise RuntimeError(f"Parameter {name} readback mismatch: expected {expected}, got {actual}")
+
     def _wait_ack(self, command: int | None = None, timeout_s: float = 5.0):
         if self.mav is None:
             return None
@@ -604,4 +631,22 @@ def _encode_param_value(value: float | int, param_type: int) -> float:
         return struct.unpack(">f", struct.pack(">xxxb", int(value)))[0]
     if param_type == mavutil.mavlink.MAV_PARAM_TYPE_UINT8:
         return struct.unpack(">f", struct.pack(">xxxB", int(value)))[0]
+    return float(value)
+
+
+def _decode_param_value(value: float, param_type: int) -> float | int:
+    if param_type == mavutil.mavlink.MAV_PARAM_TYPE_REAL32:
+        return float(value)
+    if param_type == mavutil.mavlink.MAV_PARAM_TYPE_INT32:
+        return int(struct.unpack(">i", struct.pack(">f", float(value)))[0])
+    if param_type == mavutil.mavlink.MAV_PARAM_TYPE_UINT32:
+        return int(struct.unpack(">I", struct.pack(">f", float(value)))[0])
+    if param_type == mavutil.mavlink.MAV_PARAM_TYPE_INT16:
+        return int(struct.unpack(">xxh", struct.pack(">f", float(value)))[0])
+    if param_type == mavutil.mavlink.MAV_PARAM_TYPE_UINT16:
+        return int(struct.unpack(">xxH", struct.pack(">f", float(value)))[0])
+    if param_type == mavutil.mavlink.MAV_PARAM_TYPE_INT8:
+        return int(struct.unpack(">xxxb", struct.pack(">f", float(value)))[0])
+    if param_type == mavutil.mavlink.MAV_PARAM_TYPE_UINT8:
+        return int(struct.unpack(">xxxB", struct.pack(">f", float(value)))[0])
     return float(value)

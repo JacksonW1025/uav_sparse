@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import yaml
 
@@ -16,6 +16,7 @@ class ScenarioCfg:
     takeoff_alt_m: float
     properties: list[str]
     t_switch_s: float | None = None
+    param_overrides: Mapping[str, float] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
