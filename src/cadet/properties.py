@@ -22,25 +22,28 @@ FULL_TAIL_WINDOW_S = (0.0, 8.0)
 NONDECAY_RATIO = 0.80
 
 
-def compute_robustness(parsed_log, property_name: str, config) -> float:
+def compute_robustness(parsed_log, property_name: str, config, window: tuple[float, float] | None = None) -> float:
     t_neutral = float(parsed_log["t_neutral_s"].iloc[0])
     tail = parsed_log[parsed_log["time_s"] >= t_neutral]
     if tail.empty:
         raise ValueError("No samples at or after t_neutral_s")
+    eval_tail = tail if window is None else _window_tail(tail, window)
     first = tail.iloc[0]
     if property_name == "post_neutral_xy_drift":
         d_max = float(config.properties[property_name]["d_max_m"])
-        drift = np.sqrt((tail["x_m"] - first["x_m"]) ** 2 + (tail["y_m"] - first["y_m"]) ** 2)
+        drift = np.sqrt((eval_tail["x_m"] - first["x_m"]) ** 2 + (eval_tail["y_m"] - first["y_m"]) ** 2)
         return float(d_max - drift.max())
     if property_name == "post_neutral_alt_drift":
         h_max = float(config.properties[property_name]["h_max_m"])
-        drift = np.abs(tail["alt_m"] - float(first["alt_m"]))
+        drift = np.abs(eval_tail["alt_m"] - float(first["alt_m"]))
         return float(h_max - drift.max())
     if property_name == "post_neutral_xy_velocity":
         v_max = float(config.properties[property_name]["v_max_mps"])
-        speed = np.sqrt(tail["vx_mps"] ** 2 + tail["vy_mps"] ** 2)
+        speed = np.sqrt(eval_tail["vx_mps"] ** 2 + eval_tail["vy_mps"] ** 2)
         return float(v_max - speed.max())
     if is_residual_rate_property(property_name):
+        if window is not None:
+            return float(_compute_residual_rate_rho_window(parsed_log, property_name, config, t_neutral, window))
         return float(compute_residual_rate_metrics(parsed_log, property_name, config)["rho_tier1"])
     raise KeyError(f"Unknown property: {property_name}")
 
@@ -172,6 +175,40 @@ def _rate_series(parsed_log, property_name: str) -> np.ndarray:
 
 def _absolute_window(t_neutral: float, relative_window: tuple[float, float]) -> tuple[float, float]:
     return float(t_neutral + relative_window[0]), float(t_neutral + relative_window[1])
+
+
+def _window_tail(tail, window: tuple[float, float]):
+    lo, hi = _validate_window(window)
+    windowed = tail[(tail["time_s"] >= lo) & (tail["time_s"] <= hi)]
+    if windowed.empty:
+        raise ValueError(f"No telemetry samples in window [{lo}, {hi}] at or after t_neutral_s")
+    return windowed
+
+
+def _compute_residual_rate_rho_window(
+    parsed_log,
+    property_name: str,
+    config,
+    t_neutral: float,
+    window: tuple[float, float],
+) -> float:
+    lo, hi = _validate_window(window)
+    times = parsed_log["time_s"].to_numpy(dtype=float)
+    abs_rate = np.abs(_rate_series(parsed_log, property_name))
+    threshold = residual_rate_threshold(property_name, config)
+    mask = (times >= t_neutral) & (times >= lo) & (times <= hi)
+    if not np.any(mask):
+        raise ValueError(f"No telemetry samples in window [{lo}, {hi}] at or after t_neutral_s")
+    return float(threshold - np.max(abs_rate[mask]))
+
+
+def _validate_window(window: tuple[float, float]) -> tuple[float, float]:
+    if len(window) != 2:
+        raise ValueError("window must be a (t0, t1) pair")
+    lo, hi = float(window[0]), float(window[1])
+    if hi < lo:
+        raise ValueError(f"window end must be >= start: [{lo}, {hi}]")
+    return lo, hi
 
 
 def _window_peak(times: np.ndarray, values: np.ndarray, lo: float, hi: float) -> float:
