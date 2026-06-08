@@ -29,6 +29,11 @@ PX4_PARAM_TYPE_BY_METADATA = {
     "BOOLEAN": mavutil.mavlink.MAV_PARAM_TYPE_INT32,
 }
 
+PX4_DEFAULT_PARAM_OVERRIDES = {
+    "MPC_ACC_HOR": 3.0,
+    "MPC_JERK_MAX": 8.0,
+}
+
 
 class PX4Adapter(MavlinkVehicleMixin, VehicleAdapter):
     def __init__(self, config):
@@ -104,7 +109,8 @@ class PX4Adapter(MavlinkVehicleMixin, VehicleAdapter):
         return mode
 
     def _apply_param_overrides(self, scenario: ScenarioCfg) -> None:
-        overrides = dict(getattr(scenario, "param_overrides", {}) or {})
+        overrides = dict(PX4_DEFAULT_PARAM_OVERRIDES)
+        overrides.update(dict(getattr(scenario, "param_overrides", {}) or {}))
         for name, value in overrides.items():
             metadata = self._parameter_metadata(name)
             if bool(metadata.get("rebootRequired", False)):

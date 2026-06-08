@@ -52,7 +52,11 @@ def test_px4_prepare_applies_param_overrides_after_setup_with_readback(monkeypat
 
     def fake_read_param(name, timeout_s=5.0):
         read_requests.append(name)
-        return 0.5, mavutil.mavlink.MAV_PARAM_TYPE_REAL32
+        values = {
+            "MPC_ACC_HOR": 0.5,
+            "MPC_JERK_MAX": 8.0,
+        }
+        return values[name], mavutil.mavlink.MAV_PARAM_TYPE_REAL32
 
     monkeypatch.setattr(adapter, "_set_param", fake_set_param)
     monkeypatch.setattr(adapter, "_read_param", fake_read_param)
@@ -63,18 +67,22 @@ def test_px4_prepare_applies_param_overrides_after_setup_with_readback(monkeypat
         ("COM_RC_IN_MODE", 1, mavutil.mavlink.MAV_PARAM_TYPE_INT32),
         ("MIS_TAKEOFF_ALT", 5.0, mavutil.mavlink.MAV_PARAM_TYPE_REAL32),
         ("MPC_ACC_HOR", 0.5, mavutil.mavlink.MAV_PARAM_TYPE_REAL32),
+        ("MPC_JERK_MAX", 8.0, mavutil.mavlink.MAV_PARAM_TYPE_REAL32),
     ]
-    assert read_requests == ["MPC_ACC_HOR"]
+    assert read_requests == ["MPC_ACC_HOR", "MPC_JERK_MAX"]
     assert adapter.timing["param_override_MPC_ACC_HOR_target"] == pytest.approx(0.5)
     assert adapter.timing["param_override_MPC_ACC_HOR_readback"] == pytest.approx(0.5)
     assert adapter.timing["param_override_MPC_ACC_HOR_reboot_required"] is False
+    assert adapter.timing["param_override_MPC_JERK_MAX_target"] == pytest.approx(8.0)
+    assert adapter.timing["param_override_MPC_JERK_MAX_readback"] == pytest.approx(8.0)
 
 
-def test_px4_prepare_empty_param_overrides_keeps_setup_param_sequence(monkeypatch):
+def test_px4_prepare_empty_param_overrides_applies_explicit_defaults(monkeypatch):
     config = load_config("configs/rq1_minimal.yaml")
     scenario = config.scenario_by_id("px4_position")
     adapter = PX4Adapter(config)
     calls = []
+    read_requests = []
     dummy = DummyMav()
 
     monkeypatch.setattr(px4_module, "start_process", lambda *args, **kwargs: object())
@@ -88,21 +96,34 @@ def test_px4_prepare_empty_param_overrides_keeps_setup_param_sequence(monkeypatc
     monkeypatch.setattr(adapter, "_manual_climb_to_altitude", lambda *args, **kwargs: None)
     monkeypatch.setattr(adapter, "_set_scenario_mode", lambda *args, **kwargs: None)
     monkeypatch.setattr(adapter, "_wait_hover_stable", lambda *args, **kwargs: None)
-    monkeypatch.setattr(adapter, "_read_param", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("unexpected readback")))
+    monkeypatch.setattr(adapter, "_parameter_metadata", lambda name: {"name": name, "type": "Float"})
+
+    def fake_read_param(name, timeout_s=5.0):
+        read_requests.append(name)
+        values = {
+            "MPC_ACC_HOR": 3.0,
+            "MPC_JERK_MAX": 8.0,
+        }
+        return values[name], mavutil.mavlink.MAV_PARAM_TYPE_REAL32
 
     def fake_set_param(name, value, param_type, timeout_s=5.0):
         calls.append((name, value, param_type))
         return True
 
     monkeypatch.setattr(adapter, "_set_param", fake_set_param)
+    monkeypatch.setattr(adapter, "_read_param", fake_read_param)
 
     adapter.prepare(scenario, seed=0)
 
     assert calls == [
         ("COM_RC_IN_MODE", 1, mavutil.mavlink.MAV_PARAM_TYPE_INT32),
         ("MIS_TAKEOFF_ALT", 5.0, mavutil.mavlink.MAV_PARAM_TYPE_REAL32),
+        ("MPC_ACC_HOR", 3.0, mavutil.mavlink.MAV_PARAM_TYPE_REAL32),
+        ("MPC_JERK_MAX", 8.0, mavutil.mavlink.MAV_PARAM_TYPE_REAL32),
     ]
-    assert not any(key.startswith("param_override_") for key in adapter.timing)
+    assert read_requests == ["MPC_ACC_HOR", "MPC_JERK_MAX"]
+    assert adapter.timing["param_override_MPC_ACC_HOR_readback"] == pytest.approx(3.0)
+    assert adapter.timing["param_override_MPC_JERK_MAX_readback"] == pytest.approx(8.0)
 
 
 def test_px4_param_override_readback_mismatch_raises(monkeypatch):
