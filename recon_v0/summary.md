@@ -112,3 +112,36 @@ Evaluation used `compute_robustness(..., window=(11.0, 13.0))` and recorded `[5,
 ### Decision Table Row
 
 Stage 0 is a control/oracle gate only. Phase D is not entered until this STOP C result is reviewed.
+
+## Amendment 02 Step 1 STOP
+
+Status: stopped before constructing `theta**` or running any Amendment 02 recon
+data.
+
+Amendment 02 was committed in `0727a1e`. Step 1 then checked current SITL
+parameters and the active PX4 source path.
+
+Actual findings:
+
+- Current SITL readback: `MPC_POS_MODE=4`.
+- Current SITL also read back `MPC_ACC_HOR=0.5`, meaning the prior
+  positive-control override persisted in PX4 parameter storage. Future default
+  runs need an explicit reset/cleanup mechanism before they can be interpreted
+  as default-parameter runs.
+- In `MPC_POS_MODE=4`, `FlightModeManager.cpp` selects
+  `ManualAcceleration`.
+- `ManualAcceleration` calls `StickAccelerationXY::generateSetpoints()`.
+- `StickAccelerationXY` computes commanded acceleration and zero-stick drag
+  using `MPC_ACC_HOR`, and applies `MPC_JERK_MAX` to the acceleration slew.
+- `MPC_DEC_HOR_SLOW` is absent from the current PX4 parameter metadata.
+- `MPC_ACC_HOR_MAX` is present but the current PX4 main Parameter Reference and
+  local source metadata say mode 4 does not use it and should use
+  `MPC_ACC_HOR` instead.
+
+Therefore Step 1 did not identify a valid corrected deceleration-side scan
+parameter among the Amendment 02 candidates. The code reality conflicts with
+the requested assumption that the current-mode brake authority is
+`MPC_DEC_HOR_SLOW` or `MPC_ACC_HOR_MAX`.
+
+No `theta**_sat`, no `theta**_sub`, no repaired positive control, no corrected
+Stage 2, and no Stage 1 inventory were run.

@@ -52,6 +52,43 @@ Candidate ALTCTL secondary parameter, if Stage 2 secondary probe is reached:
 `0.1`, default `4.0`, from PX4 Guide main Parameter Reference, lines
 30418-30425.
 
+## Amendment 02 Step 1 Code-Reality Stop
+
+Status: stopped before constructing `theta**` or running any Amendment 02
+recon data.
+
+Current SITL readback, using the local PX4 build at
+`/home/car/PX4-Autopilot`, returned:
+
+- `MPC_POS_MODE=4`, i.e. the Position-mode manual acceleration task is active.
+- `MPC_ACC_HOR=0.5`, showing the prior positive-control override persisted in
+  PX4 parameter storage after the run.
+- `MPC_ACC_HOR_MAX=5.0`, `MPC_JERK_MAX=8.0`, `MPC_VEL_MANUAL=10.0`.
+
+Source/code reality for `MPC_POS_MODE=4`:
+
+- `src/modules/flight_mode_manager/FlightModeManager.cpp` selects
+  `FlightTaskIndex::ManualAcceleration` for `MPC_POS_MODE=4`.
+- `src/modules/flight_mode_manager/tasks/ManualAcceleration/FlightTaskManualAcceleration.cpp`
+  calls `StickAccelerationXY::generateSetpoints(...)`.
+- `src/modules/flight_mode_manager/tasks/Utility/StickAccelerationXY.cpp`
+  computes acceleration and zero-stick drag from `MPC_ACC_HOR`, constrains
+  acceleration changes with `MPC_JERK_MAX`, and does not reference
+  `MPC_ACC_HOR_MAX`.
+- The current generated parameter metadata has no `MPC_DEC_HOR_SLOW`.
+- The PX4 main Parameter Reference lists `MPC_ACC_HOR_MAX` as min `2`, max
+  `15`, increment `1`, default `5.0`, but explicitly says for
+  `MPC_POS_MODE 4` it is not used and to use `MPC_ACC_HOR` instead:
+  https://docs.px4.io/main/en/advanced_config/parameter_reference#mpc_acc_hor_max
+- The same reference lists `MPC_ACC_HOR` as min `2`, max `15`, increment `1`,
+  default `3.0`, used in manual `MPC_POS_MODE` acceleration based mode:
+  https://docs.px4.io/main/en/advanced_config/parameter_reference#mpc_acc_hor
+
+Therefore the Amendment 02 candidate correction does not identify a usable
+deceleration-side Stage 2 parameter in the current SITL/code reality:
+`MPC_DEC_HOR_SLOW` is absent, and `MPC_ACC_HOR_MAX` is explicitly not used in
+`MPC_POS_MODE=4`. No corrected Stage 2 parameter is registered here.
+
 ## Code-Reality Precheck
 
 Before running Stage 0, the local oracle entry point was checked:
