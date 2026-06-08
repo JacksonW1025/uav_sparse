@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -16,6 +17,8 @@ from cadet.properties import compute_all_properties
 from cadet.vehicle.ardupilot import ArduPilotAdapter
 from cadet.vehicle.px4 import PX4Adapter
 from cadet.vehicle.synthetic import SyntheticAdapter
+
+XY_SPEED_DIAGNOSTIC_WINDOWS_S = ((5.0, 7.0), (7.0, 9.0), (9.0, 11.0), (11.0, 13.0))
 
 
 @dataclass
@@ -96,6 +99,7 @@ def run_query(
         run_wall_time_s = time.monotonic() - run_start
         parse_start = time.monotonic()
         parsed_log = adapter.parse_log(raw_log_path)
+        parsed_log = _augment_parsed_log_diagnostics(parsed_log)
         parse_wall_time_s = time.monotonic() - parse_start
     finally:
         shutdown_start = time.monotonic()
@@ -123,6 +127,7 @@ def run_query(
     }
     if getattr(scenario, "t_switch_s", None) is not None:
         metadata["t_switch_s"] = float(scenario.t_switch_s)
+    metadata.update(_telemetry_diagnostics(parsed_log))
     for key, value in adapter_timing.items():
         metadata[f"adapter_{key}"] = value
     metadata_path.write_text(json.dumps(metadata, indent=2, sort_keys=True), encoding="utf-8")
@@ -148,6 +153,88 @@ def _scenario_runtime_cache_tag(scenario: ScenarioCfg) -> str | None:
 
 def _cache_float_label(value: float) -> str:
     return f"{float(value):.3f}".replace("-", "m").replace(".", "p")
+
+
+def _augment_parsed_log_diagnostics(parsed_log: pd.DataFrame) -> pd.DataFrame:
+    df = parsed_log.copy()
+    if {"vx_mps", "vy_mps"}.issubset(df.columns):
+        vx = pd.to_numeric(df["vx_mps"], errors="coerce")
+        vy = pd.to_numeric(df["vy_mps"], errors="coerce")
+        df["xy_speed_mps"] = np.sqrt(vx**2 + vy**2)
+    if _has_transition_fields(df):
+        df["velocity_at_transition_mps"] = _velocity_at_transition_mps(df)
+    return df
+
+
+def _telemetry_diagnostics(parsed_log: pd.DataFrame) -> dict[str, float]:
+    diagnostics = {}
+    if "xy_speed_mps" in parsed_log and "time_s" in parsed_log:
+        for lo, hi in XY_SPEED_DIAGNOSTIC_WINDOWS_S:
+            diagnostics[f"xy_speed_peak_{int(lo)}_{int(hi)}_mps"] = _xy_speed_peak(parsed_log, lo, hi)
+    if _has_transition_fields(parsed_log):
+        first_request_t_s = _first_finite(parsed_log, "transition_first_request_t_s")
+        observed_t_s = _first_finite(parsed_log, "transition_observed_t_s")
+        diagnostics.update(
+            {
+                "transition_t_switch_s": _first_finite(parsed_log, "transition_t_switch_s"),
+                "transition_first_request_t_s": first_request_t_s,
+                "transition_observed_t_s": observed_t_s,
+                "transition_request_count": _first_finite(parsed_log, "transition_request_count"),
+                "velocity_at_transition_mps": _velocity_at_transition_mps(parsed_log),
+                "transition_request_to_observed_delay_s": (
+                    observed_t_s - first_request_t_s
+                    if math.isfinite(observed_t_s) and math.isfinite(first_request_t_s)
+                    else math.nan
+                ),
+            }
+        )
+    return diagnostics
+
+
+def _has_transition_fields(parsed_log: pd.DataFrame) -> bool:
+    return any(
+        name in parsed_log
+        for name in ["transition_t_switch_s", "transition_first_request_t_s", "transition_observed_t_s"]
+    )
+
+
+def _velocity_at_transition_mps(parsed_log: pd.DataFrame) -> float:
+    observed_t_s = _first_finite(parsed_log, "transition_observed_t_s")
+    if not math.isfinite(observed_t_s) or "time_s" not in parsed_log:
+        return math.nan
+    if "xy_speed_mps" not in parsed_log and {"vx_mps", "vy_mps"}.issubset(parsed_log.columns):
+        speed = np.sqrt(
+            pd.to_numeric(parsed_log["vx_mps"], errors="coerce") ** 2
+            + pd.to_numeric(parsed_log["vy_mps"], errors="coerce") ** 2
+        )
+    elif "xy_speed_mps" in parsed_log:
+        speed = pd.to_numeric(parsed_log["xy_speed_mps"], errors="coerce")
+    else:
+        return math.nan
+    times = pd.to_numeric(parsed_log["time_s"], errors="coerce")
+    valid = times.notna() & speed.notna()
+    if not bool(valid.any()):
+        return math.nan
+    idx = (times[valid] - observed_t_s).abs().idxmin()
+    return float(speed.loc[idx])
+
+
+def _xy_speed_peak(parsed_log: pd.DataFrame, lo: float, hi: float) -> float:
+    times = pd.to_numeric(parsed_log["time_s"], errors="coerce")
+    speed = pd.to_numeric(parsed_log["xy_speed_mps"], errors="coerce")
+    mask = (times >= float(lo)) & (times <= float(hi)) & speed.notna()
+    if not bool(mask.any()):
+        return math.nan
+    return float(speed.loc[mask].max())
+
+
+def _first_finite(parsed_log: pd.DataFrame, column: str) -> float:
+    if column not in parsed_log:
+        return math.nan
+    values = pd.to_numeric(parsed_log[column], errors="coerce").dropna()
+    if values.empty:
+        return math.nan
+    return float(values.iloc[0])
 
 
 def _append_jsonl(output_dir: Path, config, row: dict) -> None:
