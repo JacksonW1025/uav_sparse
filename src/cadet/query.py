@@ -58,6 +58,9 @@ def run_query(
     projected = project_theta(theta, config)
     thash = theta_hash(projected)
     query_id = f"{thash}_{scenario.id}_{seed}"
+    runtime_tag = _scenario_runtime_cache_tag(scenario)
+    if runtime_tag:
+        query_id = f"{query_id}_{runtime_tag}"
     if cache_tag:
         query_id = f"{query_id}_{cache_tag}"
     query_dir = output_dir / "queries" / query_id
@@ -125,6 +128,26 @@ def run_query(
     metadata_path.write_text(json.dumps(metadata, indent=2, sort_keys=True), encoding="utf-8")
     _append_jsonl(output_dir, config, {"query_id": query_id, **metadata, "robustness": robustness})
     return QueryResult(query_id, thash, robustness, parsed_path, metadata)
+
+
+def _scenario_runtime_cache_tag(scenario: ScenarioCfg) -> str | None:
+    parts = []
+    t_switch_s = getattr(scenario, "t_switch_s", None)
+    if t_switch_s is not None:
+        parts.append(f"ts{_cache_float_label(float(t_switch_s))}")
+    overrides = dict(getattr(scenario, "param_overrides", {}) or {})
+    if overrides:
+        payload = json.dumps(
+            {str(name): float(value) for name, value in sorted(overrides.items())},
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        parts.append(f"params{hashlib.sha256(payload.encode('utf-8')).hexdigest()[:10]}")
+    return "_".join(parts) if parts else None
+
+
+def _cache_float_label(value: float) -> str:
+    return f"{float(value):.3f}".replace("-", "m").replace(".", "p")
 
 
 def _append_jsonl(output_dir: Path, config, row: dict) -> None:
