@@ -78,3 +78,37 @@ selected, and oracle sensitivity under the positive control is not evaluated.
 No row in the preregistered decision table is reached. This is a pre-Stage-0
 parameter-override API stop, not evidence for `H_mode`, `H_conjunction`, or
 `H_null`.
+
+## STOP C Stage 0 Results
+
+Status: Stage 0 executed and stopped before Phase D.
+
+Phase A2 parameter override support commit: `9351b80`.
+Run artifacts directory: `runs/recon_stage0_terminal_v0`.
+Evaluation used `compute_robustness(..., window=(11.0, 13.0))` and recorded `[5,7]`, `[7,9]`, `[9,11]`, `[11,13]` XY-speed peaks.
+
+### Stage 0 Rows
+
+| point_id | MPC_ACC_HOR | legal | label | terminal_peak | margin | rho_mean | rho_std | max_abs | survivor |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| eval164 | 3.000 | True | robust_safe | 0.027506 | 0.972494 | 0.972494 | 0.007972 | 0.500000 | False |
+| eval174 | 3.000 | True | robust_safe | 0.040215 | 0.959785 | 0.959785 | 0.010416 | 0.500000 | False |
+| eval182 | 3.000 | True | robust_safe | 0.045782 | 0.954218 | 0.954218 | 0.006460 | 0.500000 | False |
+| eval199 | 3.000 | True | robust_safe | 0.046625 | 0.953375 | 0.953375 | 0.008706 | 0.500000 | False |
+| eval234 | 3.000 | True | robust_safe | 0.050138 | 0.949862 | 0.949862 | 0.015341 | 0.500000 | False |
+| G01 | 3.000 | True | robust_safe | 0.321245 | 0.678755 | 0.678755 | 0.020213 | 1.000000 | False |
+| G02 | 3.000 | True | robust_safe | 0.300011 | 0.699989 | 0.699989 | 0.016905 | 1.000000 | False |
+| eval234_MPC_ACC_HOR_0p5 | 0.500 | False | robust_safe | 0.017593 | 0.982407 | 0.982407 | 0.014884 | 0.500000 | False |
+
+### STOP C Questions
+
+1. Negative control 0 survivor: `True` (0 survivor rows among default-parameter C1 rows).
+2. Theta-star: `eval234` selected by minimum default terminal margin among the five interior theta files; default margin `0.949862` with terminal_peak `0.050138`.
+3. Positive control detected robust violation: `False`.
+4. Positive-control readback targets: `[0.5, 0.5, 0.5, 0.5, 0.5]`; readbacks: `[0.5, 0.5, 0.5, 0.5, 0.5]`; reboot_required flags: `[False, False, False, False, False]`.
+5. Oracle credible for Stage 2 gate: `False`.
+   C2 did not fire. Because readback verification ran on every repeat, distinguish this as oracle/vehicle-response non-sensitivity if readbacks equal 0.5; otherwise parameter injection failure.
+
+### Decision Table Row
+
+Stage 0 is a control/oracle gate only. Phase D is not entered until this STOP C result is reviewed.
