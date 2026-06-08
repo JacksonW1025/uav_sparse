@@ -238,3 +238,114 @@ sticks level and maintain altitude, but do not actively brake or hold horizontal
 position: https://docs.px4.io/main/en/flight_modes_mc/
 
 STOP: Stage 1 inventory is complete. Await manual scenario selection.
+
+## Transition v2 Amendment 04 T1
+
+Status: Amendment 04 executed through exploratory T1 and stopped. No
+confirmatory T2 was run because no attributable candidate was found.
+
+Pre-data commits:
+
+- `e930e56` `recon: transition handoff prereg v2 (generalizable, pre-data)`
+- `3437672` `recon: transition amendment 04 (longer feasible build + J1 stress map, pre-data)`
+- `ab26049` `harness: transition amendment 04 long feasible stress map`
+
+Harness/test check:
+
+```text
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/pytest \
+  tests/test_transition_handoff_v2.py \
+  tests/test_h3_transition.py \
+  tests/test_terminal_window.py \
+  tests/test_px4_param_overrides.py -q
+
+21 passed
+```
+
+### A04 Discipline Check
+
+- Parameters were explicitly set and read back on all rows:
+  `MPC_ACC_HOR=3.0`, `MPC_JERK_MAX=8.0`.
+- Maximum post-switch manual input was `0.0`.
+- Terminal windows were relative to `t_switch`:
+  `[t_switch+6, t_switch+8]`.
+- Diagnostic windows were relative:
+  `[+0,+2]`, `[+2,+4]`, `[+4,+6]`, `[+6,+8]`.
+- Current F has `max_value=0.7`; requested amplitudes `0.85` and `1.0` both
+  projected to F and are recorded as saturated requests. F was not relaxed.
+
+Generated files:
+
+- `recon_v0/transition_exploratory_v2.csv`
+- `recon_v0/transition_exploratory_v2_summary.json`
+
+No `transition_confirmatory_prereg_v2.md`, `transition_confirmatory_v2.csv`, or
+`transition_hitrate_v2.csv` was generated because T2 was not entered.
+
+### Step 1 Stress Map
+
+Stress map used `J=1`, seed 0, `t_switch in {5,6,8,10}`, pitch plus optional
+diagonal after pitch-only failed to reach `V_stress`.
+
+Maximum reachable stress in the A04 map:
+
+- `velocity_at_transition_mps = 3.388950` on
+  `diag_long_hold_*_ts10p00`.
+- The same row had SW terminal peak `0.218766 m/s`, below the `1.0 m/s`
+  threshold.
+
+Stress-valid J=1 rows:
+
+| profile | t_switch | velocity_at_transition | terminal window | SW terminal peak | label |
+| --- | ---: | ---: | --- | ---: | --- |
+| `diag_long_hold_a0p85_ts5p00` | 5.0 | 2.064439 | `[11,13]` | 0.297639 | robust_safe |
+| `diag_long_hold_a1p00_ts5p00` | 5.0 | 2.064439 | `[11,13]` | 0.297639 | robust_safe |
+| `diag_long_hold_a0p85_ts10p00` | 10.0 | 3.388950 | `[16,18]` | 0.218766 | robust_safe |
+| `diag_long_hold_a1p00_ts10p00` | 10.0 | 3.388950 | `[16,18]` | 0.218766 | robust_safe |
+
+### Step 2 Differential Check
+
+Stress-valid rows were rerun with SW and NS, seed 0, `J=5`.
+
+J=5 maximum SW observed-transition stress:
+
+- `max_j5_velocity_at_transition_mean_mps = 2.187907`
+
+NS safe upper bound measured for differential attribution:
+
+- `ns_safe_upper_bound_mps = 2.187907`, defined using the paired SW
+  observed-transition stress for NS-robust-safe pairs.
+
+Differential rows:
+
+| arm | profile | velocity reference | terminal window | terminal peak | rho_mean | rho_std | label |
+| --- | --- | ---: | --- | ---: | ---: | ---: | --- |
+| SW | `diag_long_hold_a0p85_ts10p00` | 2.187907 | `[16,18]` | 0.281062 | 0.718938 | 0.035469 | robust_safe |
+| NS | `diag_long_hold_a0p85_ts10p00` | 4.980012 | `[16,18]` | 0.253937 | 0.746063 | 0.019463 | robust_safe |
+| SW | `diag_long_hold_a1p00_ts10p00` | 2.187907 | `[16,18]` | 0.281062 | 0.718938 | 0.035469 | robust_safe |
+| NS | `diag_long_hold_a1p00_ts10p00` | 4.980012 | `[16,18]` | 0.253937 | 0.746063 | 0.019463 | robust_safe |
+| SW | `diag_long_hold_a0p85_ts5p00` | 1.893884 | `[11,13]` | 0.311352 | 0.688648 | 0.025043 | robust_safe |
+| NS | `diag_long_hold_a0p85_ts5p00` | 4.077472 | `[11,13]` | 0.218239 | 0.781761 | 0.026450 | robust_safe |
+| SW | `diag_long_hold_a1p00_ts5p00` | 1.893884 | `[11,13]` | 0.311352 | 0.688648 | 0.025043 | robust_safe |
+| NS | `diag_long_hold_a1p00_ts5p00` | 4.077472 | `[11,13]` | 0.218239 | 0.781761 | 0.026450 | robust_safe |
+
+Note: NS has no observed transition event; the NS velocity column is its nominal
+switch-time reference speed. The NS safe upper bound above uses the paired SW
+observed-transition stress.
+
+### STOP Outcome
+
+T1 outcome: `T1_TENTATIVE_H_NULL`.
+
+Go/no-go preliminary placement: `NO_GO_TENTATIVE`.
+
+Reason:
+
+- A04 did reach `V_stress`: J=1 max `3.388950 m/s`; J=5 paired SW max
+  `2.187907 m/s`.
+- At `velocity_at_transition >= V_stress`, SW remained `robust_safe`.
+- Same-maneuver NS also remained `robust_safe`.
+- No row satisfied `SW robust_violation` and `NS robust_safe`; therefore there
+  is no attributable candidate and no basis to enter T2.
+
+This is an exploratory STOP result, not a cross-seed confirmatory `H_null`.
