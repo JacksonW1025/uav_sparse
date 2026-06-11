@@ -1,25 +1,442 @@
 {
-  "action_mode": null,
-  "action_started": false,
-  "action_time_s": null,
+  "action_mode": "RTL",
+  "action_started": true,
+  "action_time_s": 73.804633,
   "bad_messages": [],
   "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/D_conservative_r1.BIN",
-  "contract_clean": false,
+  "contract_clean": true,
   "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/D_conservative_r1_parsed.csv",
   "expect_breach": true,
   "expected_action_modes": [
     "RTL",
     "LAND"
   ],
-  "fence_breach_detected": false,
-  "fence_breach_distance_m": null,
-  "fence_breach_time_s": null,
-  "fence_events": [],
+  "fence_breach_detected": true,
+  "fence_breach_distance_m": 100.1852769123027,
+  "fence_breach_time_s": 73.804633,
+  "fence_events": [
+    {
+      "ecode": 2,
+      "ecode_name": "2",
+      "raw": {
+        "ECode": 2,
+        "Subsys": 9,
+        "TimeUS": 76092051,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 73.804633
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 76424418,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 74.137
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 76756785,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 74.46936699999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 77089152,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 74.801734
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 77422352,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 75.134934
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 77754719,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 75.46730099999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 78087086,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 75.799668
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 78419453,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 76.132035
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 78751820,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 76.46440199999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 79084187,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 76.796769
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 79417387,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 77.129969
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 79749754,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 77.462336
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 80082121,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 77.794703
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 80414488,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 78.12707
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 80746855,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 78.459437
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 81079222,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 78.791804
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 81411589,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 79.124171
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 81744789,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 79.457371
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 82077156,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 79.789738
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 82409523,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 80.12210499999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 82741890,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 80.454472
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 83074257,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 80.786839
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 83406624,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 81.11920599999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 83739824,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 81.452406
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 84072191,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 81.784773
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 84404558,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 82.11713999999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 84736925,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 82.449507
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 85069292,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 82.781874
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 85401659,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 83.11424099999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 85734859,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 83.447441
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 86067226,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 83.779808
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 86399593,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 84.112175
+    }
+  ],
   "fence_messages": [
     {
       "raw": {
         "Message": "New fence",
-        "TimeUS": 2282420,
+        "TimeUS": 2287418,
         "mavpackettype": "MSG"
       },
       "text": "New fence",
@@ -28,29 +445,29 @@
     {
       "raw": {
         "Message": "Arm: Fence requires position",
-        "TimeUS": 8984738,
+        "TimeUS": 9064706,
         "mavpackettype": "MSG"
       },
       "text": "Arm: Fence requires position",
-      "time_s": 6.702318
+      "time_s": 6.777287999999999
     },
     {
       "raw": {
         "Message": "Arm: Fence requires position",
-        "TimeUS": 17059840,
+        "TimeUS": 18046945,
         "mavpackettype": "MSG"
       },
       "text": "Arm: Fence requires position",
-      "time_s": 14.777420000000001
+      "time_s": 15.759527
     },
     {
       "raw": {
         "Message": "Arm: Fence requires position",
-        "TimeUS": 26047077,
+        "TimeUS": 26042079,
         "mavpackettype": "MSG"
       },
       "text": "Arm: Fence requires position",
-      "time_s": 23.764657
+      "time_s": 23.754661000000002
     },
     {
       "raw": {
@@ -59,7 +476,7 @@
         "mavpackettype": "MSG"
       },
       "text": "PreArm: Fence requires position",
-      "time_s": 27.994631
+      "time_s": 27.989633
     },
     {
       "raw": {
@@ -68,21 +485,30 @@
         "mavpackettype": "MSG"
       },
       "text": "Arm: Fence requires position",
-      "time_s": 32.764389
+      "time_s": 32.759391
+    },
+    {
+      "raw": {
+        "Message": "Fence Breached",
+        "TimeUS": 76092051,
+        "mavpackettype": "MSG"
+      },
+      "text": "Fence Breached",
+      "time_s": 73.804633
     }
   ],
   "fence_radius_m": 100.0,
-  "max_distance_m": 0.2831033271514003,
+  "max_distance_m": 104.03957176341711,
   "max_distance_sample": {
-    "alt": 28.239999771118164,
-    "distance_m": 0.2831033271514003,
-    "lat": 37.4274999,
-    "lon": -122.1696968,
-    "mode": "GUIDED",
+    "alt": 35.790000915527344,
+    "distance_m": 104.03957176341711,
+    "lat": 37.4275001,
+    "lon": -122.1685231,
+    "mode": "RTL",
     "source": "POS",
-    "time_s": 51.094553999999995
+    "time_s": 75.989592
   },
-  "max_overshoot_m": 0.0,
+  "max_overshoot_m": 4.039571763417115,
   "modes": [
     {
       "mode": "STABILIZE",
@@ -90,7 +516,7 @@
         "Mode": 0,
         "ModeNum": 0,
         "Rsn": 26,
-        "TimeUS": 2282420,
+        "TimeUS": 2287418,
         "mavpackettype": "MODE"
       },
       "reason": 26,
@@ -102,11 +528,11 @@
         "Mode": 4,
         "ModeNum": 4,
         "Rsn": 2,
-        "TimeUS": 8972243,
+        "TimeUS": 9059708,
         "mavpackettype": "MODE"
       },
       "reason": 2,
-      "time_s": 6.6898230000000005
+      "time_s": 6.77229
     },
     {
       "mode": "GUIDED",
@@ -114,11 +540,23 @@
         "Mode": 4,
         "ModeNum": 4,
         "Rsn": 2,
-        "TimeUS": 44044875,
+        "TimeUS": 44049873,
         "mavpackettype": "MODE"
       },
       "reason": 2,
       "time_s": 41.762454999999996
+    },
+    {
+      "mode": "RTL",
+      "raw": {
+        "Mode": 6,
+        "ModeNum": 6,
+        "Rsn": 10,
+        "TimeUS": 76092051,
+        "mavpackettype": "MODE"
+      },
+      "reason": 10,
+      "time_s": 73.804633
     },
     {
       "mode": "LAND",
@@ -126,29 +564,15 @@
         "Mode": 9,
         "ModeNum": 9,
         "Rsn": 2,
-        "TimeUS": 237166762,
+        "TimeUS": 124151986,
         "mavpackettype": "MODE"
       },
       "reason": 2,
-      "time_s": 234.884342
+      "time_s": 121.86456799999999
     }
   ],
-  "other_errors": [
-    {
-      "ecode": 5,
-      "ecode_name": "DEST_OUTSIDE_FENCE",
-      "raw": {
-        "ECode": 5,
-        "Subsys": 22,
-        "TimeUS": 57042174,
-        "mavpackettype": "ERR"
-      },
-      "subsys": 22,
-      "subsys_name": "NAVIGATION",
-      "time_s": 54.759754
-    }
-  ],
-  "parm_rows_count": 1359,
+  "other_errors": [],
+  "parm_rows_count": 1353,
   "position_source": "POS",
-  "samples": 2595
+  "samples": 1465
 }

@@ -54,6 +54,49 @@ def send_guided_position_target(master, lat_deg: float, lon_deg: float, rel_alt_
     )
 
 
+def velocity_components_ned(speed_m_s: float, bearing_deg: float) -> tuple[float, float]:
+    bearing_rad = math.radians(bearing_deg)
+    north_m_s = float(speed_m_s) * math.cos(bearing_rad)
+    east_m_s = float(speed_m_s) * math.sin(bearing_rad)
+    return north_m_s, east_m_s
+
+
+def send_guided_velocity_local_ned(
+    master,
+    north_m_s: float,
+    east_m_s: float,
+    down_m_s: float = 0.0,
+) -> None:
+    type_mask = (
+        mavutil.mavlink.POSITION_TARGET_TYPEMASK_X_IGNORE
+        | mavutil.mavlink.POSITION_TARGET_TYPEMASK_Y_IGNORE
+        | mavutil.mavlink.POSITION_TARGET_TYPEMASK_Z_IGNORE
+        | mavutil.mavlink.POSITION_TARGET_TYPEMASK_AX_IGNORE
+        | mavutil.mavlink.POSITION_TARGET_TYPEMASK_AY_IGNORE
+        | mavutil.mavlink.POSITION_TARGET_TYPEMASK_AZ_IGNORE
+        | mavutil.mavlink.POSITION_TARGET_TYPEMASK_YAW_IGNORE
+        | mavutil.mavlink.POSITION_TARGET_TYPEMASK_YAW_RATE_IGNORE
+    )
+    master.mav.set_position_target_local_ned_send(
+        int(time.time() * 1000) & 0xFFFFFFFF,
+        master.target_system,
+        master.target_component,
+        mavutil.mavlink.MAV_FRAME_LOCAL_NED,
+        type_mask,
+        0.0,
+        0.0,
+        0.0,
+        float(north_m_s),
+        float(east_m_s),
+        float(down_m_s),
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+    )
+
+
 def witness_target(config: dict[str, Any]) -> tuple[float, float]:
     home = config["experiment"]["home"]
     return destination_point(

@@ -119,7 +119,7 @@ def run_one(config: dict[str, Any], arm_name: str, arm_cfg: dict[str, Any], rep_
             return result
         result["bin_path"] = str(bin_path)
         csv_path = PLANC_ROOT / "logs" / f"{run_id}_parsed.csv"
-        expect_breach = arm_cfg["motion"] == "witness_goto"
+        expect_breach = arm_cfg["motion"] == "witness_velocity"
         parsed = parse_dataflash(
             bin_path=bin_path,
             csv_path=csv_path,
@@ -218,7 +218,7 @@ def summarize_gate(runs: list[dict[str, Any]], hard_boundary_m: float | None) ->
         dest_rejects = [
             r["run_id"]
             for r in runs
-            if r.get("motion") == "witness_goto"
+            if r.get("motion") == "witness_velocity"
             and any(e.get("ecode_name") == "DEST_OUTSIDE_FENCE" for e in r.get("other_errors", []))
         ]
         if dest_rejects:
@@ -260,6 +260,15 @@ def write_report(
     lines: list[str] = []
     lines.append("# planc gate report: ArduPilot geofence high-speed overshoot")
     lines.append("")
+    lines.append("## v1 to v2 patch")
+    lines.append("")
+    lines.append(
+        "v1 used a GUIDED position target outside the fence, which ArduPilot rejected before motion "
+        "with `NAVIGATION:DEST_OUTSIDE_FENCE`. v2 changes the witness M to a streamed GUIDED local-NED "
+        "velocity setpoint. The input has no destination, so aggressiveness is in legal conditions "
+        "(speed and tailwind), not in an inadmissible command."
+    )
+    lines.append("")
     lines.append("## planc narrative")
     lines.append("")
     lines.append(
@@ -279,19 +288,20 @@ def write_report(
     lines.append("")
     lines.append(
         "P: circular fence enabled (`FENCE_TYPE=2`), `FENCE_RADIUS=100 m`, "
-        "`FENCE_ACTION=1` (RTL-and-Land), `WPNAV_SPEED=1500 cm/s` for high-speed arms. "
+        "`FENCE_ACTION=1` (RTL-and-Land), `WPNAV_SPEED=2000 cm/s` for high-speed arms. "
         "D uses `WPNAV_SPEED=500 cm/s`. All set parameters were read back and recorded per run."
     )
     lines.append("")
     lines.append(
-        "E: nominal no wind for B; tailwind with `SIM_WIND_DIR=270`, `SIM_WIND_SPD=10 m/s`, "
+        "E: nominal no wind for B; tailwind with `SIM_WIND_DIR=270`, `SIM_WIND_SPD=15 m/s`, "
         "`SIM_WIND_TURB=0` for A/C/D. The target bearing is 90 deg, so 270 deg is wind coming "
         "from the west and pushing along the outbound path."
     )
     lines.append("")
     lines.append(
-        "M: a single GUIDED global position target 350 m outside the fence for witness arms; "
-        "C sends one center hover target."
+        "M: witness arms stream one constant GUIDED local-NED velocity setpoint at 10 Hz along the "
+        "outbound bearing; C streams zero velocity. The stream stops when a fence breach or configured "
+        "fence action is observed."
     )
     lines.append("")
     lines.append(
@@ -339,6 +349,15 @@ def write_report(
     lines.append(f"- Reason: {summary['reason']}")
     lines.append(f"- Arm A N=3 consistency: {summary.get('a_consistent')} with max-distance spread {fmt(summary.get('a_max_distance_spread_m'))} m.")
     lines.append(f"- B safe: {summary.get('b_safe')}; C safe: {summary.get('c_safe')}; D safe: {summary.get('d_safe')}.")
+    fallback_runs = [
+        run.get("run_id")
+        for run in runs
+        if run.get("flight", {}).get("observed", {}).get("fallback_used")
+    ]
+    if fallback_runs:
+        lines.append(f"- RC override fallback used in: {', '.join(str(r) for r in fallback_runs)}.")
+    else:
+        lines.append("- RC override fallback was not used; all witness runs used admitted GUIDED velocity setpoints.")
     lines.append("")
     lines.append("## reproducibility")
     lines.append("")

@@ -17,14 +17,22 @@ This gate uses ArduPilot's native ArduCopter SITL. It is headless, quick, and
 supports native `SIM_*` environment injection including wind. PX4 ports are left
 for later work.
 
+## v1 to v2
+
+v1 used a GUIDED position target outside the fence. ArduPilot rejected that
+command at admission time with `NAVIGATION:DEST_OUTSIDE_FENCE`, so the aircraft
+never exercised the physical geofence crossing path. v2 replaces that witness
+with a streamed GUIDED local-NED velocity setpoint. The input has no destination;
+the aggressive part is the legal high speed and tailwind condition.
+
 ## Scenario
 
 The scenario is high-speed geofence overshoot:
 
 - `P`: circular fence enabled, radius 100 m, `FENCE_ACTION=RTL`, high
   `WPNAV_SPEED`.
-- `E`: no-wind nominal control, and a 10 m/s tailwind witness condition.
-- `M`: one GUIDED target far outside the circle along a fixed bearing.
+- `E`: no-wind nominal control, and a 15 m/s tailwind witness condition.
+- `M`: one constant streamed GUIDED velocity setpoint along a fixed bearing.
 
 The hard unsafe boundary is calibrated from the no-wind witness arm:
 
@@ -39,10 +47,10 @@ GCS violation.
 ## Arms
 
 - Arm B: no wind, same sparse witness. This calibrates the hard boundary.
-- Arm A: 10 m/s tailwind, high speed, same sparse witness. This runs three
+- Arm A: 15 m/s tailwind, high speed, same sparse witness. This runs three
   repetitions.
-- Arm C: 10 m/s tailwind, hover near the fence center.
-- Arm D: 10 m/s tailwind, same sparse witness, conservative legal speed.
+- Arm C: 15 m/s tailwind, zero-velocity hover near the fence center.
+- Arm D: 15 m/s tailwind, same sparse witness, conservative legal speed.
 
 Run all arms with:
 

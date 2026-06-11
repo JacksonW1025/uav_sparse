@@ -5,7 +5,7 @@ from typing import Any
 
 from pymavlink import mavutil
 
-from injector import send_guided_position_target, witness_target
+from injector import send_guided_position_target, send_guided_velocity_local_ned, velocity_components_ned
 
 
 class FlightError(RuntimeError):
@@ -118,6 +118,17 @@ def wait_position_stable(master, min_samples: int = 8, timeout_s: float = 35.0) 
 
 def relative_alt_m(pos_msg: Any) -> float:
     return float(getattr(pos_msg, "relative_alt", 0.0)) / 1000.0
+
+
+def horizontal_distance_from_home_m(pos_msg: Any, home: dict[str, Any]) -> float:
+    lat = float(pos_msg.lat) / 1.0e7
+    lon = float(pos_msg.lon) / 1.0e7
+    home_lat = float(home["lat"])
+    home_lon = float(home["lon"])
+    # Equirectangular is accurate enough for the sub-kilometer realtime fallback check.
+    north = (lat - home_lat) * 111_320.0
+    east = (lon - home_lon) * 111_320.0
+    return (north * north + east * east) ** 0.5
 
 
 def _send_arm_command(master) -> None:
@@ -259,6 +270,180 @@ def observe(master, max_wait_s: float, post_action_hold_s: float = 8.0) -> dict[
     return {"modes_seen": modes, "statustext": statustext}
 
 
+def send_rc_pitch_forward(master, pitch_pwm: int) -> None:
+    master.mav.rc_channels_override_send(
+        master.target_system,
+        master.target_component,
+        0,
+        int(pitch_pwm),
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    )
+
+
+def release_rc_override(master) -> None:
+    master.mav.rc_channels_override_send(
+        master.target_system,
+        master.target_component,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+    )
+
+
+def stream_forward_velocity_until_action(master, config: dict[str, Any], speed_m_s: float) -> dict[str, Any]:
+    observation = config["experiment"]["observation_s"]
+    stream_hz = float(config["experiment"].get("stream_hz", 10))
+    stream_dt = 1.0 / max(stream_hz, 1.0)
+    bearing = float(config["experiment"]["target_bearing_deg"])
+    north_m_s, east_m_s = velocity_components_ned(speed_m_s, bearing)
+    max_wait_s = float(observation["witness"])
+    start = time.time()
+    next_send = 0.0
+    modes: list[dict[str, Any]] = []
+    statustext: list[str] = []
+    fence_status: list[dict[str, Any]] = []
+    action_seen_at = None
+    breach_seen_at = None
+    max_realtime_distance_m = 0.0
+    fallback_used = False
+    fallback_reason = None
+    fallback_after_s = float(config["experiment"].get("velocity_fallback_after_s", 12.0))
+    fallback_min_distance_m = float(config["experiment"].get("velocity_fallback_min_distance_m", 5.0))
+    fallback_pitch_pwm = int(config["experiment"].get("fallback_pitch_pwm", 1100))
+
+    while time.time() - start < max_wait_s:
+        now = time.time()
+        elapsed = now - start
+        send_gcs_heartbeat(master)
+        if action_seen_at is None and now >= next_send:
+            if fallback_used:
+                send_rc_pitch_forward(master, fallback_pitch_pwm)
+            else:
+                send_guided_velocity_local_ned(master, north_m_s, east_m_s, 0.0)
+            next_send = now + stream_dt
+
+        msg = master.recv_match(
+            type=["HEARTBEAT", "STATUSTEXT", "FENCE_STATUS", "GLOBAL_POSITION_INT"],
+            blocking=True,
+            timeout=0.1,
+        )
+        if msg is None:
+            if (
+                not fallback_used
+                and elapsed >= fallback_after_s
+                and max_realtime_distance_m < fallback_min_distance_m
+            ):
+                fallback_used = True
+                fallback_reason = (
+                    f"GUIDED velocity did not move past {fallback_min_distance_m} m "
+                    f"within {fallback_after_s} s"
+                )
+                set_mode(master, "ALT_HOLD", timeout_s=10.0)
+            continue
+
+        mtype = msg.get_type()
+        if mtype == "STATUSTEXT":
+            statustext.append(str(getattr(msg, "text", "")))
+        elif mtype == "FENCE_STATUS":
+            rec = {
+                "wall_s": elapsed,
+                "breach_status": int(getattr(msg, "breach_status", 0)),
+                "breach_type": int(getattr(msg, "breach_type", 0)),
+                "breach_count": int(getattr(msg, "breach_count", 0)),
+            }
+            fence_status.append(rec)
+            if rec["breach_status"] and breach_seen_at is None:
+                breach_seen_at = now
+        elif mtype == "GLOBAL_POSITION_INT":
+            max_realtime_distance_m = max(max_realtime_distance_m, horizontal_distance_from_home_m(msg, config["experiment"]["home"]))
+        elif mtype == "HEARTBEAT":
+            mode = mode_name(master, msg)
+            if not modes or modes[-1]["mode"] != mode:
+                modes.append({"wall_s": elapsed, "mode": mode})
+            if mode in {"RTL", "LAND", "BRAKE", "SMART_RTL"} and action_seen_at is None:
+                action_seen_at = now
+
+        if action_seen_at is None and breach_seen_at is not None:
+            # Stop pushing once the fence breach is visible; the configured fence action should take over.
+            action_seen_at = now
+        if action_seen_at is not None:
+            release_rc_override(master)
+            if time.time() - action_seen_at >= float(config["experiment"].get("post_action_observation_s", 12.0)):
+                break
+
+        if (
+            not fallback_used
+            and elapsed >= fallback_after_s
+            and max_realtime_distance_m < fallback_min_distance_m
+        ):
+            fallback_used = True
+            fallback_reason = (
+                f"GUIDED velocity did not move past {fallback_min_distance_m} m "
+                f"within {fallback_after_s} s"
+            )
+            set_mode(master, "ALT_HOLD", timeout_s=10.0)
+
+    release_rc_override(master)
+    send_guided_velocity_local_ned(master, 0.0, 0.0, 0.0)
+    return {
+        "modes_seen": modes,
+        "statustext": statustext,
+        "fence_status": fence_status,
+        "command": {
+            "kind": "guided_velocity_local_ned",
+            "speed_m_s": speed_m_s,
+            "north_m_s": north_m_s,
+            "east_m_s": east_m_s,
+            "bearing_deg": bearing,
+            "stream_hz": stream_hz,
+        },
+        "fallback_used": fallback_used,
+        "fallback_reason": fallback_reason,
+        "max_realtime_distance_m": max_realtime_distance_m,
+    }
+
+
+def stream_zero_velocity_hover(master, config: dict[str, Any], alt_m: float) -> dict[str, Any]:
+    observation = config["experiment"]["observation_s"]
+    stream_hz = float(config["experiment"].get("stream_hz", 10))
+    stream_dt = 1.0 / max(stream_hz, 1.0)
+    start = time.time()
+    next_send = 0.0
+    modes: list[dict[str, Any]] = []
+    statustext: list[str] = []
+    while time.time() - start < float(observation["hover"]):
+        now = time.time()
+        send_gcs_heartbeat(master)
+        if now >= next_send:
+            send_guided_velocity_local_ned(master, 0.0, 0.0, 0.0)
+            next_send = now + stream_dt
+        msg = master.recv_match(type=["HEARTBEAT", "STATUSTEXT"], blocking=True, timeout=0.1)
+        if msg is None:
+            continue
+        if msg.get_type() == "STATUSTEXT":
+            statustext.append(str(getattr(msg, "text", "")))
+        elif msg.get_type() == "HEARTBEAT":
+            mode = mode_name(master, msg)
+            if not modes or modes[-1]["mode"] != mode:
+                modes.append({"wall_s": time.time() - start, "mode": mode})
+    send_guided_velocity_local_ned(master, 0.0, 0.0, 0.0)
+    return {
+        "modes_seen": modes,
+        "statustext": statustext,
+        "command": {"kind": "guided_zero_velocity_local_ned", "rel_alt_m": alt_m, "stream_hz": stream_hz},
+    }
+
+
 def run_flight(master, config: dict[str, Any], motion: str) -> dict[str, Any]:
     request_streams(master)
     wait_position(master, timeout_s=30.0)
@@ -271,16 +456,13 @@ def run_flight(master, config: dict[str, Any], motion: str) -> dict[str, Any]:
     set_mode(master, "GUIDED")
 
     home = config["experiment"]["home"]
-    observation = config["experiment"]["observation_s"]
-    if motion == "witness_goto":
-        target_lat, target_lon = witness_target(config)
-        send_guided_position_target(master, target_lat, target_lon, alt_m)
-        observed = observe(master, float(observation["witness"]))
-        target = {"lat": target_lat, "lon": target_lon, "rel_alt_m": alt_m}
-    elif motion == "hover_center":
-        send_guided_position_target(master, float(home["lat"]), float(home["lon"]), alt_m)
-        observed = observe(master, float(observation["hover"]), post_action_hold_s=999.0)
-        target = {"lat": float(home["lat"]), "lon": float(home["lon"]), "rel_alt_m": alt_m}
+    if motion == "witness_velocity":
+        speed_m_s = float(config["experiment"].get("witness_velocity_m_s", 18.0))
+        observed = stream_forward_velocity_until_action(master, config, speed_m_s)
+        target = observed["command"]
+    elif motion == "hover_zero_velocity":
+        observed = stream_zero_velocity_hover(master, config, alt_m)
+        target = {"lat": float(home["lat"]), "lon": float(home["lon"]), "rel_alt_m": alt_m, "kind": "zero_velocity"}
     else:
         raise FlightError(f"Unknown motion {motion}")
 

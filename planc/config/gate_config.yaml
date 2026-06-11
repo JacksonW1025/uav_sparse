@@ -1,5 +1,6 @@
 experiment:
   name: geofence_high_speed_overshoot_gate
+  version: v2_guided_velocity
   date: "2026-06-11"
   home:
     lat: 37.4275
@@ -10,8 +11,14 @@ experiment:
   target_distance_m: 350.0
   takeoff_alt_m: 20.0
   speedup: 4
+  witness_velocity_m_s: 20.0
+  stream_hz: 10
+  post_action_observation_s: 12
+  velocity_fallback_after_s: 12
+  velocity_fallback_min_distance_m: 5
+  fallback_pitch_pwm: 1100
   observation_s:
-    witness: 45
+    witness: 65
     hover: 25
   repetitions:
     arm_a: 3
@@ -49,7 +56,8 @@ baseline_params:
   FENCE_ACTION: 1
   FENCE_MARGIN: 2
   FENCE_ENABLE: 1
-  WPNAV_SPEED: 1500
+  WPNAV_SPEED: 2000
+  WPNAV_ACCEL: 500
 
 oracle:
   fence_radius_m: 100.0
@@ -67,43 +75,47 @@ arms:
   B_nominal:
     label: "Arm B: no-wind witness calibration"
     environment: nominal_no_wind
-    motion: witness_goto
+    motion: witness_velocity
     repetitions: 1
     params:
       SIM_WIND_SPD: 0
       SIM_WIND_TURB: 0
-      WPNAV_SPEED: 1500
+      WPNAV_SPEED: 2000
+      WPNAV_ACCEL: 500
       FENCE_ACTION: 1
   A_witness:
     label: "Arm A: tailwind high-speed sparse witness"
     environment: tailwind_extreme
-    motion: witness_goto
+    motion: witness_velocity
     repetitions: 3
     params:
       SIM_WIND_DIR: 270
-      SIM_WIND_SPD: 10
+      SIM_WIND_SPD: 15
       SIM_WIND_TURB: 0
-      WPNAV_SPEED: 1500
+      WPNAV_SPEED: 2000
+      WPNAV_ACCEL: 500
       FENCE_ACTION: 1
   C_hover:
     label: "Arm C: tailwind hover control"
     environment: tailwind_extreme
-    motion: hover_center
+    motion: hover_zero_velocity
     repetitions: 1
     params:
       SIM_WIND_DIR: 270
-      SIM_WIND_SPD: 10
+      SIM_WIND_SPD: 15
       SIM_WIND_TURB: 0
-      WPNAV_SPEED: 1500
+      WPNAV_SPEED: 2000
+      WPNAV_ACCEL: 500
       FENCE_ACTION: 1
   D_conservative:
     label: "Arm D: tailwind sparse witness with conservative speed"
     environment: tailwind_extreme
-    motion: witness_goto
+    motion: witness_velocity
     repetitions: 1
     params:
       SIM_WIND_DIR: 270
-      SIM_WIND_SPD: 10
+      SIM_WIND_SPD: 15
       SIM_WIND_TURB: 0
       WPNAV_SPEED: 500
+      WPNAV_ACCEL: 200
       FENCE_ACTION: 1
