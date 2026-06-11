@@ -1,0 +1,140 @@
+{
+  "action_mode": null,
+  "action_started": false,
+  "action_time_s": null,
+  "bad_messages": [],
+  "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/C_hover_r1.BIN",
+  "contract_clean": true,
+  "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/C_hover_r1_parsed.csv",
+  "expect_breach": false,
+  "expected_action_modes": [
+    "RTL",
+    "LAND"
+  ],
+  "fence_breach_detected": false,
+  "fence_breach_distance_m": null,
+  "fence_breach_time_s": null,
+  "fence_events": [],
+  "fence_messages": [
+    {
+      "raw": {
+        "Message": "New fence",
+        "TimeUS": 2282420,
+        "mavpackettype": "MSG"
+      },
+      "text": "New fence",
+      "time_s": 0.0
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 9064706,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 6.782285999999999
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 18044446,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 15.762026
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 26037081,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 23.754661
+    },
+    {
+      "raw": {
+        "Message": "PreArm: Fence requires position",
+        "TimeUS": 30277051,
+        "mavpackettype": "MSG"
+      },
+      "text": "PreArm: Fence requires position",
+      "time_s": 27.994631
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 34047209,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 31.764789
+    }
+  ],
+  "fence_radius_m": 100.0,
+  "max_distance_m": 0.2831033271514003,
+  "max_distance_sample": {
+    "alt": 27.479999542236328,
+    "distance_m": 0.2831033271514003,
+    "lat": 37.4274999,
+    "lon": -122.1696968,
+    "mode": "GUIDED",
+    "source": "POS",
+    "time_s": 49.794241
+  },
+  "max_overshoot_m": 0.0,
+  "modes": [
+    {
+      "mode": "STABILIZE",
+      "raw": {
+        "Mode": 0,
+        "ModeNum": 0,
+        "Rsn": 26,
+        "TimeUS": 2282420,
+        "mavpackettype": "MODE"
+      },
+      "reason": 26,
+      "time_s": 0.0
+    },
+    {
+      "mode": "GUIDED",
+      "raw": {
+        "Mode": 4,
+        "ModeNum": 4,
+        "Rsn": 2,
+        "TimeUS": 9054710,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "time_s": 6.77229
+    },
+    {
+      "mode": "GUIDED",
+      "raw": {
+        "Mode": 4,
+        "ModeNum": 4,
+        "Rsn": 2,
+        "TimeUS": 43044442,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "time_s": 40.762021999999995
+    },
+    {
+      "mode": "LAND",
+      "raw": {
+        "Mode": 9,
+        "ModeNum": 9,
+        "Rsn": 2,
+        "TimeUS": 156056719,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "time_s": 153.77429899999998
+    }
+  ],
+  "other_errors": [],
+  "parm_rows_count": 1355,
+  "position_source": "POS",
+  "samples": 1785
+}

@@ -1,0 +1,1961 @@
+{
+  "calibration": {
+    "buffer_m": 3.0,
+    "fence_radius_m": 100.0,
+    "hard_boundary_m": 103.0,
+    "overshoot_nominal_m": 0.0,
+    "source_contract_clean": false,
+    "source_run": "B_nominal_r1",
+    "valid_nominal_breach": false
+  },
+  "config": {
+    "arms": {
+      "A_witness": {
+        "environment": "tailwind_extreme",
+        "label": "Arm A: tailwind high-speed sparse witness",
+        "motion": "witness_goto",
+        "params": {
+          "FENCE_ACTION": 1,
+          "SIM_WIND_DIR": 270,
+          "SIM_WIND_SPD": 10,
+          "SIM_WIND_TURB": 0,
+          "WPNAV_SPEED": 1500
+        },
+        "repetitions": 3
+      },
+      "B_nominal": {
+        "environment": "nominal_no_wind",
+        "label": "Arm B: no-wind witness calibration",
+        "motion": "witness_goto",
+        "params": {
+          "FENCE_ACTION": 1,
+          "SIM_WIND_SPD": 0,
+          "SIM_WIND_TURB": 0,
+          "WPNAV_SPEED": 1500
+        },
+        "repetitions": 1
+      },
+      "C_hover": {
+        "environment": "tailwind_extreme",
+        "label": "Arm C: tailwind hover control",
+        "motion": "hover_center",
+        "params": {
+          "FENCE_ACTION": 1,
+          "SIM_WIND_DIR": 270,
+          "SIM_WIND_SPD": 10,
+          "SIM_WIND_TURB": 0,
+          "WPNAV_SPEED": 1500
+        },
+        "repetitions": 1
+      },
+      "D_conservative": {
+        "environment": "tailwind_extreme",
+        "label": "Arm D: tailwind sparse witness with conservative speed",
+        "motion": "witness_goto",
+        "params": {
+          "FENCE_ACTION": 1,
+          "SIM_WIND_DIR": 270,
+          "SIM_WIND_SPD": 10,
+          "SIM_WIND_TURB": 0,
+          "WPNAV_SPEED": 500
+        },
+        "repetitions": 1
+      }
+    },
+    "baseline_params": {
+      "FENCE_ACTION": 1,
+      "FENCE_ENABLE": 1,
+      "FENCE_MARGIN": 2,
+      "FENCE_RADIUS": 100,
+      "FENCE_TYPE": 2,
+      "LOG_BACKEND_TYPE": 1,
+      "LOG_DISARMED": 1,
+      "SIM_WIND_DIR": 270,
+      "SIM_WIND_SPD": 0,
+      "SIM_WIND_TURB": 0,
+      "WPNAV_SPEED": 1500
+    },
+    "experiment": {
+      "date": "2026-06-11",
+      "home": {
+        "alt_m": 16.0,
+        "lat": 37.4275,
+        "lon": -122.1697,
+        "yaw_deg": 90.0
+      },
+      "name": "geofence_high_speed_overshoot_gate",
+      "observation_s": {
+        "hover": 25,
+        "witness": 45
+      },
+      "repetitions": {
+        "arm_a": 3
+      },
+      "speedup": 4,
+      "takeoff_alt_m": 20.0,
+      "target_bearing_deg": 90.0,
+      "target_distance_m": 350.0
+    },
+    "oracle": {
+      "action_latency_s": 8.0,
+      "buffer_fraction": 0.2,
+      "expected_action_modes_for_brake": [
+        "BRAKE",
+        "LAND"
+      ],
+      "expected_action_modes_for_rtl": [
+        "RTL",
+        "LAND"
+      ],
+      "fence_radius_m": 100.0,
+      "min_buffer_m": 3.0
+    },
+    "param_metadata": {
+      "fence_action_brake": 4,
+      "fence_action_rtl": 1,
+      "fence_type_circle": 2,
+      "source": "/home/car/ardupilot/libraries/AC_Fence/AC_Fence.h"
+    },
+    "sitl": {
+      "ardupilot_root_candidates": [
+        "/home/car/ardupilot",
+        "/mnt/nvme/UAVFuzzing/ardupilot-home"
+      ],
+      "connection": "tcp:127.0.0.1:5760",
+      "defaults_candidates": [
+        "/home/car/ardupilot/Tools/autotest/default_params/copter.parm",
+        "/mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm"
+      ],
+      "model": "quad",
+      "sim_vehicle_candidates": [
+        "/home/car/ardupilot/Tools/autotest/sim_vehicle.py",
+        "/mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py"
+      ],
+      "vehicle_binary_candidates": [
+        "/home/car/ardupilot/build/sitl/bin/arducopter",
+        "/mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter"
+      ]
+    }
+  },
+  "env": {
+    "ardupilot_commit": "e010f97906087a3a1975e1c4fcc1f88a249599ce",
+    "ardupilot_commit_short": "e010f97906",
+    "ardupilot_root": "/home/car/ardupilot",
+    "ardupilot_status": "## HEAD (no branch)",
+    "connection": "tcp:127.0.0.1:5760",
+    "connectivity_probe": {
+      "connection": "tcp:127.0.0.1:5760",
+      "heartbeat_target_component": 1,
+      "heartbeat_target_system": 1,
+      "ok": true,
+      "param_records": [
+        {
+          "before": 4.0,
+          "name": "SIM_SPEEDUP",
+          "ok": true,
+          "readback": 4.0,
+          "requested": 4.0
+        }
+      ],
+      "sim_speedup_before": 4.0
+    },
+    "defaults_file": "/home/car/ardupilot/Tools/autotest/default_params/copter.parm",
+    "env_PATH": "/usr/lib/ccache:/home/car/ardupilot/Tools/autotest:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin:/home/car/.local/bin:/home/car/.codex/tmp/arg0/codex-arg0oYAttj:/usr/lib/ccache:/home/car/ardupilot/Tools/autotest:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin:/home/car/.local/bin:/home/car/.nvm/versions/node/v24.12.0/bin:/opt/ros/humble/bin:/usr/local/cuda-12.6/bin:/usr/lib/ccache:/home/car/ardupilot/Tools/autotest:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin:/home/car/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/car/.vscode/extensions/openai.chatgpt-26.602.40724-linux-arm64/bin/linux-aarch64",
+    "model": "quad",
+    "packages": {
+      "matplotlib": "3.10.8",
+      "numpy": "2.2.6",
+      "pymavlink": "2.4.49",
+      "yaml": "6.0.3"
+    },
+    "param_metadata": {
+      "fence_action_brake": 4,
+      "fence_action_rtl": 1,
+      "fence_type_circle": 2,
+      "source": "/home/car/ardupilot/libraries/AC_Fence/AC_Fence.h"
+    },
+    "platform": "Linux-5.15.148-tegra-aarch64-with-glibc2.35",
+    "python": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+    "repo_root": "/mnt/nvme/px4_work/uav_sparse",
+    "selected_start_command_template": [
+      "/home/car/ardupilot/build/sitl/bin/arducopter",
+      "--model",
+      "quad",
+      "--speedup",
+      "4",
+      "--wipe",
+      "--defaults",
+      "/home/car/ardupilot/Tools/autotest/default_params/copter.parm",
+      "--home",
+      "<lat,lon,alt,yaw>"
+    ],
+    "sim_vehicle_on_path": "/home/car/ardupilot/Tools/autotest/sim_vehicle.py",
+    "sim_vehicle_py": "/home/car/ardupilot/Tools/autotest/sim_vehicle.py",
+    "speedup": 4,
+    "vehicle_binary": "/home/car/ardupilot/build/sitl/bin/arducopter",
+    "vehicle_binary_help_head": "Options:\n\t--help|-h                display this help information\n\t--wipe|-w                wipe eeprom\n\t--unhide-groups|-u       parameter enumeration ignores AP_PARAM_FLAG_ENABLE\n\t--speedup|-s SPEEDUP     set simulation speedup\n\t--rate|-r RATE           set SITL framerate\n\t--console|-C             use console instead of TCP ports\n\t--instance|-I N          set instance of SITL (adds 10*instance to all port numbers)\n\t--synthetic-clock|-S     set synthetic clock mode\n\t--home|-O HOME           set start location (lat,lng,alt,yaw) or location name\n\t--model|-M MODEL         set simulation model\n\t--config string          set additional simulation config string\n\t--fg|-F ADDRESS          set Flight Gear view address, defaults to 127.0.0.1\n\t--disable-fgview         disable Flight Gear view\n\t--gimbal                 enable simulated MAVLink gimbal\n\t--autotest-dir DIR       set directory for additional files\n\t--defaults path          set path to defaults file\n\t--uartA device           set device string for UARTA\n\t--uartB device           set device string for UARTB\n\t--uartC device           set device string for UARTC\n\t--uartD device           set device string for UARTD\n\t--uartE device           set device string for UARTE\n\t--uartF device           set device string for UARTF\n\t--uartG device           set device string for UARTG\n\t--uartH device           set device string for UARTH\n\t--uartI device           set device string for UARTI\n\t--uartJ device           set device string for UARTJ\n\t--serial0 device         set device string for SERIAL0\n\t--serial1 device         set device string for SERIAL1\n\t--serial2 device         set device string for SERIAL2\n\t--serial3 device         set device string for SERIAL3\n\t--serial4 device         set device string for SERIAL4\n\t--serial5 device         set device string for SERIAL5\n\t--serial6 device         set device string for SERIAL6\n\t--serial7 device         set device string for SERIAL7\n\t--serial8 device         set device string for SERIAL8\n\t--serial9 device         set device string for SERIAL9\n\t--rtscts                 enable rtscts on serial ports (default false)\n\t--base-port PORT         set port num for base port(default 5670) must be before -I option\n\t--rc-in-port PORT        set port num for rc in\n\t--sim-address ADDR       set address string for simulator\n\t--sim-port-in PORT       set port num for simulator in\n\t--sim-port-out PORT      set port num for simulator out\n\t--irlock-port PORT       set port num for irlock\n\t--start-time TIMESTR     set simulation start time in UNIX timestamp\n\t--sysid ID               set SYSID_THISMAV\n\t--slave number           set the number of JSON slaves"
+  },
+  "runs": [
+    {
+      "action_mode": null,
+      "action_started": false,
+      "action_time_s": null,
+      "arm": "B_nominal",
+      "bad_messages": [],
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/B_nominal_r1.BIN",
+      "contract_clean": false,
+      "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/B_nominal_r1_parsed.csv",
+      "environment": "nominal_no_wind",
+      "expect_breach": true,
+      "expected_action_modes": [
+        "RTL",
+        "LAND"
+      ],
+      "fence_breach_detected": false,
+      "fence_breach_distance_m": null,
+      "fence_breach_time_s": null,
+      "fence_events": [],
+      "fence_messages": [
+        {
+          "raw": {
+            "Message": "New fence",
+            "TimeUS": 2282420,
+            "mavpackettype": "MSG"
+          },
+          "text": "New fence",
+          "time_s": 0.0
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 8992235,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 6.709815000000001
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 17047345,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 14.764925
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 26044578,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 23.762158
+        },
+        {
+          "raw": {
+            "Message": "PreArm: Fence requires position",
+            "TimeUS": 30277051,
+            "mavpackettype": "MSG"
+          },
+          "text": "PreArm: Fence requires position",
+          "time_s": 27.994631
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 35049308,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 32.766888
+        }
+      ],
+      "fence_radius_m": 100.0,
+      "flight": {
+        "motion": "witness_goto",
+        "observed": {
+          "modes_seen": [
+            {
+              "mode": "GUIDED",
+              "wall_s": 0.2494513988494873
+            }
+          ],
+          "statustext": []
+        },
+        "target": {
+          "lat": 37.42749993397882,
+          "lon": -122.16574078530067,
+          "rel_alt_m": 20.0
+        }
+      },
+      "hard_boundary_m": 103.0,
+      "hard_boundary_margin_m": -102.97910712125861,
+      "label": "Arm B: no-wind witness calibration",
+      "max_distance_m": 0.02089287874138602,
+      "max_distance_sample": {
+        "alt": 23.510000228881836,
+        "distance_m": 0.02089287874138602,
+        "lat": 37.4275001,
+        "lon": -122.1696998,
+        "mode": "GUIDED",
+        "source": "POS",
+        "time_s": 49.194480999999996
+      },
+      "max_overshoot_m": 0.0,
+      "modes": [
+        {
+          "mode": "STABILIZE",
+          "raw": {
+            "Mode": 0,
+            "ModeNum": 0,
+            "Rsn": 26,
+            "TimeUS": 2282420,
+            "mavpackettype": "MODE"
+          },
+          "reason": 26,
+          "time_s": 0.0
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 8977241,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 6.694820999999999
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 44039877,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 41.757456999999995
+        },
+        {
+          "mode": "LAND",
+          "raw": {
+            "Mode": 9,
+            "ModeNum": 9,
+            "Rsn": 2,
+            "TimeUS": 237186754,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 234.904334
+        }
+      ],
+      "motion": "witness_goto",
+      "other_errors": [
+        {
+          "ecode": 5,
+          "ecode_name": "DEST_OUTSIDE_FENCE",
+          "raw": {
+            "ECode": 5,
+            "Subsys": 22,
+            "TimeUS": 57039675,
+            "mavpackettype": "ERR"
+          },
+          "subsys": 22,
+          "subsys_name": "NAVIGATION",
+          "time_s": 54.757255
+        }
+      ],
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 150.0,
+          "name": "FENCE_RADIUS",
+          "ok": true,
+          "readback": 100.0,
+          "requested": 100.0
+        },
+        {
+          "before": 1.0,
+          "name": "FENCE_ACTION",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 2.0,
+          "name": "FENCE_MARGIN",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 1000.0,
+          "name": "WPNAV_SPEED",
+          "ok": true,
+          "readback": 1500.0,
+          "requested": 1500.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/B_nominal_r1_params.json",
+      "param_snapshot": {
+        "FENCE_ACTION": 1.0,
+        "FENCE_ENABLE": 1.0,
+        "FENCE_MARGIN": 2.0,
+        "FENCE_RADIUS": 100.0,
+        "FENCE_TYPE": 2.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_DISARMED": 1.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 0.0,
+        "SIM_WIND_TURB": 0.0,
+        "WPNAV_SPEED": 1500.0
+      },
+      "params_requested": {
+        "FENCE_ACTION": 1,
+        "FENCE_ENABLE": 1,
+        "FENCE_MARGIN": 2,
+        "FENCE_RADIUS": 100,
+        "FENCE_TYPE": 2,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_DISARMED": 1,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 0,
+        "SIM_WIND_TURB": 0,
+        "WPNAV_SPEED": 1500
+      },
+      "parm_rows_count": 1359,
+      "plots": {
+        "distance": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/distance_B_nominal_r1.png",
+        "trajectory": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/trajectory_B_nominal_r1.png"
+      },
+      "position_source": "POS",
+      "rep_index": 1,
+      "run_id": "B_nominal_r1",
+      "safe": true,
+      "samples": 2595,
+      "started_at_utc": "2026-06-11T11:00:40.257729+00:00",
+      "unsafe": false,
+      "verdict": "safe_contract_dirty",
+      "work_dir": "/mnt/nvme/px4_work/uav_sparse/planc/work/B_nominal_r1"
+    },
+    {
+      "action_mode": null,
+      "action_started": false,
+      "action_time_s": null,
+      "arm": "A_witness",
+      "bad_messages": [],
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/A_witness_r1.BIN",
+      "contract_clean": false,
+      "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/A_witness_r1_parsed.csv",
+      "environment": "tailwind_extreme",
+      "expect_breach": true,
+      "expected_action_modes": [
+        "RTL",
+        "LAND"
+      ],
+      "fence_breach_detected": false,
+      "fence_breach_distance_m": null,
+      "fence_breach_time_s": null,
+      "fence_events": [],
+      "fence_messages": [
+        {
+          "raw": {
+            "Message": "New fence",
+            "TimeUS": 2282420,
+            "mavpackettype": "MSG"
+          },
+          "text": "New fence",
+          "time_s": 0.0
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 8987237,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 6.704817
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 17052343,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 14.769923
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 25044145,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 22.761725
+        },
+        {
+          "raw": {
+            "Message": "PreArm: Fence requires position",
+            "TimeUS": 30277051,
+            "mavpackettype": "MSG"
+          },
+          "text": "PreArm: Fence requires position",
+          "time_s": 27.994631
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 34044710,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 31.76229
+        }
+      ],
+      "fence_radius_m": 100.0,
+      "flight": {
+        "motion": "witness_goto",
+        "observed": {
+          "modes_seen": [
+            {
+              "mode": "GUIDED",
+              "wall_s": 0.24953675270080566
+            }
+          ],
+          "statustext": []
+        },
+        "target": {
+          "lat": 37.42749993397882,
+          "lon": -122.16574078530067,
+          "rel_alt_m": 20.0
+        }
+      },
+      "hard_boundary_m": 103.0,
+      "hard_boundary_margin_m": -102.7168966728486,
+      "label": "Arm A: tailwind high-speed sparse witness",
+      "max_distance_m": 0.2831033271514003,
+      "max_distance_sample": {
+        "alt": 27.479999542236328,
+        "distance_m": 0.2831033271514003,
+        "lat": 37.4274999,
+        "lon": -122.1696968,
+        "mode": "GUIDED",
+        "source": "POS",
+        "time_s": 49.794241
+      },
+      "max_overshoot_m": 0.0,
+      "modes": [
+        {
+          "mode": "STABILIZE",
+          "raw": {
+            "Mode": 0,
+            "ModeNum": 0,
+            "Rsn": 26,
+            "TimeUS": 2282420,
+            "mavpackettype": "MODE"
+          },
+          "reason": 26,
+          "time_s": 0.0
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 8974742,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 6.692322000000001
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 43044442,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 40.762021999999995
+        },
+        {
+          "mode": "LAND",
+          "raw": {
+            "Mode": 9,
+            "ModeNum": 9,
+            "Rsn": 2,
+            "TimeUS": 236182156,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 233.899736
+        }
+      ],
+      "motion": "witness_goto",
+      "other_errors": [
+        {
+          "ecode": 5,
+          "ecode_name": "DEST_OUTSIDE_FENCE",
+          "raw": {
+            "ECode": 5,
+            "Subsys": 22,
+            "TimeUS": 56044240,
+            "mavpackettype": "ERR"
+          },
+          "subsys": 22,
+          "subsys_name": "NAVIGATION",
+          "time_s": 53.76182
+        }
+      ],
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 10.0,
+          "requested": 10.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 150.0,
+          "name": "FENCE_RADIUS",
+          "ok": true,
+          "readback": 100.0,
+          "requested": 100.0
+        },
+        {
+          "before": 1.0,
+          "name": "FENCE_ACTION",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 2.0,
+          "name": "FENCE_MARGIN",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 1000.0,
+          "name": "WPNAV_SPEED",
+          "ok": true,
+          "readback": 1500.0,
+          "requested": 1500.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/A_witness_r1_params.json",
+      "param_snapshot": {
+        "FENCE_ACTION": 1.0,
+        "FENCE_ENABLE": 1.0,
+        "FENCE_MARGIN": 2.0,
+        "FENCE_RADIUS": 100.0,
+        "FENCE_TYPE": 2.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_DISARMED": 1.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 10.0,
+        "SIM_WIND_TURB": 0.0,
+        "WPNAV_SPEED": 1500.0
+      },
+      "params_requested": {
+        "FENCE_ACTION": 1,
+        "FENCE_ENABLE": 1,
+        "FENCE_MARGIN": 2,
+        "FENCE_RADIUS": 100,
+        "FENCE_TYPE": 2,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_DISARMED": 1,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 10,
+        "SIM_WIND_TURB": 0,
+        "WPNAV_SPEED": 1500
+      },
+      "parm_rows_count": 1359,
+      "plots": {
+        "distance": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/distance_A_witness_r1.png",
+        "trajectory": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/trajectory_A_witness_r1.png"
+      },
+      "position_source": "POS",
+      "rep_index": 1,
+      "run_id": "A_witness_r1",
+      "safe": true,
+      "samples": 2584,
+      "started_at_utc": "2026-06-11T11:01:57.366816+00:00",
+      "unsafe": false,
+      "verdict": "safe_contract_dirty",
+      "work_dir": "/mnt/nvme/px4_work/uav_sparse/planc/work/A_witness_r1"
+    },
+    {
+      "action_mode": null,
+      "action_started": false,
+      "action_time_s": null,
+      "arm": "A_witness",
+      "bad_messages": [],
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/A_witness_r2.BIN",
+      "contract_clean": false,
+      "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/A_witness_r2_parsed.csv",
+      "environment": "tailwind_extreme",
+      "expect_breach": true,
+      "expected_action_modes": [
+        "RTL",
+        "LAND"
+      ],
+      "fence_breach_detected": false,
+      "fence_breach_distance_m": null,
+      "fence_breach_time_s": null,
+      "fence_events": [],
+      "fence_messages": [
+        {
+          "raw": {
+            "Message": "New fence",
+            "TimeUS": 2282420,
+            "mavpackettype": "MSG"
+          },
+          "text": "New fence",
+          "time_s": 0.0
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 9067205,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 6.784784999999999
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 18049444,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 15.767024000000001
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 27049176,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 24.766756
+        },
+        {
+          "raw": {
+            "Message": "PreArm: Fence requires position",
+            "TimeUS": 30277051,
+            "mavpackettype": "MSG"
+          },
+          "text": "PreArm: Fence requires position",
+          "time_s": 27.994631
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 35044310,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 32.76189
+        }
+      ],
+      "fence_radius_m": 100.0,
+      "flight": {
+        "motion": "witness_goto",
+        "observed": {
+          "modes_seen": [
+            {
+              "mode": "GUIDED",
+              "wall_s": 0.2535827159881592
+            }
+          ],
+          "statustext": []
+        },
+        "target": {
+          "lat": 37.42749993397882,
+          "lon": -122.16574078530067,
+          "rel_alt_m": 20.0
+        }
+      },
+      "hard_boundary_m": 103.0,
+      "hard_boundary_margin_m": -102.7168966728486,
+      "label": "Arm A: tailwind high-speed sparse witness",
+      "max_distance_m": 0.2831033271514003,
+      "max_distance_sample": {
+        "alt": 28.239999771118164,
+        "distance_m": 0.2831033271514003,
+        "lat": 37.4274999,
+        "lon": -122.1696968,
+        "mode": "GUIDED",
+        "source": "POS",
+        "time_s": 51.094553999999995
+      },
+      "max_overshoot_m": 0.0,
+      "modes": [
+        {
+          "mode": "STABILIZE",
+          "raw": {
+            "Mode": 0,
+            "ModeNum": 0,
+            "Rsn": 26,
+            "TimeUS": 2282420,
+            "mavpackettype": "MODE"
+          },
+          "reason": 26,
+          "time_s": 0.0
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 9059708,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 6.777288
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 44044875,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 41.762454999999996
+        },
+        {
+          "mode": "LAND",
+          "raw": {
+            "Mode": 9,
+            "ModeNum": 9,
+            "Rsn": 2,
+            "TimeUS": 237164263,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 234.881843
+        }
+      ],
+      "motion": "witness_goto",
+      "other_errors": [
+        {
+          "ecode": 5,
+          "ecode_name": "DEST_OUTSIDE_FENCE",
+          "raw": {
+            "ECode": 5,
+            "Subsys": 22,
+            "TimeUS": 57039675,
+            "mavpackettype": "ERR"
+          },
+          "subsys": 22,
+          "subsys_name": "NAVIGATION",
+          "time_s": 54.757255
+        }
+      ],
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 10.0,
+          "requested": 10.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 150.0,
+          "name": "FENCE_RADIUS",
+          "ok": true,
+          "readback": 100.0,
+          "requested": 100.0
+        },
+        {
+          "before": 1.0,
+          "name": "FENCE_ACTION",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 2.0,
+          "name": "FENCE_MARGIN",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 1000.0,
+          "name": "WPNAV_SPEED",
+          "ok": true,
+          "readback": 1500.0,
+          "requested": 1500.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/A_witness_r2_params.json",
+      "param_snapshot": {
+        "FENCE_ACTION": 1.0,
+        "FENCE_ENABLE": 1.0,
+        "FENCE_MARGIN": 2.0,
+        "FENCE_RADIUS": 100.0,
+        "FENCE_TYPE": 2.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_DISARMED": 1.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 10.0,
+        "SIM_WIND_TURB": 0.0,
+        "WPNAV_SPEED": 1500.0
+      },
+      "params_requested": {
+        "FENCE_ACTION": 1,
+        "FENCE_ENABLE": 1,
+        "FENCE_MARGIN": 2,
+        "FENCE_RADIUS": 100,
+        "FENCE_TYPE": 2,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_DISARMED": 1,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 10,
+        "SIM_WIND_TURB": 0,
+        "WPNAV_SPEED": 1500
+      },
+      "parm_rows_count": 1359,
+      "plots": {
+        "distance": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/distance_A_witness_r2.png",
+        "trajectory": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/trajectory_A_witness_r2.png"
+      },
+      "position_source": "POS",
+      "rep_index": 2,
+      "run_id": "A_witness_r2",
+      "safe": true,
+      "samples": 2594,
+      "started_at_utc": "2026-06-11T11:03:14.068993+00:00",
+      "unsafe": false,
+      "verdict": "safe_contract_dirty",
+      "work_dir": "/mnt/nvme/px4_work/uav_sparse/planc/work/A_witness_r2"
+    },
+    {
+      "action_mode": null,
+      "action_started": false,
+      "action_time_s": null,
+      "arm": "A_witness",
+      "bad_messages": [],
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/A_witness_r3.BIN",
+      "contract_clean": false,
+      "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/A_witness_r3_parsed.csv",
+      "environment": "tailwind_extreme",
+      "expect_breach": true,
+      "expected_action_modes": [
+        "RTL",
+        "LAND"
+      ],
+      "fence_breach_detected": false,
+      "fence_breach_distance_m": null,
+      "fence_breach_time_s": null,
+      "fence_events": [],
+      "fence_messages": [
+        {
+          "raw": {
+            "Message": "New fence",
+            "TimeUS": 2312408,
+            "mavpackettype": "MSG"
+          },
+          "text": "New fence",
+          "time_s": 0.0
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 9079700,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 6.767292000000001
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 18046945,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 15.734537000000001
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 26059572,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 23.747163999999998
+        },
+        {
+          "raw": {
+            "Message": "PreArm: Fence requires position",
+            "TimeUS": 30277051,
+            "mavpackettype": "MSG"
+          },
+          "text": "PreArm: Fence requires position",
+          "time_s": 27.964643
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 35041811,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 32.729403000000005
+        }
+      ],
+      "fence_radius_m": 100.0,
+      "flight": {
+        "motion": "witness_goto",
+        "observed": {
+          "modes_seen": [
+            {
+              "mode": "GUIDED",
+              "wall_s": 0.2518153190612793
+            }
+          ],
+          "statustext": []
+        },
+        "target": {
+          "lat": 37.42749993397882,
+          "lon": -122.16574078530067,
+          "rel_alt_m": 20.0
+        }
+      },
+      "hard_boundary_m": 103.0,
+      "hard_boundary_margin_m": -102.71711561823936,
+      "label": "Arm A: tailwind high-speed sparse witness",
+      "max_distance_m": 0.2828843817606438,
+      "max_distance_sample": {
+        "alt": 24.469999313354492,
+        "distance_m": 0.2828843817606438,
+        "lat": 37.4275,
+        "lon": -122.1696968,
+        "mode": "GUIDED",
+        "source": "POS",
+        "time_s": 49.564333000000005
+      },
+      "max_overshoot_m": 0.0,
+      "modes": [
+        {
+          "mode": "STABILIZE",
+          "raw": {
+            "Mode": 0,
+            "ModeNum": 0,
+            "Rsn": 26,
+            "TimeUS": 2312408,
+            "mavpackettype": "MODE"
+          },
+          "reason": 26,
+          "time_s": 0.0
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 9069704,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 6.757296
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 44052372,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 41.739964
+        },
+        {
+          "mode": "LAND",
+          "raw": {
+            "Mode": 9,
+            "ModeNum": 9,
+            "Rsn": 2,
+            "TimeUS": 237166762,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 234.854354
+        }
+      ],
+      "motion": "witness_goto",
+      "other_errors": [
+        {
+          "ecode": 5,
+          "ecode_name": "DEST_OUTSIDE_FENCE",
+          "raw": {
+            "ECode": 5,
+            "Subsys": 22,
+            "TimeUS": 57042174,
+            "mavpackettype": "ERR"
+          },
+          "subsys": 22,
+          "subsys_name": "NAVIGATION",
+          "time_s": 54.729766000000005
+        }
+      ],
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 10.0,
+          "requested": 10.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 150.0,
+          "name": "FENCE_RADIUS",
+          "ok": true,
+          "readback": 100.0,
+          "requested": 100.0
+        },
+        {
+          "before": 1.0,
+          "name": "FENCE_ACTION",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 2.0,
+          "name": "FENCE_MARGIN",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 1000.0,
+          "name": "WPNAV_SPEED",
+          "ok": true,
+          "readback": 1500.0,
+          "requested": 1500.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/A_witness_r3_params.json",
+      "param_snapshot": {
+        "FENCE_ACTION": 1.0,
+        "FENCE_ENABLE": 1.0,
+        "FENCE_MARGIN": 2.0,
+        "FENCE_RADIUS": 100.0,
+        "FENCE_TYPE": 2.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_DISARMED": 1.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 10.0,
+        "SIM_WIND_TURB": 0.0,
+        "WPNAV_SPEED": 1500.0
+      },
+      "params_requested": {
+        "FENCE_ACTION": 1,
+        "FENCE_ENABLE": 1,
+        "FENCE_MARGIN": 2,
+        "FENCE_RADIUS": 100,
+        "FENCE_TYPE": 2,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_DISARMED": 1,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 10,
+        "SIM_WIND_TURB": 0,
+        "WPNAV_SPEED": 1500
+      },
+      "parm_rows_count": 1359,
+      "plots": {
+        "distance": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/distance_A_witness_r3.png",
+        "trajectory": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/trajectory_A_witness_r3.png"
+      },
+      "position_source": "POS",
+      "rep_index": 3,
+      "run_id": "A_witness_r3",
+      "safe": true,
+      "samples": 2594,
+      "started_at_utc": "2026-06-11T11:04:30.614852+00:00",
+      "unsafe": false,
+      "verdict": "safe_contract_dirty",
+      "work_dir": "/mnt/nvme/px4_work/uav_sparse/planc/work/A_witness_r3"
+    },
+    {
+      "action_mode": null,
+      "action_started": false,
+      "action_time_s": null,
+      "arm": "C_hover",
+      "bad_messages": [],
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/C_hover_r1.BIN",
+      "contract_clean": true,
+      "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/C_hover_r1_parsed.csv",
+      "environment": "tailwind_extreme",
+      "expect_breach": false,
+      "expected_action_modes": [
+        "RTL",
+        "LAND"
+      ],
+      "fence_breach_detected": false,
+      "fence_breach_distance_m": null,
+      "fence_breach_time_s": null,
+      "fence_events": [],
+      "fence_messages": [
+        {
+          "raw": {
+            "Message": "New fence",
+            "TimeUS": 2282420,
+            "mavpackettype": "MSG"
+          },
+          "text": "New fence",
+          "time_s": 0.0
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 9064706,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 6.782285999999999
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 18044446,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 15.762026
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 26037081,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 23.754661
+        },
+        {
+          "raw": {
+            "Message": "PreArm: Fence requires position",
+            "TimeUS": 30277051,
+            "mavpackettype": "MSG"
+          },
+          "text": "PreArm: Fence requires position",
+          "time_s": 27.994631
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 34047209,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 31.764789
+        }
+      ],
+      "fence_radius_m": 100.0,
+      "flight": {
+        "motion": "hover_center",
+        "observed": {
+          "modes_seen": [
+            {
+              "mode": "GUIDED",
+              "wall_s": 0.2537500858306885
+            }
+          ],
+          "statustext": []
+        },
+        "target": {
+          "lat": 37.4275,
+          "lon": -122.1697,
+          "rel_alt_m": 20.0
+        }
+      },
+      "hard_boundary_m": 103.0,
+      "hard_boundary_margin_m": -102.7168966728486,
+      "label": "Arm C: tailwind hover control",
+      "max_distance_m": 0.2831033271514003,
+      "max_distance_sample": {
+        "alt": 27.479999542236328,
+        "distance_m": 0.2831033271514003,
+        "lat": 37.4274999,
+        "lon": -122.1696968,
+        "mode": "GUIDED",
+        "source": "POS",
+        "time_s": 49.794241
+      },
+      "max_overshoot_m": 0.0,
+      "modes": [
+        {
+          "mode": "STABILIZE",
+          "raw": {
+            "Mode": 0,
+            "ModeNum": 0,
+            "Rsn": 26,
+            "TimeUS": 2282420,
+            "mavpackettype": "MODE"
+          },
+          "reason": 26,
+          "time_s": 0.0
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 9054710,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 6.77229
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 43044442,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 40.762021999999995
+        },
+        {
+          "mode": "LAND",
+          "raw": {
+            "Mode": 9,
+            "ModeNum": 9,
+            "Rsn": 2,
+            "TimeUS": 156056719,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 153.77429899999998
+        }
+      ],
+      "motion": "hover_center",
+      "other_errors": [],
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 10.0,
+          "requested": 10.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 150.0,
+          "name": "FENCE_RADIUS",
+          "ok": true,
+          "readback": 100.0,
+          "requested": 100.0
+        },
+        {
+          "before": 1.0,
+          "name": "FENCE_ACTION",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 2.0,
+          "name": "FENCE_MARGIN",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 1000.0,
+          "name": "WPNAV_SPEED",
+          "ok": true,
+          "readback": 1500.0,
+          "requested": 1500.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/C_hover_r1_params.json",
+      "param_snapshot": {
+        "FENCE_ACTION": 1.0,
+        "FENCE_ENABLE": 1.0,
+        "FENCE_MARGIN": 2.0,
+        "FENCE_RADIUS": 100.0,
+        "FENCE_TYPE": 2.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_DISARMED": 1.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 10.0,
+        "SIM_WIND_TURB": 0.0,
+        "WPNAV_SPEED": 1500.0
+      },
+      "params_requested": {
+        "FENCE_ACTION": 1,
+        "FENCE_ENABLE": 1,
+        "FENCE_MARGIN": 2,
+        "FENCE_RADIUS": 100,
+        "FENCE_TYPE": 2,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_DISARMED": 1,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 10,
+        "SIM_WIND_TURB": 0,
+        "WPNAV_SPEED": 1500
+      },
+      "parm_rows_count": 1355,
+      "plots": {
+        "distance": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/distance_C_hover_r1.png",
+        "trajectory": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/trajectory_C_hover_r1.png"
+      },
+      "position_source": "POS",
+      "rep_index": 1,
+      "run_id": "C_hover_r1",
+      "safe": true,
+      "samples": 1785,
+      "started_at_utc": "2026-06-11T11:05:47.183823+00:00",
+      "unsafe": false,
+      "verdict": "safe_contract_clean",
+      "work_dir": "/mnt/nvme/px4_work/uav_sparse/planc/work/C_hover_r1"
+    },
+    {
+      "action_mode": null,
+      "action_started": false,
+      "action_time_s": null,
+      "arm": "D_conservative",
+      "bad_messages": [],
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/D_conservative_r1.BIN",
+      "contract_clean": false,
+      "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/D_conservative_r1_parsed.csv",
+      "environment": "tailwind_extreme",
+      "expect_breach": true,
+      "expected_action_modes": [
+        "RTL",
+        "LAND"
+      ],
+      "fence_breach_detected": false,
+      "fence_breach_distance_m": null,
+      "fence_breach_time_s": null,
+      "fence_events": [],
+      "fence_messages": [
+        {
+          "raw": {
+            "Message": "New fence",
+            "TimeUS": 2282420,
+            "mavpackettype": "MSG"
+          },
+          "text": "New fence",
+          "time_s": 0.0
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 8984738,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 6.702318
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 17059840,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 14.777420000000001
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 26047077,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 23.764657
+        },
+        {
+          "raw": {
+            "Message": "PreArm: Fence requires position",
+            "TimeUS": 30277051,
+            "mavpackettype": "MSG"
+          },
+          "text": "PreArm: Fence requires position",
+          "time_s": 27.994631
+        },
+        {
+          "raw": {
+            "Message": "Arm: Fence requires position",
+            "TimeUS": 35046809,
+            "mavpackettype": "MSG"
+          },
+          "text": "Arm: Fence requires position",
+          "time_s": 32.764389
+        }
+      ],
+      "fence_radius_m": 100.0,
+      "flight": {
+        "motion": "witness_goto",
+        "observed": {
+          "modes_seen": [
+            {
+              "mode": "GUIDED",
+              "wall_s": 0.2500920295715332
+            }
+          ],
+          "statustext": []
+        },
+        "target": {
+          "lat": 37.42749993397882,
+          "lon": -122.16574078530067,
+          "rel_alt_m": 20.0
+        }
+      },
+      "hard_boundary_m": 103.0,
+      "hard_boundary_margin_m": -102.7168966728486,
+      "label": "Arm D: tailwind sparse witness with conservative speed",
+      "max_distance_m": 0.2831033271514003,
+      "max_distance_sample": {
+        "alt": 28.239999771118164,
+        "distance_m": 0.2831033271514003,
+        "lat": 37.4274999,
+        "lon": -122.1696968,
+        "mode": "GUIDED",
+        "source": "POS",
+        "time_s": 51.094553999999995
+      },
+      "max_overshoot_m": 0.0,
+      "modes": [
+        {
+          "mode": "STABILIZE",
+          "raw": {
+            "Mode": 0,
+            "ModeNum": 0,
+            "Rsn": 26,
+            "TimeUS": 2282420,
+            "mavpackettype": "MODE"
+          },
+          "reason": 26,
+          "time_s": 0.0
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 8972243,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 6.6898230000000005
+        },
+        {
+          "mode": "GUIDED",
+          "raw": {
+            "Mode": 4,
+            "ModeNum": 4,
+            "Rsn": 2,
+            "TimeUS": 44044875,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 41.762454999999996
+        },
+        {
+          "mode": "LAND",
+          "raw": {
+            "Mode": 9,
+            "ModeNum": 9,
+            "Rsn": 2,
+            "TimeUS": 237166762,
+            "mavpackettype": "MODE"
+          },
+          "reason": 2,
+          "time_s": 234.884342
+        }
+      ],
+      "motion": "witness_goto",
+      "other_errors": [
+        {
+          "ecode": 5,
+          "ecode_name": "DEST_OUTSIDE_FENCE",
+          "raw": {
+            "ECode": 5,
+            "Subsys": 22,
+            "TimeUS": 57042174,
+            "mavpackettype": "ERR"
+          },
+          "subsys": 22,
+          "subsys_name": "NAVIGATION",
+          "time_s": 54.759754
+        }
+      ],
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 10.0,
+          "requested": 10.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 150.0,
+          "name": "FENCE_RADIUS",
+          "ok": true,
+          "readback": 100.0,
+          "requested": 100.0
+        },
+        {
+          "before": 1.0,
+          "name": "FENCE_ACTION",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 2.0,
+          "name": "FENCE_MARGIN",
+          "ok": true,
+          "readback": 2.0,
+          "requested": 2.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 1000.0,
+          "name": "WPNAV_SPEED",
+          "ok": true,
+          "readback": 500.0,
+          "requested": 500.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/D_conservative_r1_params.json",
+      "param_snapshot": {
+        "FENCE_ACTION": 1.0,
+        "FENCE_ENABLE": 1.0,
+        "FENCE_MARGIN": 2.0,
+        "FENCE_RADIUS": 100.0,
+        "FENCE_TYPE": 2.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_DISARMED": 1.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 10.0,
+        "SIM_WIND_TURB": 0.0,
+        "WPNAV_SPEED": 500.0
+      },
+      "params_requested": {
+        "FENCE_ACTION": 1,
+        "FENCE_ENABLE": 1,
+        "FENCE_MARGIN": 2,
+        "FENCE_RADIUS": 100,
+        "FENCE_TYPE": 2,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_DISARMED": 1,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 10,
+        "SIM_WIND_TURB": 0,
+        "WPNAV_SPEED": 500
+      },
+      "parm_rows_count": 1359,
+      "plots": {
+        "distance": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/distance_D_conservative_r1.png",
+        "trajectory": "/mnt/nvme/px4_work/uav_sparse/planc/analysis/trajectory_D_conservative_r1.png"
+      },
+      "position_source": "POS",
+      "rep_index": 1,
+      "run_id": "D_conservative_r1",
+      "safe": true,
+      "samples": 2595,
+      "started_at_utc": "2026-06-11T11:06:41.214888+00:00",
+      "unsafe": false,
+      "verdict": "safe_contract_dirty",
+      "work_dir": "/mnt/nvme/px4_work/uav_sparse/planc/work/D_conservative_r1"
+    }
+  ],
+  "status": "GATE FAILED / NO-GO",
+  "summary": {
+    "a_consistent": false,
+    "a_max_distance_spread_m": 0.00021894539075650865,
+    "b_safe": false,
+    "blocked_runs": [],
+    "c_safe": true,
+    "d_safe": false,
+    "gate": "GATE FAILED / NO-GO",
+    "reason": "Witness GUIDED targets were rejected by ArduPilot as DEST_OUTSIDE_FENCE before a fence crossing occurred: B_nominal_r1, A_witness_r1, A_witness_r2, A_witness_r3, D_conservative_r1."
+  }
+}

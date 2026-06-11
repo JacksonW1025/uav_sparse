@@ -1,0 +1,109 @@
+experiment:
+  name: geofence_high_speed_overshoot_gate
+  date: "2026-06-11"
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 90.0
+  target_bearing_deg: 90.0
+  target_distance_m: 350.0
+  takeoff_alt_m: 20.0
+  speedup: 4
+  observation_s:
+    witness: 45
+    hover: 25
+  repetitions:
+    arm_a: 3
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+param_metadata:
+  fence_type_circle: 2
+  fence_action_rtl: 1
+  fence_action_brake: 4
+  source: /home/car/ardupilot/libraries/AC_Fence/AC_Fence.h
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  FENCE_TYPE: 2
+  FENCE_RADIUS: 100
+  FENCE_ACTION: 1
+  FENCE_MARGIN: 2
+  FENCE_ENABLE: 1
+  WPNAV_SPEED: 1500
+
+oracle:
+  fence_radius_m: 100.0
+  buffer_fraction: 0.20
+  min_buffer_m: 3.0
+  action_latency_s: 8.0
+  expected_action_modes_for_rtl:
+    - RTL
+    - LAND
+  expected_action_modes_for_brake:
+    - BRAKE
+    - LAND
+
+arms:
+  B_nominal:
+    label: "Arm B: no-wind witness calibration"
+    environment: nominal_no_wind
+    motion: witness_goto
+    repetitions: 1
+    params:
+      SIM_WIND_SPD: 0
+      SIM_WIND_TURB: 0
+      WPNAV_SPEED: 1500
+      FENCE_ACTION: 1
+  A_witness:
+    label: "Arm A: tailwind high-speed sparse witness"
+    environment: tailwind_extreme
+    motion: witness_goto
+    repetitions: 3
+    params:
+      SIM_WIND_DIR: 270
+      SIM_WIND_SPD: 10
+      SIM_WIND_TURB: 0
+      WPNAV_SPEED: 1500
+      FENCE_ACTION: 1
+  C_hover:
+    label: "Arm C: tailwind hover control"
+    environment: tailwind_extreme
+    motion: hover_center
+    repetitions: 1
+    params:
+      SIM_WIND_DIR: 270
+      SIM_WIND_SPD: 10
+      SIM_WIND_TURB: 0
+      WPNAV_SPEED: 1500
+      FENCE_ACTION: 1
+  D_conservative:
+    label: "Arm D: tailwind sparse witness with conservative speed"
+    environment: tailwind_extreme
+    motion: witness_goto
+    repetitions: 1
+    params:
+      SIM_WIND_DIR: 270
+      SIM_WIND_SPD: 10
+      SIM_WIND_TURB: 0
+      WPNAV_SPEED: 500
+      FENCE_ACTION: 1

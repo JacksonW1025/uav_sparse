@@ -1,0 +1,94 @@
+{
+  "records": [
+    {
+      "before": 1.0,
+      "name": "LOG_BACKEND_TYPE",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 0.0,
+      "name": "LOG_DISARMED",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 180.0,
+      "name": "SIM_WIND_DIR",
+      "ok": true,
+      "readback": 270.0,
+      "requested": 270.0
+    },
+    {
+      "before": 0.0,
+      "name": "SIM_WIND_SPD",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 0.0,
+      "name": "SIM_WIND_TURB",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 7.0,
+      "name": "FENCE_TYPE",
+      "ok": true,
+      "readback": 2.0,
+      "requested": 2.0
+    },
+    {
+      "before": 150.0,
+      "name": "FENCE_RADIUS",
+      "ok": true,
+      "readback": 100.0,
+      "requested": 100.0
+    },
+    {
+      "before": 1.0,
+      "name": "FENCE_ACTION",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 2.0,
+      "name": "FENCE_MARGIN",
+      "ok": true,
+      "readback": 2.0,
+      "requested": 2.0
+    },
+    {
+      "before": 0.0,
+      "name": "FENCE_ENABLE",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 1000.0,
+      "name": "WPNAV_SPEED",
+      "ok": true,
+      "readback": 1500.0,
+      "requested": 1500.0
+    }
+  ],
+  "snapshot": {
+    "FENCE_ACTION": 1.0,
+    "FENCE_ENABLE": 1.0,
+    "FENCE_MARGIN": 2.0,
+    "FENCE_RADIUS": 100.0,
+    "FENCE_TYPE": 2.0,
+    "LOG_BACKEND_TYPE": 1.0,
+    "LOG_DISARMED": 1.0,
+    "SIM_WIND_DIR": 270.0,
+    "SIM_WIND_SPD": 0.0,
+    "SIM_WIND_TURB": 0.0,
+    "WPNAV_SPEED": 1500.0
+  }
+}
