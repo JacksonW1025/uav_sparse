@@ -1,0 +1,450 @@
+{
+  "bad_events": [],
+  "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/linkloss_conservative_v08_w12_r1.BIN",
+  "contract_clean": true,
+  "contract_violations": [],
+  "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/linkloss_conservative_v08_w12_r1_parsed.csv",
+  "dirty_messages": [],
+  "err_records": [
+    {
+      "ecode": 0,
+      "raw": {
+        "ECode": 0,
+        "Subsys": 3,
+        "TimeUS": 2377382,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 3,
+      "subsys_name": "COMPASS",
+      "time_s": 0.07996800000000004
+    },
+    {
+      "ecode": 1,
+      "raw": {
+        "ECode": 1,
+        "Subsys": 8,
+        "TimeUS": 74429383,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 8,
+      "subsys_name": "FAILSAFE_GCS",
+      "time_s": 72.131969
+    },
+    {
+      "ecode": 0,
+      "raw": {
+        "ECode": 0,
+        "Subsys": 8,
+        "TimeUS": 285567394,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 8,
+      "subsys_name": "FAILSAFE_GCS",
+      "time_s": 283.26998
+    }
+  ],
+  "event_records": [
+    {
+      "id": 62,
+      "name": "EKF_YAW_RESET",
+      "raw": {
+        "Id": 62,
+        "TimeUS": 5719378,
+        "mavpackettype": "EV"
+      },
+      "time_s": 3.421964
+    },
+    {
+      "id": 25,
+      "name": "SET_HOME",
+      "raw": {
+        "Id": 25,
+        "TimeUS": 18581731,
+        "mavpackettype": "EV"
+      },
+      "time_s": 16.284317
+    },
+    {
+      "id": 10,
+      "name": "ARMED",
+      "raw": {
+        "Id": 10,
+        "TimeUS": 48041609,
+        "mavpackettype": "EV"
+      },
+      "time_s": 45.744195000000005
+    },
+    {
+      "id": 15,
+      "name": "AUTO_ARMED",
+      "raw": {
+        "Id": 15,
+        "TimeUS": 49049539,
+        "mavpackettype": "EV"
+      },
+      "time_s": 46.75212500000001
+    },
+    {
+      "id": 57,
+      "name": "MOTORS_INTERLOCK_ENABLED",
+      "raw": {
+        "Id": 57,
+        "TimeUS": 50044141,
+        "mavpackettype": "EV"
+      },
+      "time_s": 47.74672700000001
+    },
+    {
+      "id": 28,
+      "name": "NOT_LANDED",
+      "raw": {
+        "Id": 28,
+        "TimeUS": 51269484,
+        "mavpackettype": "EV"
+      },
+      "time_s": 48.97207
+    },
+    {
+      "id": 62,
+      "name": "EKF_YAW_RESET",
+      "raw": {
+        "Id": 62,
+        "TimeUS": 53626874,
+        "mavpackettype": "EV"
+      },
+      "time_s": 51.32946
+    },
+    {
+      "id": 17,
+      "name": "LAND_COMPLETE_MAYBE",
+      "raw": {
+        "Id": 17,
+        "TimeUS": 147351869,
+        "mavpackettype": "EV"
+      },
+      "time_s": 145.054455
+    },
+    {
+      "id": 18,
+      "name": "LAND_COMPLETE",
+      "raw": {
+        "Id": 18,
+        "TimeUS": 148154881,
+        "mavpackettype": "EV"
+      },
+      "time_s": 145.85746699999999
+    },
+    {
+      "id": 11,
+      "name": "DISARMED",
+      "raw": {
+        "Id": 11,
+        "TimeUS": 148662178,
+        "mavpackettype": "EV"
+      },
+      "time_s": 146.364764
+    },
+    {
+      "id": 56,
+      "name": "MOTORS_INTERLOCK_DISABLED",
+      "raw": {
+        "Id": 56,
+        "TimeUS": 148664677,
+        "mavpackettype": "EV"
+      },
+      "time_s": 146.367263
+    }
+  ],
+  "fence_messages": [
+    {
+      "raw": {
+        "Message": "New fence",
+        "TimeUS": 2297414,
+        "mavpackettype": "MSG"
+      },
+      "text": "New fence",
+      "time_s": 0.0
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 9042215,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 6.744801000000001
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 22047011,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 19.749597
+    },
+    {
+      "raw": {
+        "Message": "PreArm: Fence requires position",
+        "TimeUS": 30277051,
+        "mavpackettype": "MSG"
+      },
+      "text": "PreArm: Fence requires position",
+      "time_s": 27.979637
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 35046809,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 32.74939500000001
+    }
+  ],
+  "fence_radius_m": 120.0,
+  "fence_report_only_errors": [],
+  "fence_tolerance_m": 1.5,
+  "gcs_action_mode": {
+    "mode": "RTL",
+    "raw": {
+      "Mode": 6,
+      "ModeNum": 6,
+      "Rsn": 5,
+      "TimeUS": 74429383,
+      "mavpackettype": "MODE"
+    },
+    "reason": 5,
+    "reason_name": "GCS_FAILSAFE",
+    "time_s": 72.131969
+  },
+  "gcs_action_ok": true,
+  "gcs_action_time_s": 72.131969,
+  "gcs_failsafe_time_s": 72.131969,
+  "gcs_failsafe_timeout_config_s": 2.0,
+  "gcs_failsafe_timeout_observed_s": 1.9525519999999972,
+  "gcs_failsafe_timeout_ok": true,
+  "gcs_messages": [
+    {
+      "raw": {
+        "Message": "GCS Failsafe",
+        "TimeUS": 74429383,
+        "mavpackettype": "MSG"
+      },
+      "text": "GCS Failsafe",
+      "time_s": 72.131969
+    },
+    {
+      "raw": {
+        "Message": "PreArm: GCS failsafe on",
+        "TimeUS": 154276598,
+        "mavpackettype": "MSG"
+      },
+      "text": "PreArm: GCS failsafe on",
+      "time_s": 151.979184
+    },
+    {
+      "raw": {
+        "Message": "PreArm: GCS failsafe on",
+        "TimeUS": 184277093,
+        "mavpackettype": "MSG"
+      },
+      "text": "PreArm: GCS failsafe on",
+      "time_s": 181.979679
+    },
+    {
+      "raw": {
+        "Message": "PreArm: GCS failsafe on",
+        "TimeUS": 215277188,
+        "mavpackettype": "MSG"
+      },
+      "text": "PreArm: GCS failsafe on",
+      "time_s": 212.979774
+    },
+    {
+      "raw": {
+        "Message": "PreArm: GCS failsafe on",
+        "TimeUS": 246277283,
+        "mavpackettype": "MSG"
+      },
+      "text": "PreArm: GCS failsafe on",
+      "time_s": 243.979869
+    },
+    {
+      "raw": {
+        "Message": "PreArm: GCS failsafe on",
+        "TimeUS": 277277378,
+        "mavpackettype": "MSG"
+      },
+      "text": "PreArm: GCS failsafe on",
+      "time_s": 274.979964
+    },
+    {
+      "raw": {
+        "Message": "GCS Failsafe Cleared",
+        "TimeUS": 285567394,
+        "mavpackettype": "MSG"
+      },
+      "text": "GCS Failsafe Cleared",
+      "time_s": 283.26998
+    }
+  ],
+  "gcs_resolved_errors": [
+    {
+      "ecode": 0,
+      "raw": {
+        "ECode": 0,
+        "Subsys": 8,
+        "TimeUS": 285567394,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 8,
+      "subsys_name": "FAILSAFE_GCS",
+      "time_s": 283.26998
+    }
+  ],
+  "intended_gcs_errors": [
+    {
+      "ecode": 1,
+      "raw": {
+        "ECode": 1,
+        "Subsys": 8,
+        "TimeUS": 74429383,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 8,
+      "subsys_name": "FAILSAFE_GCS",
+      "time_s": 72.131969
+    }
+  ],
+  "max_distance_m": 104.35782171853207,
+  "max_distance_sample": {
+    "alt": 36.189998626708984,
+    "distance_m": 104.35782171853207,
+    "lat": 37.4274997,
+    "lon": -122.1685195,
+    "mode": "RTL",
+    "source": "POS",
+    "time_s": 74.379403
+  },
+  "messages_count": 51,
+  "modes": [
+    {
+      "mode": "STABILIZE",
+      "raw": {
+        "Mode": 0,
+        "ModeNum": 0,
+        "Rsn": 26,
+        "TimeUS": 2297414,
+        "mavpackettype": "MODE"
+      },
+      "reason": 26,
+      "reason_name": "26",
+      "time_s": 0.0
+    },
+    {
+      "mode": "GUIDED",
+      "raw": {
+        "Mode": 4,
+        "ModeNum": 4,
+        "Rsn": 2,
+        "TimeUS": 8984738,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "reason_name": "GCS_COMMAND",
+      "time_s": 6.687324
+    },
+    {
+      "mode": "GUIDED",
+      "raw": {
+        "Mode": 4,
+        "ModeNum": 4,
+        "Rsn": 2,
+        "TimeUS": 48041609,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "reason_name": "GCS_COMMAND",
+      "time_s": 45.744195000000005
+    },
+    {
+      "mode": "GUIDED",
+      "raw": {
+        "Mode": 4,
+        "ModeNum": 4,
+        "Rsn": 2,
+        "TimeUS": 61064731,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "reason_name": "GCS_COMMAND",
+      "time_s": 58.767317000000006
+    },
+    {
+      "mode": "AUTO",
+      "raw": {
+        "Mode": 3,
+        "ModeNum": 3,
+        "Rsn": 2,
+        "TimeUS": 61072228,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "reason_name": "GCS_COMMAND",
+      "time_s": 58.774814000000006
+    },
+    {
+      "mode": "RTL",
+      "raw": {
+        "Mode": 6,
+        "ModeNum": 6,
+        "Rsn": 5,
+        "TimeUS": 74429383,
+        "mavpackettype": "MODE"
+      },
+      "reason": 5,
+      "reason_name": "GCS_FAILSAFE",
+      "time_s": 72.131969
+    },
+    {
+      "mode": "LAND",
+      "raw": {
+        "Mode": 9,
+        "ModeNum": 9,
+        "Rsn": 2,
+        "TimeUS": 303691808,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "reason_name": "GCS_COMMAND",
+      "time_s": 301.394394
+    }
+  ],
+  "other_errors": [],
+  "parm_rows_count": 1399,
+  "position_source": "POS",
+  "report_only_fence_breach_is_violation": false,
+  "safe_binary": true,
+  "samples": 2955,
+  "severity_overshoot_m": 0.0,
+  "speed_audit": {
+    "audit_distance_window_m": [
+      18.0,
+      77.0
+    ],
+    "commanded_speed_m_s": 8.0,
+    "median_error_m_s": 0.0004391670227050781,
+    "median_forward_speed_m_s": 8.000439167022705,
+    "p95_error_m_s": 0.0917843341827389,
+    "p95_forward_speed_m_s": 8.091784334182739,
+    "samples": 74,
+    "source": "XKF1 primary core VN/VE projected onto outbound bearing before heartbeat stop",
+    "within_tolerance": true
+  },
+  "speed_m_s": 8.0,
+  "trigger_distance_m": 80.0,
+  "trigger_time_s": 70.179417,
+  "unsafe_binary": false,
+  "wind_m_s": 12.0
+}
