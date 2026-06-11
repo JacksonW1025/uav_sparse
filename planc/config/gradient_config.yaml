@@ -1,0 +1,139 @@
+experiment:
+  name: geofence_gradient_machine
+  version: gradient_v1
+  date: "2026-06-11"
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 90.0
+  target_bearing_deg: 90.0
+  target_distance_m: 350.0
+  takeoff_alt_m: 20.0
+  speedup: 4
+  witness_velocity_m_s: 12.0
+  stream_hz: 10
+  post_action_observation_s: 12
+  velocity_fallback_after_s: 12
+  velocity_fallback_min_distance_m: 5
+  fallback_pitch_pwm: 1100
+  observation_s:
+    witness: 65
+    hover: 25
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+param_metadata:
+  fence_type_circle: 2
+  fence_action_rtl: 1
+  fence_action_brake: 4
+  source: /home/car/ardupilot/libraries/AC_Fence/AC_Fence.h
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  FENCE_TYPE: 2
+  FENCE_RADIUS: 100
+  FENCE_ACTION: 1
+  FENCE_MARGIN: 2
+  FENCE_ENABLE: 1
+  AVOID_ENABLE: 1
+  WPNAV_SPEED: 3000
+  WPNAV_ACCEL: 1000
+  WPNAV_JERK: 20
+  PSC_JERK_XY: 20
+  ANGLE_MAX: 6000
+
+oracle:
+  fence_radius_m: 100.0
+  fixed_boundary_buffer_m: 3.0
+  action_latency_s: 8.0
+  expected_action_modes_for_rtl:
+    - RTL
+    - LAND
+  expected_action_modes_for_brake:
+    - BRAKE
+    - LAND
+  speed_audit_min_distance_m: 35.0
+  speed_audit_max_distance_m: 95.0
+  speed_audit_tolerance_m_s: 2.0
+
+sweep:
+  reference_speed_m_s: 12
+  default_fence_margin_m: 2
+  speeds_m_s:
+    - 6
+    - 9
+    - 12
+    - 15
+    - 18
+    - 20
+  tailwinds_m_s:
+    - 0
+    - 3
+    - 6
+    - 9
+    - 12
+    - 15
+  near_hazard_band_m: 2.0
+  near_hazard_repetitions: 3
+  p_layers:
+    - 2
+    - 5
+    - 10
+  p_layer_coarse_speeds_m_s:
+    - 6
+    - 12
+    - 18
+    - 20
+  p_layer_coarse_tailwinds_m_s:
+    - 0
+    - 6
+    - 12
+    - 15
+
+train_test:
+  include_v_squared: true
+  interpolation_train_speeds_m_s:
+    - 6
+    - 12
+    - 18
+  interpolation_train_tailwinds_m_s:
+    - 0
+    - 6
+    - 12
+  interpolation_test_speeds_m_s:
+    - 9
+    - 15
+  interpolation_test_tailwinds_m_s:
+    - 3
+    - 9
+  extrapolation_train_max_speed_m_s: 15
+  extrapolation_train_max_tailwind_m_s: 9
+  extrapolation_test_min_speed_m_s: 18
+  extrapolation_test_min_tailwind_m_s: 12
+
+d_hazard_sensitivity:
+  deltas_m:
+    - -6
+    - -3
+    - 0
+    - 3
+    - 6

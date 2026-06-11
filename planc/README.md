@@ -60,3 +60,27 @@ python3 planc/src/run_gate.py
 
 Results are written to `planc/results/`, raw DataFlash logs and parsed CSV files
 to `planc/logs/`, and plots to `planc/analysis/`.
+
+## Gradient/search machine
+
+The gradient extension reuses the v2 SITL harness and runs a commanded-speed x
+tailwind sweep with a fixed hazard boundary, near-boundary repetitions, P
+stratification by `FENCE_MARGIN`, and train/test prediction analysis:
+
+```bash
+python3 planc/src/run_gradient.py
+```
+
+Outputs are written to:
+
+- `planc/results/gradient_results.json`
+- `planc/results/gradient_report.md`
+- `planc/analysis/gradient_*.png`
+- `planc/logs/grad_*_parsed.csv`, `*_parsed.oracle.json`, and `*_params.json`
+
+Use `--resume` to rebuild the report/plots from completed partial runs or to
+continue after an interrupted sweep:
+
+```bash
+python3 planc/src/run_gradient.py --resume
+```

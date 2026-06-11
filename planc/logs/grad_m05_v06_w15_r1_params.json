@@ -1,0 +1,134 @@
+{
+  "records": [
+    {
+      "before": 1.0,
+      "name": "LOG_BACKEND_TYPE",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 0.0,
+      "name": "LOG_DISARMED",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 180.0,
+      "name": "SIM_WIND_DIR",
+      "ok": true,
+      "readback": 270.0,
+      "requested": 270.0
+    },
+    {
+      "before": 0.0,
+      "name": "SIM_WIND_SPD",
+      "ok": true,
+      "readback": 15.0,
+      "requested": 15.0
+    },
+    {
+      "before": 0.0,
+      "name": "SIM_WIND_TURB",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 7.0,
+      "name": "FENCE_TYPE",
+      "ok": true,
+      "readback": 2.0,
+      "requested": 2.0
+    },
+    {
+      "before": 150.0,
+      "name": "FENCE_RADIUS",
+      "ok": true,
+      "readback": 100.0,
+      "requested": 100.0
+    },
+    {
+      "before": 1.0,
+      "name": "FENCE_ACTION",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 2.0,
+      "name": "FENCE_MARGIN",
+      "ok": true,
+      "readback": 5.0,
+      "requested": 5.0
+    },
+    {
+      "before": 0.0,
+      "name": "FENCE_ENABLE",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 3.0,
+      "name": "AVOID_ENABLE",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 1000.0,
+      "name": "WPNAV_SPEED",
+      "ok": true,
+      "readback": 3000.0,
+      "requested": 3000.0
+    },
+    {
+      "before": 250.0,
+      "name": "WPNAV_ACCEL",
+      "ok": true,
+      "readback": 1000.0,
+      "requested": 1000.0
+    },
+    {
+      "before": 1.0,
+      "name": "WPNAV_JERK",
+      "ok": true,
+      "readback": 20.0,
+      "requested": 20.0
+    },
+    {
+      "before": 5.0,
+      "name": "PSC_JERK_XY",
+      "ok": true,
+      "readback": 20.0,
+      "requested": 20.0
+    },
+    {
+      "before": 3000.0,
+      "name": "ANGLE_MAX",
+      "ok": true,
+      "readback": 6000.0,
+      "requested": 6000.0
+    }
+  ],
+  "snapshot": {
+    "ANGLE_MAX": 6000.0,
+    "AVOID_ENABLE": 1.0,
+    "FENCE_ACTION": 1.0,
+    "FENCE_ENABLE": 1.0,
+    "FENCE_MARGIN": 5.0,
+    "FENCE_RADIUS": 100.0,
+    "FENCE_TYPE": 2.0,
+    "LOG_BACKEND_TYPE": 1.0,
+    "LOG_DISARMED": 1.0,
+    "PSC_JERK_XY": 20.0,
+    "SIM_WIND_DIR": 270.0,
+    "SIM_WIND_SPD": 15.0,
+    "SIM_WIND_TURB": 0.0,
+    "WPNAV_ACCEL": 1000.0,
+    "WPNAV_JERK": 20.0,
+    "WPNAV_SPEED": 3000.0
+  }
+}

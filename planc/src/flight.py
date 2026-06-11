@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import statistics
 import time
 from typing import Any
 
@@ -320,6 +321,7 @@ def stream_forward_velocity_until_action(master, config: dict[str, Any], speed_m
     fallback_after_s = float(config["experiment"].get("velocity_fallback_after_s", 12.0))
     fallback_min_distance_m = float(config["experiment"].get("velocity_fallback_min_distance_m", 5.0))
     fallback_pitch_pwm = int(config["experiment"].get("fallback_pitch_pwm", 1100))
+    send_wall_times: list[float] = []
 
     while time.time() - start < max_wait_s:
         now = time.time()
@@ -330,6 +332,7 @@ def stream_forward_velocity_until_action(master, config: dict[str, Any], speed_m
                 send_rc_pitch_forward(master, fallback_pitch_pwm)
             else:
                 send_guided_velocity_local_ned(master, north_m_s, east_m_s, 0.0)
+            send_wall_times.append(now - start)
             next_send = now + stream_dt
 
         msg = master.recv_match(
@@ -395,6 +398,18 @@ def stream_forward_velocity_until_action(master, config: dict[str, Any], speed_m
 
     release_rc_override(master)
     send_guided_velocity_local_ned(master, 0.0, 0.0, 0.0)
+    send_intervals = [
+        send_wall_times[i] - send_wall_times[i - 1]
+        for i in range(1, len(send_wall_times))
+    ]
+    send_timing = {
+        "count": len(send_wall_times),
+        "target_hz": stream_hz,
+        "mean_dt_s": statistics.fmean(send_intervals) if send_intervals else None,
+        "std_dt_s": statistics.pstdev(send_intervals) if len(send_intervals) >= 2 else None,
+        "min_dt_s": min(send_intervals) if send_intervals else None,
+        "max_dt_s": max(send_intervals) if send_intervals else None,
+    }
     return {
         "modes_seen": modes,
         "statustext": statustext,
@@ -407,6 +422,7 @@ def stream_forward_velocity_until_action(master, config: dict[str, Any], speed_m
             "bearing_deg": bearing,
             "stream_hz": stream_hz,
         },
+        "send_timing": send_timing,
         "fallback_used": fallback_used,
         "fallback_reason": fallback_reason,
         "max_realtime_distance_m": max_realtime_distance_m,

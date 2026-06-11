@@ -1,0 +1,274 @@
+{
+  "action_mode": null,
+  "action_started": false,
+  "action_time_s": null,
+  "bad_events": [],
+  "bad_messages": [],
+  "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/grad_m05_v06_w06_r1.BIN",
+  "contract_clean": false,
+  "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/grad_m05_v06_w06_r1_parsed.csv",
+  "event_records": [
+    {
+      "id": 62,
+      "name": "EKF_YAW_RESET",
+      "raw": {
+        "Id": 62,
+        "TimeUS": 5719378,
+        "mavpackettype": "EV"
+      },
+      "time_s": 3.424463
+    },
+    {
+      "id": 25,
+      "name": "SET_HOME",
+      "raw": {
+        "Id": 25,
+        "TimeUS": 18581731,
+        "mavpackettype": "EV"
+      },
+      "time_s": 16.286816
+    },
+    {
+      "id": 10,
+      "name": "ARMED",
+      "raw": {
+        "Id": 10,
+        "TimeUS": 43036945,
+        "mavpackettype": "EV"
+      },
+      "time_s": 40.74203
+    },
+    {
+      "id": 15,
+      "name": "AUTO_ARMED",
+      "raw": {
+        "Id": 15,
+        "TimeUS": 44047374,
+        "mavpackettype": "EV"
+      },
+      "time_s": 41.752458999999995
+    },
+    {
+      "id": 57,
+      "name": "MOTORS_INTERLOCK_ENABLED",
+      "raw": {
+        "Id": 57,
+        "TimeUS": 45039477,
+        "mavpackettype": "EV"
+      },
+      "time_s": 42.744561999999995
+    },
+    {
+      "id": 28,
+      "name": "NOT_LANDED",
+      "raw": {
+        "Id": 28,
+        "TimeUS": 46269818,
+        "mavpackettype": "EV"
+      },
+      "time_s": 43.974903
+    },
+    {
+      "id": 62,
+      "name": "EKF_YAW_RESET",
+      "raw": {
+        "Id": 62,
+        "TimeUS": 48617212,
+        "mavpackettype": "EV"
+      },
+      "time_s": 46.322297
+    },
+    {
+      "id": 17,
+      "name": "LAND_COMPLETE_MAYBE",
+      "raw": {
+        "Id": 17,
+        "TimeUS": 345051924,
+        "mavpackettype": "EV"
+      },
+      "time_s": 342.757009
+    },
+    {
+      "id": 18,
+      "name": "LAND_COMPLETE",
+      "raw": {
+        "Id": 18,
+        "TimeUS": 345854103,
+        "mavpackettype": "EV"
+      },
+      "time_s": 343.559188
+    },
+    {
+      "id": 11,
+      "name": "DISARMED",
+      "raw": {
+        "Id": 11,
+        "TimeUS": 346359734,
+        "mavpackettype": "EV"
+      },
+      "time_s": 344.064819
+    },
+    {
+      "id": 56,
+      "name": "MOTORS_INTERLOCK_DISABLED",
+      "raw": {
+        "Id": 56,
+        "TimeUS": 346362233,
+        "mavpackettype": "EV"
+      },
+      "time_s": 344.067318
+    }
+  ],
+  "expect_breach": true,
+  "expected_action_modes": [
+    "RTL",
+    "LAND"
+  ],
+  "fence_breach_detected": false,
+  "fence_breach_distance_m": null,
+  "fence_breach_time_s": null,
+  "fence_events": [],
+  "fence_messages": [
+    {
+      "raw": {
+        "Message": "New fence",
+        "TimeUS": 2294915,
+        "mavpackettype": "MSG"
+      },
+      "text": "New fence",
+      "time_s": 0.0
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 8989736,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 6.694821000000001
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 17049844,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 14.754929
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 25046644,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 22.751729
+    },
+    {
+      "raw": {
+        "Message": "PreArm: Fence requires position",
+        "TimeUS": 30277051,
+        "mavpackettype": "MSG"
+      },
+      "text": "PreArm: Fence requires position",
+      "time_s": 27.982136
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 34049708,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 31.754793000000003
+    }
+  ],
+  "fence_radius_m": 100.0,
+  "gps_speed_rows_count": 1693,
+  "max_distance_m": 99.23055884231294,
+  "max_distance_sample": {
+    "alt": 35.79999923706055,
+    "distance_m": 99.23055884231294,
+    "lat": 37.4275006,
+    "lon": -122.1685775,
+    "mode": "GUIDED",
+    "source": "POS",
+    "time_s": 76.082055
+  },
+  "max_overshoot_m": 0.0,
+  "modes": [
+    {
+      "mode": "STABILIZE",
+      "raw": {
+        "Mode": 0,
+        "ModeNum": 0,
+        "Rsn": 26,
+        "TimeUS": 2294915,
+        "mavpackettype": "MODE"
+      },
+      "reason": 26,
+      "time_s": 0.0
+    },
+    {
+      "mode": "GUIDED",
+      "raw": {
+        "Mode": 4,
+        "ModeNum": 4,
+        "Rsn": 2,
+        "TimeUS": 8979740,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "time_s": 6.684825
+    },
+    {
+      "mode": "GUIDED",
+      "raw": {
+        "Mode": 4,
+        "ModeNum": 4,
+        "Rsn": 2,
+        "TimeUS": 43036945,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "time_s": 40.74203
+    },
+    {
+      "mode": "LAND",
+      "raw": {
+        "Mode": 9,
+        "ModeNum": 9,
+        "Rsn": 2,
+        "TimeUS": 316271774,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "time_s": 313.976859
+    }
+  ],
+  "other_errors": [],
+  "parm_rows_count": 1373,
+  "position_source": "POS",
+  "samples": 3385,
+  "speed_audit": {
+    "audit_distance_window_m": [
+      35.0,
+      95.0
+    ],
+    "commanded_speed_m_s": 6.0,
+    "max_forward_error_m_s": 0.03132295608520508,
+    "max_forward_speed_m_s": 6.031322956085205,
+    "max_ground_speed_m_s": 6.031348760879214,
+    "mean_forward_speed_m_s": 4.485455587226197,
+    "median_forward_error_m_s": -0.01659679412841797,
+    "median_forward_speed_m_s": 5.983403205871582,
+    "median_ground_speed_m_s": 5.983416609862179,
+    "p95_forward_error_m_s": 0.01682653427124059,
+    "p95_forward_speed_m_s": 6.016826534271241,
+    "samples": 133,
+    "source": "XKF1 primary core VN/VE projected onto target bearing",
+    "target_bearing_deg": 90.0
+  },
+  "velocity_rows_count": 3437
+}

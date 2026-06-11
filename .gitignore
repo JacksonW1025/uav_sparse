@@ -26,5 +26,8 @@ __pycache__/
 # planc keeps raw DataFlash logs as experiment evidence, but not transient SITL workdirs.
 /planc/work/
 /planc/results/gate_results_partial.json
+/planc/results/gradient_results_partial.json
 !/planc/logs/*.BIN
 !/planc/logs/*.bin
+/planc/logs/grad_*.BIN
+/planc/logs/grad_*.bin
