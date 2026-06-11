@@ -1,0 +1,5 @@
+arm_type,n,nonlinear_observable_count,nonlinear_activated_count,nonlinear_activated_rate,median_actuator_sat_ratio,max_actuator_sat_ratio,median_actuator_sat_consecutive_s,max_actuator_sat_consecutive_s,explicit_saturation_flag_active_count,top_nonlinear_activation_reasons
+M0_at_P,0,0,0,0.0,,,,,0,
+Msmall_at_P,0,0,0,0.0,,,,,0,
+Mstrong_at_P0,32,32,32,1.0,0.5,0.5,9.0,10.099999904632568,32,explicit_saturation_or_clipping_flag_active:32;control_allocator_saturation_flag_active:32;sustained_actuator_near_limit:32
+Mstrong_at_P,32,32,32,1.0,0.5,0.5106382978723404,9.100000023841858,10.100000143051147,32,explicit_saturation_or_clipping_flag_active:32;control_allocator_saturation_flag_active:32;sustained_actuator_near_limit:32

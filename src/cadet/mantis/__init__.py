@@ -1,0 +1,2 @@
+"""Minimal MANTIS pilot helpers."""
+

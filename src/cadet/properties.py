@@ -9,6 +9,16 @@ RESIDUAL_RATE_PROPERTIES = {
         "threshold_key": "rate_max_mps",
         "unit": "m/s",
     },
+    "post_neutral_roll_rate": {
+        "log_field": "roll_rate_rps",
+        "threshold_key": "rate_max_radps",
+        "unit": "rad/s",
+    },
+    "post_neutral_pitch_rate": {
+        "log_field": "pitch_rate_rps",
+        "threshold_key": "rate_max_radps",
+        "unit": "rad/s",
+    },
     "post_neutral_yaw_rate": {
         "log_field": "yaw_rate_rps",
         "threshold_key": "rate_max_radps",

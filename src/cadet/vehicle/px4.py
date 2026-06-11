@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import math
+import os
+import time
 from pathlib import Path
 
 import pandas as pd
@@ -38,7 +40,7 @@ PX4_DEFAULT_PARAM_OVERRIDES = {
 class PX4Adapter(MavlinkVehicleMixin, VehicleAdapter):
     def __init__(self, config):
         self.config = config
-        self.px4_root = Path(config.simulator.get("px4", {}).get("root", "/home/car/PX4-Autopilot"))
+        self.px4_root = Path(os.environ.get("PX4_ROOT", config.simulator.get("px4", {}).get("root", "/home/car/PX4-Autopilot")))
         self.sim_cfg = config.simulator.get("px4", {})
         self.log_dir = Path("runs") / config.experiment_id / "sim_logs"
         self.process = None
@@ -47,9 +49,16 @@ class PX4Adapter(MavlinkVehicleMixin, VehicleAdapter):
 
     def prepare(self, scenario: ScenarioCfg, seed: int) -> None:
         self.timing = {}
+        self.mode_trace = []
+        self.mode_trace_zero_s = time.monotonic()
         if self.sim_cfg.get("cleanup_each_run", True):
             self.shutdown()
         speed = float(self.sim_cfg.get("sim_speed_factor", 5.0))
+        max_mode_attempts = self._max_mode_switch_attempts()
+        staging_mode = self._scenario_staging_mode(scenario)
+        test_mode = self._scenario_test_mode(scenario)
+        self.timing["staging_mode_used"] = staging_mode or ""
+        self.timing["target_test_mode"] = test_mode
         env = {
             "HEADLESS": "1",
             "PX4_SIM_SPEED_FACTOR": str(speed),
@@ -69,10 +78,14 @@ class PX4Adapter(MavlinkVehicleMixin, VehicleAdapter):
         mav.set_mode("TAKEOFF")
         self._wait_altitude(float(scenario.takeoff_alt_m), tolerance_m=0.8, timeout_s=60)
         self._send_neutral_manual_for(2.0, speed)
-        self._set_mode("POSCTL", timeout_s=15)
-        self._manual_climb_to_altitude(float(scenario.takeoff_alt_m), speed)
-        self._set_scenario_mode(scenario.perturb_mode)
+        if staging_mode:
+            self._set_mode(staging_mode, timeout_s=15, max_attempts=max_mode_attempts)
+            if staging_mode == "POSCTL":
+                self._manual_climb_to_altitude(float(scenario.takeoff_alt_m), speed)
+        self._set_mode(test_mode, timeout_s=15, max_attempts=max_mode_attempts)
+        self.timing["final_pre_maneuver_mode"] = self.last_mode
         self._wait_hover_stable(duration_s=1.5, keep_manual_alive=True)
+        self.timing["mode_trace"] = list(getattr(self, "mode_trace", []))
 
     def run(self, input_sequence: pd.DataFrame, scenario: ScenarioCfg, output_dir: Path) -> Path:
         speed = float(self.sim_cfg.get("sim_speed_factor", 5.0))
@@ -96,7 +109,7 @@ class PX4Adapter(MavlinkVehicleMixin, VehicleAdapter):
         kill_process_patterns(["jmavsim", "px4_sitl", "PX4_SYS_AUTOSTART", "build/px4_sitl_default/bin/px4"])
 
     def _set_scenario_mode(self, mode: str) -> None:
-        self._set_mode(self._scenario_mode_command(mode), timeout_s=15)
+        self._set_mode(self._scenario_mode_command(mode), timeout_s=15, max_attempts=self._max_mode_switch_attempts())
 
     def _send_scenario_mode_command(self, mode: str) -> None:
         self._send_mode_command(self._scenario_mode_command(mode))
@@ -106,7 +119,32 @@ class PX4Adapter(MavlinkVehicleMixin, VehicleAdapter):
             return "POSCTL"
         if mode == "Hold":
             return "LOITER"
+        if mode in {"Stabilized", "STABILIZED"}:
+            return "STABILIZED"
+        if mode == "ACRO":
+            return "ACRO"
         return mode
+
+    def _scenario_test_mode(self, scenario: ScenarioCfg) -> str:
+        explicit = getattr(scenario, "test_mode", None)
+        return self._scenario_mode_command(explicit or scenario.perturb_mode)
+
+    def _scenario_staging_mode(self, scenario: ScenarioCfg) -> str | None:
+        explicit = getattr(scenario, "staging_mode", None)
+        if explicit:
+            return self._scenario_mode_command(explicit)
+        test_mode = self._scenario_test_mode(scenario)
+        if test_mode in {"ACRO", "STABILIZED"}:
+            return None
+        if test_mode == "POSCTL":
+            return "POSCTL"
+        return None
+
+    def _max_mode_switch_attempts(self) -> int | None:
+        value = self.sim_cfg.get("max_mode_switch_attempts")
+        if value in (None, ""):
+            return None
+        return int(value)
 
     def _apply_param_overrides(self, scenario: ScenarioCfg) -> None:
         overrides = dict(PX4_DEFAULT_PARAM_OVERRIDES)

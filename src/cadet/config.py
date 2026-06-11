@@ -16,6 +16,8 @@ class ScenarioCfg:
     takeoff_alt_m: float
     properties: list[str]
     t_switch_s: float | None = None
+    staging_mode: str | None = None
+    test_mode: str | None = None
     param_overrides: Mapping[str, float] = field(default_factory=dict)
 
 

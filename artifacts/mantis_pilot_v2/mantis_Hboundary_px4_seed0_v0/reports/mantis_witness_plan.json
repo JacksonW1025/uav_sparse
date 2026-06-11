@@ -1,0 +1,112 @@
+{
+  "axis": "pitch",
+  "commit": "e0c589a",
+  "config": "configs/mantis_pilot.yaml",
+  "contracts": {
+    "C_recover": {
+      "name": "post-neutral residual-rate",
+      "roll_pitch_terminal_residual_rate_threshold_radps": 0.35,
+      "rule": "existing terminal window, non-decay logic, and robust repeat rule"
+    },
+    "C_track": {
+      "baseline_ratio": 2.5,
+      "high_err_duration_threshold_s": 0.25,
+      "name": "active-window rate-tracking",
+      "nte_threshold": 0.65,
+      "peak_err_threshold_radps": 1.0,
+      "required_topics": [
+        "vehicle_rates_setpoint",
+        "vehicle_angular_velocity"
+      ],
+      "saturation_error_overlap_threshold_s": 0.2
+    }
+  },
+  "headroom_boundary_known_safe_scale": 0.7,
+  "headroom_boundary_mode": true,
+  "headroom_boundary_policy": "H-induced P0 violations are BAD_HEADROOM, not accepted witnesses",
+  "headroom_boundary_refinement_points": 3,
+  "headroom_boundary_scales": [
+    0.65,
+    0.6,
+    0.55,
+    0.5
+  ],
+  "headroom_profiles_planned": [
+    {
+      "H_id": "H0",
+      "changed_description": "none",
+      "description": "normal/default headroom",
+      "overrides": {}
+    },
+    {
+      "H_id": "H1",
+      "changed_description": "{\"CA_ROTOR0_CT\": {\"default\": 6.5, \"override\": 5.8500000000000005}, \"CA_ROTOR1_CT\": {\"default\": 6.5, \"override\": 5.8500000000000005}, \"CA_ROTOR2_CT\": {\"default\": 6.5, \"override\": 5.8500000000000005}, \"CA_ROTOR3_CT\": {\"default\": 6.5, \"override\": 5.8500000000000005}}",
+      "description": "PX4 CA rotor thrust coefficient scaled to 0.90",
+      "overrides": {
+        "CA_ROTOR0_CT": 5.8500000000000005,
+        "CA_ROTOR1_CT": 5.8500000000000005,
+        "CA_ROTOR2_CT": 5.8500000000000005,
+        "CA_ROTOR3_CT": 5.8500000000000005
+      }
+    },
+    {
+      "H_id": "H2",
+      "changed_description": "{\"CA_ROTOR0_CT\": {\"default\": 6.5, \"override\": 5.2}, \"CA_ROTOR1_CT\": {\"default\": 6.5, \"override\": 5.2}, \"CA_ROTOR2_CT\": {\"default\": 6.5, \"override\": 5.2}, \"CA_ROTOR3_CT\": {\"default\": 6.5, \"override\": 5.2}}",
+      "description": "PX4 CA rotor thrust coefficient scaled to 0.80",
+      "overrides": {
+        "CA_ROTOR0_CT": 5.2,
+        "CA_ROTOR1_CT": 5.2,
+        "CA_ROTOR2_CT": 5.2,
+        "CA_ROTOR3_CT": 5.2
+      }
+    },
+    {
+      "H_id": "H3",
+      "changed_description": "{\"CA_ROTOR0_CT\": {\"default\": 6.5, \"override\": 4.55}, \"CA_ROTOR1_CT\": {\"default\": 6.5, \"override\": 4.55}, \"CA_ROTOR2_CT\": {\"default\": 6.5, \"override\": 4.55}, \"CA_ROTOR3_CT\": {\"default\": 6.5, \"override\": 4.55}}",
+      "description": "PX4 CA rotor thrust coefficient scaled to 0.70",
+      "overrides": {
+        "CA_ROTOR0_CT": 4.55,
+        "CA_ROTOR1_CT": 4.55,
+        "CA_ROTOR2_CT": 4.55,
+        "CA_ROTOR3_CT": 4.55
+      }
+    }
+  ],
+  "max_total_queries": 220,
+  "nonlinear_rule": "necessary but not sufficient; C_track requires overlap with high-error active window",
+  "platform": "px4",
+  "readiness": {
+    "axis": "pitch",
+    "blockers": [],
+    "commit": "e0c589a",
+    "config": "configs/mantis_pilot.yaml",
+    "mode_mapping_ready": true,
+    "nonlinear_observability": false,
+    "nonlinear_observability_reason": "requires per-query raw ULog diagnostics; readiness is code/parser-only before SITL execution",
+    "nonlinear_rawlog_parser_ready": true,
+    "observe_mode": "STABILIZED",
+    "param_override_ready": true,
+    "param_readback_ready": "requires_sitl",
+    "perturb_mode": "STABILIZED",
+    "platform": "px4",
+    "scenario_id": "px4_stabilized_pitch",
+    "sim_root": "/home/car/PX4-Autopilot",
+    "sim_root_exists": true,
+    "staging_mode": "",
+    "telemetry_rate_columns": [
+      "roll_rate_rps",
+      "pitch_rate_rps",
+      "yaw_rate_rps",
+      "roll_rad",
+      "pitch_rad",
+      "yaw_rad"
+    ],
+    "telemetry_rate_columns_ready_by_code": true,
+    "test_mode": "STABILIZED"
+  },
+  "scenario": "px4_stabilized_pitch",
+  "seed": 0,
+  "stop_at_first_witness": true,
+  "threshold_tuning_policy": "fixed before rerun; do not tune after seeing data",
+  "witness_definition": "Safe(Mstrong,P0,H) and Safe(M0,P,H) and Safe(Msmall,P,H) and Violation(Mstrong,P,H)"
+}

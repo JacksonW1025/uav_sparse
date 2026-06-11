@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import time
 from pathlib import Path
 
@@ -19,7 +20,7 @@ from cadet.vehicle.mavlink_common import (
 class ArduPilotAdapter(MavlinkVehicleMixin, VehicleAdapter):
     def __init__(self, config):
         self.config = config
-        self.ap_root = Path(config.simulator.get("ardupilot", {}).get("root", "/home/car/ardupilot"))
+        self.ap_root = Path(os.environ.get("AP_ROOT", config.simulator.get("ardupilot", {}).get("root", "/home/car/ardupilot")))
         self.sim_cfg = config.simulator.get("ardupilot", {})
         self.log_dir = Path("runs") / config.experiment_id / "sim_logs"
         self.process = None
@@ -78,6 +79,7 @@ class ArduPilotAdapter(MavlinkVehicleMixin, VehicleAdapter):
         self._request_message_interval(mavutil.mavlink.MAVLINK_MSG_ID_ATTITUDE, 50)
         self._request_message_interval(mavutil.mavlink.MAVLINK_MSG_ID_HEARTBEAT, 2)
         self.timing["message_interval_wall_time_s"] = time.monotonic() - interval_start
+        self._apply_param_overrides(scenario)
         global_start = time.monotonic()
         self._wait_global_position_ready(timeout_s=30)
         self.timing["global_position_ready_wall_time_s"] = time.monotonic() - global_start
@@ -122,5 +124,23 @@ class ArduPilotAdapter(MavlinkVehicleMixin, VehicleAdapter):
             self._set_mode("LOITER", timeout_s=15)
         elif mode == "AltHold":
             self._set_mode("ALT_HOLD", timeout_s=15)
+        elif mode in {"Stabilize", "STABILIZE"}:
+            self._set_mode("STABILIZE", timeout_s=15)
         else:
             self._set_mode(mode, timeout_s=15)
+
+    def _apply_param_overrides(self, scenario: ScenarioCfg) -> None:
+        overrides = dict(getattr(scenario, "param_overrides", {}) or {})
+        for name, value in overrides.items():
+            _, param_type = self._read_param(name)
+            set_start = time.monotonic()
+            set_ok = self._set_param(name, float(value), param_type)
+            safe_name = "".join(ch if ch.isalnum() else "_" for ch in name)
+            self.timing[f"param_override_{safe_name}_set_wall_time_s"] = time.monotonic() - set_start
+            if not set_ok:
+                raise RuntimeError(f"ArduPilot parameter override failed to set {name}={value}")
+            actual, actual_type = self._read_param(name)
+            self._verify_param_value(name, value, actual)
+            self.timing[f"param_override_{safe_name}_target"] = float(value)
+            self.timing[f"param_override_{safe_name}_readback"] = float(actual)
+            self.timing[f"param_override_{safe_name}_param_type"] = int(actual_type)

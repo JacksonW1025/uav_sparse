@@ -1,0 +1,270 @@
+{
+  "acceptance_gate": "four_arm_differential_plus_nonlinear_activated",
+  "axis": "roll",
+  "chirp_policy": "scout_only_not_primary_bug_oracle",
+  "input": {
+    "channels": [
+      "roll",
+      "pitch",
+      "yaw",
+      "throttle"
+    ],
+    "horizon_s": 5.0,
+    "max_delta_per_window": 0.5,
+    "max_value": 1.0,
+    "min_value": -1.0,
+    "neutral_tail_s": 8.0,
+    "perturb_delta": 0.08,
+    "window_s": 0.5
+  },
+  "maneuvers": {
+    "M0": [
+      {
+        "amplitude": 0.0,
+        "axis": "none",
+        "commanded_support_size": 0,
+        "family": "M0",
+        "hold_windows": 0,
+        "horizon_s": 5.0,
+        "kind": "hover",
+        "name": "hover_no_input",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      }
+    ],
+    "M_small": [
+      {
+        "amplitude": 0.2,
+        "axis": "roll",
+        "commanded_support_size": 1,
+        "family": "M_small",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "step",
+        "name": "small_step_roll",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.2,
+        "axis": "roll",
+        "commanded_support_size": 2,
+        "family": "M_small",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "doublet",
+        "name": "small_doublet_roll",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      }
+    ],
+    "M_strong": [
+      {
+        "amplitude": 0.5,
+        "axis": "roll",
+        "commanded_support_size": 1,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "step",
+        "name": "strong_step_roll_0p5",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.5,
+        "axis": "roll",
+        "commanded_support_size": 2,
+        "family": "M_strong",
+        "hold_windows": 2,
+        "horizon_s": 5.0,
+        "kind": "step",
+        "name": "strong_step_roll_0p5_hold2",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.5,
+        "axis": "roll",
+        "commanded_support_size": 1,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "doublet",
+        "name": "strong_doublet_roll_0p5",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.7,
+        "axis": "roll",
+        "commanded_support_size": 1,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "step",
+        "name": "strong_step_roll_0p7",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.7,
+        "axis": "roll",
+        "commanded_support_size": 3,
+        "family": "M_strong",
+        "hold_windows": 2,
+        "horizon_s": 5.0,
+        "kind": "step",
+        "name": "strong_step_roll_0p7_hold2",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.7,
+        "axis": "roll",
+        "commanded_support_size": 1,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "doublet",
+        "name": "strong_doublet_roll_0p7",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.9,
+        "axis": "roll",
+        "commanded_support_size": 1,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "step",
+        "name": "strong_step_roll_0p9",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.9,
+        "axis": "roll",
+        "commanded_support_size": 3,
+        "family": "M_strong",
+        "hold_windows": 2,
+        "horizon_s": 5.0,
+        "kind": "step",
+        "name": "strong_step_roll_0p9_hold2",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.5,
+        "axis": "roll",
+        "commanded_support_size": 8,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "chirp",
+        "name": "chirp_roll_scout",
+        "neutral_tail_s": 8.0,
+        "repeat_count": 1,
+        "scout_only": true,
+        "window_s": 0.5
+      }
+    ]
+  },
+  "param_candidate_specs": [
+    {
+      "label": "rate_p_x1p5",
+      "symbolic_multipliers": {
+        "MC_ROLLRATE_P": 1.5
+      }
+    },
+    {
+      "label": "rate_p_x2p0",
+      "symbolic_multipliers": {
+        "MC_ROLLRATE_P": 2.0
+      }
+    },
+    {
+      "label": "rate_p_x3p0",
+      "symbolic_multipliers": {
+        "MC_ROLLRATE_P": 3.0
+      }
+    },
+    {
+      "label": "rate_d_x0p5",
+      "symbolic_multipliers": {
+        "MC_ROLLRATE_D": 0.5
+      }
+    },
+    {
+      "label": "rate_d_x1p5",
+      "symbolic_multipliers": {
+        "MC_ROLLRATE_D": 1.5
+      }
+    },
+    {
+      "label": "rate_p_x2p0_rate_d_x0p5",
+      "symbolic_multipliers": {
+        "MC_ROLLRATE_D": 0.5,
+        "MC_ROLLRATE_P": 2.0
+      }
+    },
+    {
+      "label": "rate_p_x2p0_att_p_x1p5",
+      "symbolic_multipliers": {
+        "MC_ROLLRATE_P": 2.0,
+        "MC_ROLL_P": 1.5
+      }
+    },
+    {
+      "label": "rate_i_x1p5",
+      "symbolic_multipliers": {
+        "MC_ROLLRATE_I": 1.5
+      }
+    }
+  ],
+  "param_target_names": [
+    "MC_ROLLRATE_P",
+    "MC_ROLLRATE_I",
+    "MC_ROLLRATE_D",
+    "MC_ROLLRATE_K",
+    "MC_ROLL_P"
+  ],
+  "scenario": {
+    "id": "px4_acro_roll",
+    "observe_mode": "ACRO",
+    "perturb_mode": "ACRO",
+    "platform": "px4",
+    "properties": [
+      "post_neutral_roll_rate",
+      "post_neutral_pitch_rate",
+      "post_neutral_yaw_rate"
+    ],
+    "staging_mode": null,
+    "takeoff_alt_m": 5.0,
+    "test_mode": "ACRO"
+  },
+  "target_property": "post_neutral_roll_rate"
+}

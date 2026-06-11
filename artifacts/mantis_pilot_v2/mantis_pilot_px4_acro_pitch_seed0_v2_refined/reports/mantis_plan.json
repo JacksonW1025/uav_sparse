@@ -1,0 +1,395 @@
+{
+  "acceptance_gate": "four_arm_differential_plus_nonlinear_activated",
+  "adaptive_boundary": true,
+  "axis": "pitch",
+  "boundary_source": "fresh",
+  "chirp_policy": "scout_only_not_primary_bug_oracle",
+  "input": {
+    "channels": [
+      "roll",
+      "pitch",
+      "yaw",
+      "throttle"
+    ],
+    "horizon_s": 5.0,
+    "max_delta_per_window": 0.5,
+    "max_value": 1.0,
+    "min_value": -1.0,
+    "neutral_tail_s": 8.0,
+    "perturb_delta": 0.08,
+    "window_s": 0.5
+  },
+  "maneuvers": {
+    "M0": [
+      {
+        "amplitude": 0.0,
+        "axis": "none",
+        "commanded_support_size": 0,
+        "family": "M0",
+        "hold_windows": 0,
+        "horizon_s": 5.0,
+        "kind": "hover",
+        "name": "hover_no_input",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 0.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      }
+    ],
+    "M_small": [
+      {
+        "amplitude": 0.2,
+        "axis": "pitch",
+        "commanded_support_size": 1,
+        "family": "M_small",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "step",
+        "name": "small_step_pitch",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 0.5,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.2,
+        "axis": "pitch",
+        "commanded_support_size": 2,
+        "family": "M_small",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "doublet",
+        "name": "small_doublet_pitch",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 1.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      }
+    ],
+    "M_strong": [
+      {
+        "amplitude": 0.5,
+        "axis": "pitch",
+        "commanded_support_size": 1,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "step",
+        "name": "strong_step_pitch_0p5",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 0.5,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.5,
+        "axis": "pitch",
+        "commanded_support_size": 2,
+        "family": "M_strong",
+        "hold_windows": 2,
+        "horizon_s": 5.0,
+        "kind": "step",
+        "name": "strong_step_pitch_0p5_hold2",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 1.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.5,
+        "axis": "pitch",
+        "commanded_support_size": 1,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "doublet",
+        "name": "strong_doublet_pitch_0p5",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 1.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.7,
+        "axis": "pitch",
+        "commanded_support_size": 1,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "step",
+        "name": "strong_step_pitch_0p7",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 0.5,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.7,
+        "axis": "pitch",
+        "commanded_support_size": 1,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "doublet",
+        "name": "strong_doublet_A0p7_hold1",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 1.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.9,
+        "axis": "pitch",
+        "commanded_support_size": 1,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "doublet",
+        "name": "strong_doublet_A0p9_hold1",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 1.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.9,
+        "axis": "pitch",
+        "commanded_support_size": 4,
+        "family": "M_strong",
+        "hold_windows": 2,
+        "horizon_s": 5.0,
+        "kind": "doublet",
+        "name": "strong_doublet_A0p9_hold2",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 2.0,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.7,
+        "axis": "pitch",
+        "commanded_support_size": 3,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "pulse_train",
+        "name": "pulse_train_A0p7_repeat3",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 3.0,
+        "repeat_count": 3,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.9,
+        "axis": "pitch",
+        "commanded_support_size": 3,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "pulse_train",
+        "name": "pulse_train_A0p9_repeat3",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 3.0,
+        "repeat_count": 3,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.9,
+        "axis": "pitch",
+        "commanded_support_size": 7,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "reversal_fast",
+        "name": "reversal_A0p9_fast",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 3.5,
+        "repeat_count": 1,
+        "scout_only": false,
+        "window_s": 0.5
+      },
+      {
+        "amplitude": 0.5,
+        "axis": "pitch",
+        "commanded_support_size": 8,
+        "family": "M_strong",
+        "hold_windows": 1,
+        "horizon_s": 5.0,
+        "kind": "chirp",
+        "name": "chirp_pitch_scout",
+        "neutral_tail_s": 8.0,
+        "release_time_s": 4.0,
+        "repeat_count": 1,
+        "scout_only": true,
+        "window_s": 0.5
+      }
+    ]
+  },
+  "max_boundary_candidates": 24,
+  "max_stage_c_param_candidates": 12,
+  "param_candidate_specs": [
+    {
+      "label": "rate_p_x1p55",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_P": 1.55
+      }
+    },
+    {
+      "label": "rate_p_x1p60",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_P": 1.6
+      }
+    },
+    {
+      "label": "rate_p_x1p70",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_P": 1.7
+      }
+    },
+    {
+      "label": "rate_p_x1p80",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_P": 1.8
+      }
+    },
+    {
+      "label": "rate_p_x1p90",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_P": 1.9
+      }
+    },
+    {
+      "label": "rate_d_x0p75",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_D": 0.75
+      }
+    },
+    {
+      "label": "rate_d_x0p85",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_D": 0.85
+      }
+    },
+    {
+      "label": "rate_d_x1p15",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_D": 1.15
+      }
+    },
+    {
+      "label": "rate_d_x1p25",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_D": 1.25
+      }
+    },
+    {
+      "label": "att_p_x1p10",
+      "symbolic_multipliers": {
+        "MC_PITCH_P": 1.1
+      }
+    },
+    {
+      "label": "att_p_x1p20",
+      "symbolic_multipliers": {
+        "MC_PITCH_P": 1.2
+      }
+    },
+    {
+      "label": "att_p_x1p30",
+      "symbolic_multipliers": {
+        "MC_PITCH_P": 1.3
+      }
+    },
+    {
+      "label": "rate_p_x1p55_rate_d_x0p85",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_D": 0.85,
+        "MC_PITCHRATE_P": 1.55
+      }
+    },
+    {
+      "label": "rate_p_x1p60_rate_d_x0p85",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_D": 0.85,
+        "MC_PITCHRATE_P": 1.6
+      }
+    },
+    {
+      "label": "rate_p_x1p70_rate_d_x0p85",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_D": 0.85,
+        "MC_PITCHRATE_P": 1.7
+      }
+    },
+    {
+      "label": "rate_p_x1p60_rate_d_x1p15",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_D": 1.15,
+        "MC_PITCHRATE_P": 1.6
+      }
+    },
+    {
+      "label": "rate_p_x1p70_att_p_x1p10",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_P": 1.7,
+        "MC_PITCH_P": 1.1
+      }
+    },
+    {
+      "label": "rate_p_x1p70_att_p_x1p20",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_P": 1.7,
+        "MC_PITCH_P": 1.2
+      }
+    },
+    {
+      "label": "rate_p_x1p50_rate_i_x1p20",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_I": 1.2,
+        "MC_PITCHRATE_P": 1.5
+      }
+    },
+    {
+      "label": "rate_p_x1p60_rate_i_x1p20",
+      "symbolic_multipliers": {
+        "MC_PITCHRATE_I": 1.2,
+        "MC_PITCHRATE_P": 1.6
+      }
+    }
+  ],
+  "param_target_names": [
+    "MC_PITCHRATE_P",
+    "MC_PITCHRATE_I",
+    "MC_PITCHRATE_D",
+    "MC_PITCHRATE_K",
+    "MC_PITCH_P"
+  ],
+  "previous_run_dir": "",
+  "scenario": {
+    "id": "px4_acro_roll",
+    "observe_mode": "ACRO",
+    "perturb_mode": "ACRO",
+    "platform": "px4",
+    "properties": [
+      "post_neutral_roll_rate",
+      "post_neutral_pitch_rate",
+      "post_neutral_yaw_rate"
+    ],
+    "staging_mode": null,
+    "takeoff_alt_m": 5.0,
+    "test_mode": "ACRO"
+  },
+  "target_property": "post_neutral_pitch_rate"
+}

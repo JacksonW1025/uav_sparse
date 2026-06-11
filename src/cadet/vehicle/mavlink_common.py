@@ -59,6 +59,8 @@ class MavlinkVehicleMixin:
     last_attitude: dict[str, float]
     last_position: dict[str, float]
     samples: list[dict[str, Any]]
+    mode_trace: list[dict[str, Any]]
+    mode_trace_zero_s: float
 
     def _timing_add(self, key: str, value: int | float) -> None:
         timing = getattr(self, "timing", None)
@@ -189,15 +191,17 @@ class MavlinkVehicleMixin:
         self._timing_add("arm_retry_count", max(0, request_count - 1))
         raise TimeoutError("Timed out waiting for motors to arm")
 
-    def _set_mode(self, mode: str, timeout_s: float = 10.0) -> None:
+    def _set_mode(self, mode: str, timeout_s: float = 10.0, *, max_attempts: int | None = None) -> None:
         assert self.mav is not None
-        manual_required_px4_modes = {"POSCTL", "Position", "ALTCTL", "MANUAL", "STABILIZED"}
+        manual_required_px4_modes = {"POSCTL", "Position", "ALTCTL", "MANUAL", "STABILIZED", "ACRO"}
         deadline = time.monotonic() + timeout_s
         next_mode_request = 0.0
         last_ack: str | None = None
+        last_ack_result: int | None = None
         request_count = 0
+        observed_before = self.last_mode
         if self.last_autopilot == mavutil.mavlink.MAV_AUTOPILOT_PX4 and mode in manual_required_px4_modes:
-            prefeed_deadline = time.monotonic() + 0.7
+            prefeed_deadline = time.monotonic() + self._manual_mode_prefeed_s()
             while time.monotonic() < prefeed_deadline:
                 self._send_manual_normalized(0.0, 0.0, 0.0, 0.0)
                 time.sleep(0.02)
@@ -206,7 +210,7 @@ class MavlinkVehicleMixin:
             needs_manual_input = self.last_autopilot == mavutil.mavlink.MAV_AUTOPILOT_PX4 and mode in manual_required_px4_modes
             if needs_manual_input:
                 self._send_manual_normalized(0.0, 0.0, 0.0, 0.0)
-            if now >= next_mode_request:
+            if now >= next_mode_request and (max_attempts is None or request_count < int(max_attempts)):
                 self._send_mode_command(mode)
                 request_count += 1
                 next_mode_request = now + 0.2
@@ -219,6 +223,7 @@ class MavlinkVehicleMixin:
                     progress = int(getattr(msg, "progress", 0))
                     result_param2 = int(getattr(msg, "result_param2", 0))
                     last_ack = f"result={result} progress={progress} result_param2={result_param2}"
+                    last_ack_result = result
                 continue
             self.last_mode = mavutil.mode_string_v10(msg)
             self.last_autopilot = int(getattr(msg, "autopilot", 0))
@@ -229,9 +234,73 @@ class MavlinkVehicleMixin:
                 self.last_px4_sub_mode = (self.last_custom_mode & 0xFF000000) >> 24
             if self._mode_matches(self.last_mode, mode):
                 self._record_mode_timing(mode, request_count)
+                self._record_mode_trace(
+                    requested_mode=mode,
+                    observed_mode_before=observed_before,
+                    ack_result=last_ack_result,
+                    ack=last_ack,
+                    observed_mode_after=self.last_mode,
+                    success=True,
+                    request_count=request_count,
+                    reason="matched_requested_mode",
+                )
                 return
         self._record_mode_timing(mode, request_count)
+        reason = f"last_ack={last_ack}" if last_ack is not None else "timeout_without_matching_mode"
+        self._record_mode_trace(
+            requested_mode=mode,
+            observed_mode_before=observed_before,
+            ack_result=last_ack_result,
+            ack=last_ack,
+            observed_mode_after=self.last_mode,
+            success=False,
+            request_count=request_count,
+            reason=reason,
+        )
         raise TimeoutError(f"Mode did not switch to {mode}; last mode={self.last_mode}; last_ack={last_ack}")
+
+    def _manual_mode_prefeed_s(self) -> float:
+        sim_cfg = getattr(self, "sim_cfg", {}) or {}
+        try:
+            return max(0.0, float(sim_cfg.get("manual_mode_prefeed_s", 1.2)))
+        except (TypeError, ValueError):
+            return 1.2
+
+    def _record_mode_trace(
+        self,
+        *,
+        requested_mode: str,
+        observed_mode_before: str,
+        ack_result: int | None,
+        ack: str | None,
+        observed_mode_after: str,
+        success: bool,
+        request_count: int,
+        reason: str,
+    ) -> None:
+        zero = getattr(self, "mode_trace_zero_s", 0.0)
+        if zero <= 0.0:
+            zero = time.monotonic()
+            self.mode_trace_zero_s = zero
+        trace = getattr(self, "mode_trace", [])
+        trace.append(
+            {
+                "time_s": time.monotonic() - zero,
+                "requested_mode": requested_mode,
+                "observed_mode_before": observed_mode_before,
+                "ack_result": ack_result,
+                "ack": ack or "",
+                "observed_mode_after": observed_mode_after,
+                "success": bool(success),
+                "request_count": int(request_count),
+                "reason": reason,
+            }
+        )
+        self.mode_trace = trace
+        timing = getattr(self, "timing", None)
+        if isinstance(timing, dict):
+            timing["mode_trace"] = list(trace)
+            timing["final_observed_mode"] = observed_mode_after
 
     def _record_mode_timing(self, mode: str, request_count: int) -> None:
         safe_mode = "".join(ch if ch.isalnum() else "_" for ch in str(mode))
@@ -268,6 +337,10 @@ class MavlinkVehicleMixin:
             "Hold": {"LOITER", "HOLD", "AUTO.LOITER", "Hold"},
             "Loiter": {"LOITER", "Loiter"},
             "AltHold": {"ALT_HOLD", "ALTHOLD", "ALTCTL", "AltHold"},
+            "ACRO": {"ACRO"},
+            "Stabilized": {"STABILIZED", "STABILIZE", "Stabilized"},
+            "STABILIZED": {"STABILIZED", "STABILIZE"},
+            "STABILIZE": {"STABILIZE", "STABILIZED"},
         }
         if requested in aliases:
             return observed in aliases[requested]
@@ -461,8 +534,9 @@ class MavlinkVehicleMixin:
         self.t_neutral_s = float(input_sequence["t_s"].max() - self.config.input["neutral_tail_s"])
         transition_t_switch_s = getattr(scenario, "t_switch_s", None)
         transition_enabled = transition_t_switch_s is not None
-        if scenario.perturb_mode != scenario.observe_mode:
-            self._set_scenario_mode(scenario.perturb_mode)
+        test_mode = getattr(scenario, "test_mode", None) or scenario.perturb_mode
+        if not self._mode_matches(self.last_mode, test_mode):
+            self._set_scenario_mode(test_mode)
 
         start = time.monotonic()
         last_sent_idx = -1
@@ -506,6 +580,7 @@ class MavlinkVehicleMixin:
             self._send_manual_normalized(**neutral)
             self._drain_messages(float(rows[last_sent_idx]["t_s"]), neutral)
             time.sleep(0.01)
+        self._send_neutral_manual_for(1.0, speed_factor)
 
         if transition_enabled:
             for row in self.samples:

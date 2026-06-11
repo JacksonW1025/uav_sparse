@@ -1,0 +1,6 @@
+axis,scenario_id,name,default_value,readback_type,min,max,rebootRequired
+pitch,px4_stabilized_pitch,MC_PITCHRATE_D,0.0025500000920146,9,0.0,,False
+pitch,px4_stabilized_pitch,MC_PITCHRATE_I,0.2000000029802322,9,0.0,,False
+pitch,px4_stabilized_pitch,MC_PITCHRATE_K,1.0,9,0.01,5.0,False
+pitch,px4_stabilized_pitch,MC_PITCHRATE_P,0.2549999952316284,9,0.01,0.6,False
+pitch,px4_stabilized_pitch,MC_PITCH_P,6.5,9,0.0,12.0,False

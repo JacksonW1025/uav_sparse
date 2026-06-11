@@ -89,18 +89,51 @@ def run_query(
     run_wall_time_s = 0.0
     parse_wall_time_s = 0.0
     shutdown_wall_time_s = 0.0
+    failure_stage = ""
     try:
         prepare_start = time.monotonic()
+        failure_stage = "prepare"
         adapter.prepare(scenario, seed)
         prepare_wall_time_s = time.monotonic() - prepare_start
         adapter_timing = getattr(adapter, "timing", {})
         run_start = time.monotonic()
+        failure_stage = "run"
         raw_log_path = adapter.run(sequence, scenario, query_dir)
         run_wall_time_s = time.monotonic() - run_start
         parse_start = time.monotonic()
+        failure_stage = "parse"
         parsed_log = adapter.parse_log(raw_log_path)
         parsed_log = _augment_parsed_log_diagnostics(parsed_log)
         parse_wall_time_s = time.monotonic() - parse_start
+    except Exception as exc:
+        total_wall_time_s = time.monotonic() - query_start
+        adapter_timing = dict(getattr(adapter, "timing", {}) or {})
+        mode_trace = getattr(adapter, "mode_trace", None)
+        if mode_trace is not None and "mode_trace" not in adapter_timing:
+            adapter_timing["mode_trace"] = list(mode_trace)
+        if getattr(adapter, "last_mode", None) is not None and "final_observed_mode" not in adapter_timing:
+            adapter_timing["final_observed_mode"] = getattr(adapter, "last_mode")
+        metadata = {
+            "scenario_id": scenario.id,
+            "seed": seed,
+            "query_type": query_type,
+            "theta_hash": thash,
+            "cache_tag": cache_tag,
+            "wall_time_s": run_wall_time_s,
+            "prepare_wall_time_s": prepare_wall_time_s,
+            "run_wall_time_s": run_wall_time_s,
+            "parse_wall_time_s": parse_wall_time_s,
+            "shutdown_wall_time_s": shutdown_wall_time_s,
+            "total_wall_time_s": total_wall_time_s,
+            "harness_failure": True,
+            "failure_stage": failure_stage or "unknown",
+            "failure_reason": str(exc),
+        }
+        for key, value in adapter_timing.items():
+            metadata[f"adapter_{key}"] = value
+        metadata_path.write_text(json.dumps(metadata, indent=2, sort_keys=True), encoding="utf-8")
+        _append_jsonl(output_dir, config, {"query_id": query_id, **metadata, "robustness": {}})
+        raise
     finally:
         shutdown_start = time.monotonic()
         adapter.shutdown()

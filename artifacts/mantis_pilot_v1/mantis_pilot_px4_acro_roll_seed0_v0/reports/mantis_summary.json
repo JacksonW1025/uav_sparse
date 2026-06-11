@@ -1,0 +1,41 @@
+{
+  "accepted_candidates": 0,
+  "confirmed_candidates": 0,
+  "elapsed_wall_time_s": 997.3815423560009,
+  "guided_modal_sliver_found": false,
+  "note": "Mode did not switch to POSCTL; last mode=LOITER; last_ack=result=1 progress=0 result_param2=0",
+  "param_candidates_generated": 8,
+  "pure_param_rejected": 2,
+  "query_count": 25,
+  "readiness": {
+    "axis": "roll",
+    "blockers": [],
+    "commit": "e0c589a",
+    "config": "configs/mantis_pilot.yaml",
+    "mode_mapping_ready": true,
+    "nonlinear_observability": false,
+    "nonlinear_observability_reason": "parsed MAVLink telemetry lacks actuator/motor, saturation, integrator, limit, and thrust-headroom diagnostics",
+    "observe_mode": "ACRO",
+    "param_override_ready": true,
+    "param_readback_ready": "requires_sitl",
+    "perturb_mode": "ACRO",
+    "platform": "px4",
+    "scenario_id": "px4_acro_roll",
+    "sim_root": "/home/car/PX4-Autopilot",
+    "sim_root_exists": true,
+    "telemetry_rate_columns": [
+      "roll_rate_rps",
+      "pitch_rate_rps",
+      "yaw_rate_rps",
+      "roll_rad",
+      "pitch_rad",
+      "yaw_rad"
+    ],
+    "telemetry_rate_columns_ready_by_code": true
+  },
+  "reconstructed_from_queries_jsonl": true,
+  "run_dir": "runs/mantis_pilot_px4_acro_roll_seed0_v0",
+  "small_safe_retained": 6,
+  "status": "BLOCKED_ENV",
+  "strong_unsafe_candidates": 0
+}

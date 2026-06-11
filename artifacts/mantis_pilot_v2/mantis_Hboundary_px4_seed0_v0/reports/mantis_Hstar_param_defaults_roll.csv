@@ -1,0 +1,6 @@
+axis,scenario_id,name,default_value,readback_type,min,max,rebootRequired
+roll,px4_acro_roll,MC_ROLLRATE_D,0.0015000000130385,9,0.0,0.01,False
+roll,px4_acro_roll,MC_ROLLRATE_I,0.3000000119209289,9,0.0,,False
+roll,px4_acro_roll,MC_ROLLRATE_K,1.0,9,0.01,5.0,False
+roll,px4_acro_roll,MC_ROLLRATE_P,0.3000000119209289,9,0.01,0.5,False
+roll,px4_acro_roll,MC_ROLL_P,11.699999809265137,9,0.0,12.0,False

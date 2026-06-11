@@ -1,0 +1,52 @@
+{
+  "accepted_candidates": 0,
+  "confirmed_candidates": 0,
+  "elapsed_wall_time_s": 1235.790738932992,
+  "guided_modal_sliver_found": false,
+  "mode_trace_rows": 32,
+  "nonlinear_backfill": {
+    "diagnostics_csv": "runs/mantis_pilot_px4_acro_roll_seed0_v1/reports/mantis_nonlinear_diagnostics.csv",
+    "inventory_json": "runs/mantis_pilot_px4_acro_roll_seed0_v1/reports/nonlinear_topics_inventory.json",
+    "nonlinear_activated": true,
+    "nonlinear_observability": true,
+    "query_raw_logs_matched": 32,
+    "run_dir": "runs/mantis_pilot_px4_acro_roll_seed0_v1"
+  },
+  "note": "",
+  "param_candidates_generated": 8,
+  "pure_param_rejected": 7,
+  "query_count": 32,
+  "readiness": {
+    "axis": "roll",
+    "blockers": [],
+    "commit": "e0c589a",
+    "config": "configs/mantis_pilot.yaml",
+    "mode_mapping_ready": true,
+    "nonlinear_observability": false,
+    "nonlinear_observability_reason": "requires per-query raw ULog diagnostics; readiness is code/parser-only before SITL execution",
+    "nonlinear_rawlog_parser_ready": true,
+    "observe_mode": "ACRO",
+    "param_override_ready": true,
+    "param_readback_ready": "requires_sitl",
+    "perturb_mode": "ACRO",
+    "platform": "px4",
+    "scenario_id": "px4_acro_roll",
+    "sim_root": "/home/car/PX4-Autopilot",
+    "sim_root_exists": true,
+    "staging_mode": "",
+    "telemetry_rate_columns": [
+      "roll_rate_rps",
+      "pitch_rate_rps",
+      "yaw_rate_rps",
+      "roll_rad",
+      "pitch_rad",
+      "yaw_rad"
+    ],
+    "telemetry_rate_columns_ready_by_code": true,
+    "test_mode": "ACRO"
+  },
+  "run_dir": "runs/mantis_pilot_px4_acro_roll_seed0_v1",
+  "small_safe_retained": 1,
+  "status": "NO_SLIVER_FOUND",
+  "strong_unsafe_candidates": 0
+}
