@@ -1,6 +1,16 @@
+# uav_sparse
+
+## Repo 状态
+
+- 旧实验状态已在 `2026-06-11` 提交并推送，归档标签为 `archive/legacy-pre-planc-20260611`。
+- 旧 CADET/MANTIS 实验内容已通过 `git mv` 归档到 `legacy/`，可从该目录或归档标签找回。
+- 当前主线实验位于 `planc/`，用于 ArduPilot SITL geofence high-speed overshoot 门控实验。
+
+## Legacy CADET README
+
 # uav_sparse / CADET
 
-Chinese version: [README_zh.md](README_zh.md)
+Chinese version: [README_zh.md](legacy/README_zh.md)
 
 This repository is the working codebase for **CADET**:
 **C**ontrol-**A**llocation-**D**irected **E**xploration of
