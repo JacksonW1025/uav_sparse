@@ -1,0 +1,151 @@
+experiment:
+  name: rtl_energy_spec_gap_decisive_test
+  version: rtl_energy_v1
+  date: "2026-06-11"
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 90.0
+  target_bearing_deg: 90.0
+  takeoff_alt_m: 20.0
+  cruise_speed_m_s: 8.0
+  stream_hz: 10
+  speedup: 6
+  home_radius_m: 10.0
+  d_reached_tolerance_m: 8.0
+  speed_audit_tolerance_m_s: 2.0
+  speed_audit_min_distance_m: 12.0
+  max_wait_for_low_failsafe_s: 75
+  max_return_or_land_s: 105
+  premise_distance_m: 90.0
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+models:
+  nominal:
+    mass_kg: 3.0
+    params:
+      SIM_SPR_ENABLE: 0
+  heavy:
+    mass_kg: 3.25
+    params:
+      SIM_SPR_ENABLE: 1
+
+param_metadata:
+  source: /home/car/ardupilot/libraries/AP_BattMonitor/AP_BattMonitor_Params.cpp
+  batt_fs_low_act_rtl: 2
+  batt_fs_crit_act_land: 1
+  mode_reason_battery_failsafe: 4
+  low_capacity_semantics: "BATT_CAPACITY - BAT.CurrTot < BATT_LOW_MAH"
+  critical_capacity_semantics: "BATT_CAPACITY - BAT.CurrTot < BATT_CRT_MAH"
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  BATT_MONITOR: 4
+  BATT_CAPACITY: 650
+  SIM_BATT_CAP_AH: 0.65
+  SIM_BATT_VOLTAGE: 12.6
+  BATT_LOW_MAH: 220
+  BATT_CRT_MAH: 60
+  BATT_LOW_VOLT: 0
+  BATT_CRT_VOLT: 0
+  BATT_LOW_TIMER: 1
+  BATT_FS_LOW_ACT: 2
+  BATT_FS_CRT_ACT: 1
+  BATT_ARM_VOLT: 0
+  BATT_ARM_MAH: 0
+  FS_THR_ENABLE: 0
+  FS_GCS_ENABLE: 0
+  FENCE_ENABLE: 0
+  FENCE_TYPE: 0
+  AVOID_ENABLE: 0
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  SIM_SPR_ENABLE: 0
+  WPNAV_SPEED: 800
+  WPNAV_ACCEL: 400
+  WPNAV_JERK: 10
+  PSC_JERK_XY: 10
+  RTL_SPEED: 800
+  RTL_ALT: 2000
+  RTL_ALT_FINAL: 0
+  RTL_CLIMB_MIN: 0
+  RTL_CONE_SLOPE: 0
+
+premise:
+  wind_probe_m_s: 10
+  nominal_mass_model: nominal
+  heavy_mass_model: heavy
+
+sweep:
+  default_layer: default
+  distances_m:
+    - 40
+    - 60
+    - 80
+    - 100
+    - 120
+    - 140
+  winds_m_s:
+    - 0
+    - 3
+    - 6
+    - 9
+    - 12
+    - 15
+  near_boundary_repetitions: 3
+  near_boundary_band_m: 18
+  p_layers:
+    lenient:
+      BATT_LOW_MAH: 170
+    default:
+      BATT_LOW_MAH: 220
+    conservative:
+      BATT_LOW_MAH: 270
+
+train_test:
+  interpolation_train_distances_m:
+    - 40
+    - 80
+    - 120
+  interpolation_train_winds_m_s:
+    - 0
+    - 6
+    - 12
+  interpolation_test_distances_m:
+    - 60
+    - 100
+    - 140
+  interpolation_test_winds_m_s:
+    - 3
+    - 9
+    - 15
+  extrapolation_train_max_distance_m: 100
+  extrapolation_train_max_wind_m_s: 9
+  extrapolation_test_min_distance_m: 120
+  extrapolation_test_min_wind_m_s: 12
+
+search:
+  bisection_iterations_per_wind: 4
+  winds_m_s:
+    - 0
+    - 6
+    - 12
+    - 15
