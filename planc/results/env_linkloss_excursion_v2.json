@@ -1,0 +1,49 @@
+{
+  "ardupilot_commit": "e010f97906087a3a1975e1c4fcc1f88a249599ce",
+  "ardupilot_commit_short": "e010f97906",
+  "ardupilot_root": "/home/car/ardupilot",
+  "ardupilot_status": "## HEAD (no branch)",
+  "connection": "tcp:127.0.0.1:5760",
+  "defaults_file": "/home/car/ardupilot/Tools/autotest/default_params/copter.parm",
+  "env_PATH": "/usr/lib/ccache:/home/car/ardupilot/Tools/autotest:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin:/home/car/.local/bin:/home/car/.codex/tmp/arg0/codex-arg0oYAttj:/usr/lib/ccache:/home/car/ardupilot/Tools/autotest:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin:/home/car/.local/bin:/home/car/.nvm/versions/node/v24.12.0/bin:/opt/ros/humble/bin:/usr/local/cuda-12.6/bin:/usr/lib/ccache:/home/car/ardupilot/Tools/autotest:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin:/home/car/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/car/.vscode/extensions/openai.chatgpt-26.602.40724-linux-arm64/bin/linux-aarch64",
+  "model": "quad",
+  "packages": {
+    "matplotlib": "3.10.8",
+    "numpy": "2.2.6",
+    "pymavlink": "2.4.49",
+    "yaml": "6.0.3"
+  },
+  "param_metadata": {
+    "fence_action_report_only": 0,
+    "fence_report_only_note": "Fence breach ERR/STATUSTEXT is an oracle measurement boundary, not a failsafe action.",
+    "fence_type_circle": 2,
+    "fs_gcs_enable_rtl": 1,
+    "fs_gcs_timeout_range_s": [
+      2,
+      120
+    ],
+    "mode_reason_gcs_failsafe": 5,
+    "mode_reason_radio_failsafe": 3,
+    "source": "/home/car/ardupilot/ArduCopter/Parameters.cpp"
+  },
+  "platform": "Linux-5.15.148-tegra-aarch64-with-glibc2.35",
+  "python": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+  "repo_root": "/mnt/nvme/px4_work/uav_sparse",
+  "selected_start_command_template": [
+    "/home/car/ardupilot/build/sitl/bin/arducopter",
+    "--model",
+    "quad",
+    "--speedup",
+    "6",
+    "--wipe",
+    "--defaults",
+    "/home/car/ardupilot/Tools/autotest/default_params/copter.parm",
+    "--home",
+    "<lat,lon,alt,yaw>"
+  ],
+  "sim_vehicle_on_path": "/home/car/ardupilot/Tools/autotest/sim_vehicle.py",
+  "sim_vehicle_py": "/home/car/ardupilot/Tools/autotest/sim_vehicle.py",
+  "speedup": 6,
+  "vehicle_binary": "/home/car/ardupilot/build/sitl/bin/arducopter",
+  "vehicle_binary_help_head": "Options:\n\t--help|-h                display this help information\n\t--wipe|-w                wipe eeprom\n\t--unhide-groups|-u       parameter enumeration ignores AP_PARAM_FLAG_ENABLE\n\t--speedup|-s SPEEDUP     set simulation speedup\n\t--rate|-r RATE           set SITL framerate\n\t--console|-C             use console instead of TCP ports\n\t--instance|-I N          set instance of SITL (adds 10*instance to all port numbers)\n\t--synthetic-clock|-S     set synthetic clock mode\n\t--home|-O HOME           set start location (lat,lng,alt,yaw) or location name\n\t--model|-M MODEL         set simulation model\n\t--config string          set additional simulation config string\n\t--fg|-F ADDRESS          set Flight Gear view address, defaults to 127.0.0.1\n\t--disable-fgview         disable Flight Gear view\n\t--gimbal                 enable simulated MAVLink gimbal\n\t--autotest-dir DIR       set directory for additional files\n\t--defaults path          set path to defaults file\n\t--uartA device           set device string for UARTA\n\t--uartB device           set device string for UARTB\n\t--uartC device           set device string for UARTC\n\t--uartD device           set device string for UARTD\n\t--uartE device           set device string for UARTE\n\t--uartF device           set device string for UARTF\n\t--uartG device           set device string for UARTG\n\t--uartH device           set device string for UARTH\n\t--uartI device           set device string for UARTI\n\t--uartJ device           set device string for UARTJ\n\t--serial0 device         set device string for SERIAL0\n\t--serial1 device         set device string for SERIAL1\n\t--serial2 device         set device string for SERIAL2\n\t--serial3 device         set device string for SERIAL3\n\t--serial4 device         set device string for SERIAL4\n\t--serial5 device         set device string for SERIAL5\n\t--serial6 device         set device string for SERIAL6\n\t--serial7 device         set device string for SERIAL7\n\t--serial8 device         set device string for SERIAL8\n\t--serial9 device         set device string for SERIAL9\n\t--rtscts                 enable rtscts on serial ports (default false)\n\t--base-port PORT         set port num for base port(default 5670) must be before -I option\n\t--rc-in-port PORT        set port num for rc in\n\t--sim-address ADDR       set address string for simulator\n\t--sim-port-in PORT       set port num for simulator in\n\t--sim-port-out PORT      set port num for simulator out\n\t--irlock-port PORT       set port num for irlock\n\t--start-time TIMESTR     set simulation start time in UNIX timestamp\n\t--sysid ID               set SYSID_THISMAV\n\t--slave number           set the number of JSON slaves"
+}

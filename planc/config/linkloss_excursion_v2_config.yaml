@@ -1,0 +1,173 @@
+experiment:
+  name: linkloss_boundary_excursion_second_scenario
+  version: linkloss_excursion_v2_noise_floor_aware
+  date: "2026-06-11"
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 90.0
+  target_bearing_deg: 90.0
+  takeoff_alt_m: 20.0
+  fence_radius_m: 120.0
+  d_inside_m: 40.0
+  waypoint_distance_m: 260.0
+  stream_hz: 10
+  speedup: 6
+  speed_audit_tolerance_m_s: 3.0
+  speed_audit_min_distance_m: 18.0
+  linkloss_timeout_tolerance_s: 2.5
+  fence_tolerance_m: 1.5
+  post_failsafe_observation_s: 35.0
+  max_auto_outbound_s: 45.0
+  max_linkloss_observation_s: 70.0
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+param_metadata:
+  source: /home/car/ardupilot/ArduCopter/Parameters.cpp
+  fs_gcs_enable_rtl: 1
+  fs_gcs_timeout_range_s: [2, 120]
+  fence_type_circle: 2
+  fence_action_report_only: 0
+  mode_reason_gcs_failsafe: 5
+  mode_reason_radio_failsafe: 3
+  fence_report_only_note: "Fence breach ERR/STATUSTEXT is an oracle measurement boundary, not a failsafe action."
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  SYSID_MYGCS: 255
+  FS_GCS_ENABLE: 1
+  FS_GCS_TIMEOUT: 5
+  FS_OPTIONS: 0
+  FS_THR_ENABLE: 0
+  FENCE_ENABLE: 1
+  FENCE_TYPE: 2
+  FENCE_RADIUS: 120
+  FENCE_ACTION: 0
+  FENCE_MARGIN: 2
+  AVOID_ENABLE: 0
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  SIM_RC_FAIL: 0
+  WPNAV_SPEED: 2600
+  WPNAV_ACCEL: 700
+  WPNAV_JERK: 20
+  PSC_JERK_XY: 20
+  RTL_SPEED: 1200
+  RTL_ALT: 2000
+  RTL_ALT_FINAL: 0
+  RTL_CLIMB_MIN: 0
+  RTL_CONE_SLOPE: 0
+  BATT_LOW_VOLT: 0
+  BATT_CRT_VOLT: 0
+  BATT_LOW_MAH: 0
+  BATT_CRT_MAH: 0
+  BATT_FS_LOW_ACT: 0
+  BATT_FS_CRT_ACT: 0
+
+premise:
+  speed_response:
+    baseline_speed_m_s: 8
+    stressed_speed_m_s: 10
+    wind_m_s: 9
+    timeout_s: 5
+  wind_response:
+    speed_m_s: 10
+    baseline_wind_m_s: 0
+    stressed_wind_m_s: 12
+    timeout_s: 5
+  timeout_response:
+    speed_m_s: 10
+    wind_m_s: 9
+    timeouts_s: [2, 5, 8]
+
+noise_floor:
+  k_sigma_margin: 3.0
+  c_sigma_mae_bound: 1.5
+  ci_sigma_multiplier: 2.0
+  noise_repetitions: 8
+  grid_repetitions: 5
+  p_layer_repetitions: 1
+  default_timeout_s: 5
+  boundary_points:
+    - {speed_m_s: 7, wind_m_s: 0}
+    - {speed_m_s: 7, wind_m_s: 9}
+    - {speed_m_s: 7, wind_m_s: 12}
+    - {speed_m_s: 7, wind_m_s: 15}
+  unsafe_points:
+    - {speed_m_s: 10, wind_m_s: 0}
+    - {speed_m_s: 10, wind_m_s: 9}
+    - {speed_m_s: 10, wind_m_s: 15}
+  preregistered_oracle_note: "d_margin = k * sigma_boundary; ambiguous iff mean overshoot +/- 2*sigma_boundary crosses d_margin."
+
+sweep:
+  default_layer: default
+  speeds_m_s:
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+  winds_m_s:
+    - 0
+    - 3
+    - 6
+    - 9
+    - 12
+    - 15
+  near_boundary_repetitions: 3
+  p_layers:
+    conservative:
+      FS_GCS_TIMEOUT: 2
+    default:
+      FS_GCS_TIMEOUT: 5
+    lenient:
+      FS_GCS_TIMEOUT: 8
+
+train_test:
+  interpolation_train_speeds_m_s:
+    - 5
+    - 8
+    - 10
+  interpolation_train_winds_m_s:
+    - 0
+    - 6
+    - 12
+  interpolation_test_speeds_m_s:
+    - 6
+    - 7
+    - 9
+  interpolation_test_winds_m_s:
+    - 3
+    - 9
+    - 15
+  extrapolation_train_max_speed_m_s: 8
+  extrapolation_train_max_wind_m_s: 9
+  extrapolation_test_min_speed_m_s: 9
+  extrapolation_test_min_wind_m_s: 12
+
+search:
+  bisection_iterations_per_wind: 4
+  winds_m_s:
+    - 0
+    - 6
+    - 12
+    - 15
