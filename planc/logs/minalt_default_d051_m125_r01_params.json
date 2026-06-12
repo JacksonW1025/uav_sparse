@@ -1,0 +1,345 @@
+{
+  "active_records": [
+    {
+      "before": 0.0,
+      "name": "FENCE_ENABLE",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 0.0,
+      "name": "FENCE_TYPE",
+      "ok": true,
+      "readback": 8.0,
+      "requested": 8.0
+    },
+    {
+      "before": 1.0,
+      "name": "FENCE_ACTION",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 0.0,
+      "name": "AVOID_ENABLE",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": -10.0,
+      "name": "FENCE_ALT_MIN",
+      "ok": true,
+      "readback": 5.0,
+      "requested": 5.0
+    }
+  ],
+  "model": {
+    "json": "/mnt/nvme/px4_work/uav_sparse/planc/config/minalt_models/mass_3_75.json",
+    "mass_kg": 3.75,
+    "mass_multiplier": 1.25,
+    "name": "m125"
+  },
+  "records": [
+    {
+      "before": 1.0,
+      "name": "LOG_BACKEND_TYPE",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 0.0,
+      "name": "LOG_DISARMED",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 255.0,
+      "name": "SYSID_MYGCS",
+      "ok": true,
+      "readback": 255.0,
+      "requested": 255.0
+    },
+    {
+      "before": 0.0,
+      "name": "FS_GCS_ENABLE",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 16.0,
+      "name": "FS_OPTIONS",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 1.0,
+      "name": "FS_THR_ENABLE",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 0.0,
+      "name": "SIM_RC_FAIL",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 0.0,
+      "name": "FENCE_ENABLE",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 7.0,
+      "name": "FENCE_TYPE",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": -10.0,
+      "name": "FENCE_ALT_MIN",
+      "ok": true,
+      "readback": -10.0,
+      "requested": -10.0
+    },
+    {
+      "before": 1.0,
+      "name": "FENCE_ACTION",
+      "ok": true,
+      "readback": 1.0,
+      "requested": 1.0
+    },
+    {
+      "before": 2.0,
+      "name": "FENCE_MARGIN",
+      "ok": true,
+      "readback": 2.0,
+      "requested": 2.0
+    },
+    {
+      "before": 3.0,
+      "name": "AVOID_ENABLE",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 180.0,
+      "name": "SIM_WIND_DIR",
+      "ok": true,
+      "readback": 270.0,
+      "requested": 270.0
+    },
+    {
+      "before": 0.0,
+      "name": "SIM_WIND_SPD",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 0.0,
+      "name": "SIM_WIND_TURB",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 1000.0,
+      "name": "WPNAV_SPEED",
+      "ok": true,
+      "readback": 800.0,
+      "requested": 800.0
+    },
+    {
+      "before": 250.0,
+      "name": "WPNAV_SPEED_UP",
+      "ok": true,
+      "readback": 300.0,
+      "requested": 300.0
+    },
+    {
+      "before": 150.0,
+      "name": "WPNAV_SPEED_DN",
+      "ok": true,
+      "readback": 1000.0,
+      "requested": 1000.0
+    },
+    {
+      "before": 250.0,
+      "name": "WPNAV_ACCEL",
+      "ok": true,
+      "readback": 400.0,
+      "requested": 400.0
+    },
+    {
+      "before": 100.0,
+      "name": "WPNAV_ACCEL_Z",
+      "ok": true,
+      "readback": 500.0,
+      "requested": 500.0
+    },
+    {
+      "before": 1.0,
+      "name": "WPNAV_JERK",
+      "ok": true,
+      "readback": 10.0,
+      "requested": 10.0
+    },
+    {
+      "before": 5.0,
+      "name": "PSC_JERK_XY",
+      "ok": true,
+      "readback": 10.0,
+      "requested": 10.0
+    },
+    {
+      "before": 250.0,
+      "name": "PILOT_SPEED_UP",
+      "ok": true,
+      "readback": 300.0,
+      "requested": 300.0
+    },
+    {
+      "before": 0.0,
+      "name": "PILOT_SPEED_DN",
+      "ok": true,
+      "readback": 1000.0,
+      "requested": 1000.0
+    },
+    {
+      "before": 250.0,
+      "name": "PILOT_ACCEL_Z",
+      "ok": true,
+      "readback": 500.0,
+      "requested": 500.0
+    },
+    {
+      "before": 0.0,
+      "name": "RTL_SPEED",
+      "ok": true,
+      "readback": 800.0,
+      "requested": 800.0
+    },
+    {
+      "before": 1500.0,
+      "name": "RTL_ALT",
+      "ok": true,
+      "readback": 1800.0,
+      "requested": 1800.0
+    },
+    {
+      "before": 0.0,
+      "name": "RTL_ALT_FINAL",
+      "ok": true,
+      "readback": 1200.0,
+      "requested": 1200.0
+    },
+    {
+      "before": 0.0,
+      "name": "RTL_CLIMB_MIN",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 3.0,
+      "name": "RTL_CONE_SLOPE",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 10.5,
+      "name": "BATT_LOW_VOLT",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 0.0,
+      "name": "BATT_CRT_VOLT",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 0.0,
+      "name": "BATT_LOW_MAH",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 0.0,
+      "name": "BATT_CRT_MAH",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 0.0,
+      "name": "BATT_FS_LOW_ACT",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    },
+    {
+      "before": 0.0,
+      "name": "BATT_FS_CRT_ACT",
+      "ok": true,
+      "readback": 0.0,
+      "requested": 0.0
+    }
+  ],
+  "snapshot": {
+    "AVOID_ENABLE": 0.0,
+    "BATT_CRT_MAH": 0.0,
+    "BATT_CRT_VOLT": 0.0,
+    "BATT_FS_CRT_ACT": 0.0,
+    "BATT_FS_LOW_ACT": 0.0,
+    "BATT_LOW_MAH": 0.0,
+    "BATT_LOW_VOLT": 0.0,
+    "FENCE_ACTION": 1.0,
+    "FENCE_ALT_MIN": 5.0,
+    "FENCE_ENABLE": 1.0,
+    "FENCE_MARGIN": 2.0,
+    "FENCE_TYPE": 8.0,
+    "FS_GCS_ENABLE": 0.0,
+    "FS_OPTIONS": 0.0,
+    "FS_THR_ENABLE": 0.0,
+    "LOG_BACKEND_TYPE": 1.0,
+    "LOG_DISARMED": 1.0,
+    "PILOT_ACCEL_Z": 500.0,
+    "PILOT_SPEED_DN": 1000.0,
+    "PILOT_SPEED_UP": 300.0,
+    "PSC_JERK_XY": 10.0,
+    "RTL_ALT": 1800.0,
+    "RTL_ALT_FINAL": 1200.0,
+    "RTL_CLIMB_MIN": 0.0,
+    "RTL_CONE_SLOPE": 0.0,
+    "RTL_SPEED": 800.0,
+    "SIM_RC_FAIL": 0.0,
+    "SIM_WIND_DIR": 270.0,
+    "SIM_WIND_SPD": 0.0,
+    "SIM_WIND_TURB": 0.0,
+    "SYSID_MYGCS": 255.0,
+    "WPNAV_ACCEL": 400.0,
+    "WPNAV_ACCEL_Z": 500.0,
+    "WPNAV_JERK": 10.0,
+    "WPNAV_SPEED": 800.0,
+    "WPNAV_SPEED_DN": 1000.0,
+    "WPNAV_SPEED_UP": 300.0
+  }
+}

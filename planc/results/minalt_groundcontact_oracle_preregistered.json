@@ -1,0 +1,44 @@
+{
+  "boundary_points": [
+    {
+      "descent_rate_m_s": 5.2,
+      "model": "m140"
+    },
+    {
+      "descent_rate_m_s": 5.2,
+      "model": "m170"
+    },
+    {
+      "descent_rate_m_s": 5.3,
+      "model": "m100"
+    },
+    {
+      "descent_rate_m_s": 5.3,
+      "model": "m125"
+    }
+  ],
+  "c_sigma_mae_bound": 1.5,
+  "ci_sigma_multiplier": 2.0,
+  "created_at_utc": "2026-06-12T21:27:49.017029+00:00",
+  "grid_repetitions": 5,
+  "h_floor_m": 2.0,
+  "k_sigma_margin": 3.0,
+  "label_rule": "d_margin = k * sigma_boundary; unsafe iff mean min-AGL + 2*sigma_boundary < h_floor; safe iff mean min-AGL - 2*sigma_boundary > h_floor.",
+  "noise_repetitions": 8,
+  "scenario": "minalt_groundcontact_third_scenario",
+  "unsafe_points": [
+    {
+      "descent_rate_m_s": 5.4,
+      "model": "m100"
+    },
+    {
+      "descent_rate_m_s": 5.4,
+      "model": "m125"
+    },
+    {
+      "descent_rate_m_s": 5.4,
+      "model": "m170"
+    }
+  ],
+  "version": "minalt_groundcontact_v1_noise_floor_aware"
+}

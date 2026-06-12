@@ -56,6 +56,12 @@ class SitlRunner:
             shutil.rmtree(self.work_dir)
         self.work_dir.mkdir(parents=True)
         self.logs_root.mkdir(parents=True, exist_ok=True)
+        model_json_source = self.config["sitl"].get("model_json_source")
+        if model_json_source:
+            src = Path(str(model_json_source))
+            if not src.exists():
+                raise SitlError(f"SITL model JSON does not exist: {src}")
+            shutil.copy2(src, self.work_dir / src.name)
         cmd = [
             self.binary,
             "--model",
