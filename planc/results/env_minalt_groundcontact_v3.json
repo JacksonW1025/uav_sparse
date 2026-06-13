@@ -1,0 +1,296 @@
+{
+  "ardupilot_commit": "e010f97906087a3a1975e1c4fcc1f88a249599ce",
+  "ardupilot_commit_short": "e010f97906",
+  "ardupilot_root": "/home/car/ardupilot",
+  "ardupilot_status": "## HEAD (no branch)",
+  "connection": "tcp:127.0.0.1:5760",
+  "defaults_file": "/home/car/ardupilot/Tools/autotest/default_params/copter.parm",
+  "env_PATH": "/usr/lib/ccache:/home/car/ardupilot/Tools/autotest:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin:/home/car/.local/bin:/home/car/.codex/tmp/arg0/codex-arg0oYAttj:/usr/lib/ccache:/home/car/ardupilot/Tools/autotest:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin:/home/car/.local/bin:/home/car/.nvm/versions/node/v24.12.0/bin:/opt/ros/humble/bin:/usr/local/cuda-12.6/bin:/usr/lib/ccache:/home/car/ardupilot/Tools/autotest:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin:/home/car/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/car/.vscode/extensions/openai.chatgpt-26.602.40724-linux-arm64/bin/linux-aarch64",
+  "model": "quad",
+  "oracle_preregistration": {
+    "active_fence_params": {
+      "AVOID_ENABLE": 0,
+      "FENCE_ACTION": 1,
+      "FENCE_ENABLE": 1,
+      "FENCE_TYPE": 8
+    },
+    "ambiguous_band_min_agl_m": [
+      1.8268764135370348,
+      2.173123586462965
+    ],
+    "boundary_points": [
+      {
+        "descent_rate_m_s": 5.0,
+        "model": "m100"
+      },
+      {
+        "descent_rate_m_s": 5.3,
+        "model": "m125"
+      },
+      {
+        "descent_rate_m_s": 6.0,
+        "model": "m170"
+      }
+    ],
+    "c_sigma_mae_bound": 1.5,
+    "ci_sigma_multiplier": 2.0,
+    "created_at_utc": "2026-06-13T08:51:12.979627+00:00",
+    "d_margin_m": 0.2596853796944478,
+    "grid_repetitions": 3,
+    "h_floor_m": 2.0,
+    "k_sigma_margin": 3.0,
+    "label_rule": "d_margin = k * sigma_boundary; unsafe iff mean min-AGL + 2*sigma_boundary < h_floor; safe iff mean min-AGL - 2*sigma_boundary > h_floor. Sigma magnitude is reported, not gated, for v3.",
+    "mae_bound_m": 0.1298426898472239,
+    "measured_oracle_written_before_grid": true,
+    "noise_boundary_points": [
+      {
+        "completed_repetitions": 3,
+        "contract_clean_all": true,
+        "contract_violations": [],
+        "descent_rate_m_s": 5.0,
+        "group": "boundary",
+        "mean_min_agl_m": 1.9330840508143108,
+        "min_agl_values_m": [
+          1.8257465362548828,
+          1.9783655405044556,
+          1.9951400756835938
+        ],
+        "model_mass_kg": 3.0,
+        "model_mass_multiplier": 1.0,
+        "model_name": "m100",
+        "noise_point_key": "noise_boundary_d050_m100",
+        "point_key": "default_d050_m100",
+        "run_ids": [
+          "minalt_v3_noise_noise_boundary_d050_m100_r01",
+          "minalt_v3_noise_noise_boundary_d050_m100_r02",
+          "minalt_v3_noise_noise_boundary_d050_m100_r03"
+        ],
+        "sample_std_min_agl_m": 0.09333462798696732
+      },
+      {
+        "completed_repetitions": 3,
+        "contract_clean_all": true,
+        "contract_violations": [],
+        "descent_rate_m_s": 5.3,
+        "group": "boundary",
+        "mean_min_agl_m": 2.0532066822052,
+        "min_agl_values_m": [
+          1.9188156127929688,
+          2.111238479614258,
+          2.129565954208374
+        ],
+        "model_mass_kg": 3.75,
+        "model_mass_multiplier": 1.25,
+        "model_name": "m125",
+        "noise_point_key": "noise_boundary_d053_m125",
+        "point_key": "default_d053_m125",
+        "run_ids": [
+          "minalt_v3_noise_noise_boundary_d053_m125_r01",
+          "minalt_v3_noise_noise_boundary_d053_m125_r02",
+          "minalt_v3_noise_noise_boundary_d053_m125_r03"
+        ],
+        "sample_std_min_agl_m": 0.11674627931789476
+      },
+      {
+        "completed_repetitions": 3,
+        "contract_clean_all": true,
+        "contract_violations": [],
+        "descent_rate_m_s": 6.0,
+        "group": "boundary",
+        "mean_min_agl_m": 2.031179348627726,
+        "min_agl_values_m": [
+          2.0204596519470215,
+          2.043722629547119,
+          2.029355764389038
+        ],
+        "model_mass_kg": 5.1,
+        "model_mass_multiplier": 1.7,
+        "model_name": "m170",
+        "noise_point_key": "noise_boundary_d060_m170",
+        "point_key": "default_d060_m170",
+        "run_ids": [
+          "minalt_v3_noise_noise_boundary_d060_m170_r01",
+          "minalt_v3_noise_noise_boundary_d060_m170_r02",
+          "minalt_v3_noise_noise_boundary_d060_m170_r03"
+        ],
+        "sample_std_min_agl_m": 0.011738212228118694
+      }
+    ],
+    "noise_repetitions": 3,
+    "noise_unsafe_points": [
+      {
+        "completed_repetitions": 3,
+        "contract_clean_all": true,
+        "contract_violations": [],
+        "descent_rate_m_s": 5.0,
+        "group": "unsafe",
+        "mean_min_agl_m": 1.6981149911880493,
+        "min_agl_values_m": [
+          1.6654713153839111,
+          1.6972678899765015,
+          1.7316057682037354
+        ],
+        "model_mass_kg": 5.1,
+        "model_mass_multiplier": 1.7,
+        "model_name": "m170",
+        "noise_point_key": "noise_unsafe_d050_m170",
+        "point_key": "default_d050_m170",
+        "run_ids": [
+          "minalt_v3_noise_noise_unsafe_d050_m170_r01",
+          "minalt_v3_noise_noise_unsafe_d050_m170_r02",
+          "minalt_v3_noise_noise_unsafe_d050_m170_r03"
+        ],
+        "sample_std_min_agl_m": 0.03307536315433805
+      },
+      {
+        "completed_repetitions": 3,
+        "contract_clean_all": true,
+        "contract_violations": [],
+        "descent_rate_m_s": 7.0,
+        "group": "unsafe",
+        "mean_min_agl_m": 0.9333666960398356,
+        "min_agl_values_m": [
+          0.9776907563209534,
+          0.949823796749115,
+          0.8725855350494385
+        ],
+        "model_mass_kg": 3.75,
+        "model_mass_multiplier": 1.25,
+        "model_name": "m125",
+        "noise_point_key": "noise_unsafe_d070_m125",
+        "point_key": "default_d070_m125",
+        "run_ids": [
+          "minalt_v3_noise_noise_unsafe_d070_m125_r01",
+          "minalt_v3_noise_noise_unsafe_d070_m125_r02",
+          "minalt_v3_noise_noise_unsafe_d070_m125_r03"
+        ],
+        "sample_std_min_agl_m": 0.05445093210818387
+      },
+      {
+        "completed_repetitions": 3,
+        "contract_clean_all": false,
+        "contract_violations": [
+          "other_ERR_subsystems"
+        ],
+        "descent_rate_m_s": 8.0,
+        "group": "unsafe",
+        "mean_min_agl_m": 0.8037154277165731,
+        "min_agl_values_m": [
+          0.8388391733169556,
+          0.7861535549163818,
+          0.7861535549163818
+        ],
+        "model_mass_kg": 5.1,
+        "model_mass_multiplier": 1.7,
+        "model_name": "m170",
+        "noise_point_key": "noise_unsafe_d080_m170",
+        "point_key": "default_d080_m170",
+        "run_ids": [
+          "minalt_v3_noise_noise_unsafe_d080_m170_r01",
+          "minalt_v3_noise_noise_unsafe_d080_m170_r02",
+          "minalt_v3_noise_noise_unsafe_d080_m170_r03"
+        ],
+        "sample_std_min_agl_m": 0.030418055965993146
+      }
+    ],
+    "scenario": "minalt_groundcontact_third_scenario",
+    "sigma_boundary_m": 0.08656179323148261,
+    "sigma_unsafe_m": 0.04076003673531091,
+    "train_test": {
+      "extrapolation_test_min_descent_rate_m_s": 6.5,
+      "extrapolation_test_models": [
+        "m100",
+        "m125",
+        "m140",
+        "m170"
+      ],
+      "extrapolation_train_max_descent_rate_m_s": 6.0,
+      "extrapolation_train_models": [
+        "m100",
+        "m125",
+        "m140",
+        "m170"
+      ],
+      "interpolation_test_descent_rates_m_s": [
+        3.0,
+        5.0
+      ],
+      "interpolation_test_models": [
+        "m100",
+        "m125",
+        "m140",
+        "m170"
+      ],
+      "interpolation_train_descent_rates_m_s": [
+        2.0,
+        4.0,
+        5.5,
+        6.0
+      ],
+      "interpolation_train_models": [
+        "m100",
+        "m125",
+        "m140",
+        "m170"
+      ],
+      "min_extrapolation_gap_m_s": 0.5,
+      "min_extrapolation_test_descent_rate_count": 4,
+      "min_extrapolation_test_width_m_s": 1.5
+    },
+    "unsafe_points": [
+      {
+        "descent_rate_m_s": 5.0,
+        "model": "m170"
+      },
+      {
+        "descent_rate_m_s": 7.0,
+        "model": "m125"
+      },
+      {
+        "descent_rate_m_s": 8.0,
+        "model": "m170"
+      }
+    ],
+    "version": "minalt_groundcontact_v3_wide_range_deterministic",
+    "wind_turbulence": {
+      "SIM_WIND_DIR": 270.0,
+      "SIM_WIND_SPD": 0.0,
+      "SIM_WIND_TURB": 0.0
+    }
+  },
+  "packages": {
+    "matplotlib": "3.10.8",
+    "numpy": "2.2.6",
+    "pymavlink": "2.4.49",
+    "yaml": "6.0.3"
+  },
+  "param_metadata": {
+    "arming_note": "Fence floor is activated after takeoff because ArduCopter pre-arm checks reject arming below an enabled FENCE_ALT_MIN.",
+    "crash_or_ground_contact_note": "CRASH/ground contact is the unsafe outcome oracle, not a preventive contract violation.",
+    "fence_action_note": "FENCE_ACTION=1 switches to RTL on breach, falling back to Land only if RTL fails.",
+    "fence_action_rtl_and_land": 1,
+    "fence_type_alt_min": 8,
+    "source_copter_action": "/home/car/ardupilot/ArduCopter/fence.cpp",
+    "source_fence": "/home/car/ardupilot/libraries/AC_Fence/AC_Fence.h"
+  },
+  "platform": "Linux-5.15.148-tegra-aarch64-with-glibc2.35",
+  "python": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+  "repo_root": "/mnt/nvme/px4_work/uav_sparse",
+  "selected_start_command_template": [
+    "/home/car/ardupilot/build/sitl/bin/arducopter",
+    "--model",
+    "quad",
+    "--speedup",
+    "8",
+    "--wipe",
+    "--defaults",
+    "/home/car/ardupilot/Tools/autotest/default_params/copter.parm",
+    "--home",
+    "<lat,lon,alt,yaw>"
+  ],
+  "sim_vehicle_on_path": "/home/car/ardupilot/Tools/autotest/sim_vehicle.py",
+  "sim_vehicle_py": "/home/car/ardupilot/Tools/autotest/sim_vehicle.py",
+  "speedup": 8,
+  "vehicle_binary": "/home/car/ardupilot/build/sitl/bin/arducopter",
+  "vehicle_binary_help_head": "Options:\n\t--help|-h                display this help information\n\t--wipe|-w                wipe eeprom\n\t--unhide-groups|-u       parameter enumeration ignores AP_PARAM_FLAG_ENABLE\n\t--speedup|-s SPEEDUP     set simulation speedup\n\t--rate|-r RATE           set SITL framerate\n\t--console|-C             use console instead of TCP ports\n\t--instance|-I N          set instance of SITL (adds 10*instance to all port numbers)\n\t--synthetic-clock|-S     set synthetic clock mode\n\t--home|-O HOME           set start location (lat,lng,alt,yaw) or location name\n\t--model|-M MODEL         set simulation model\n\t--config string          set additional simulation config string\n\t--fg|-F ADDRESS          set Flight Gear view address, defaults to 127.0.0.1\n\t--disable-fgview         disable Flight Gear view\n\t--gimbal                 enable simulated MAVLink gimbal\n\t--autotest-dir DIR       set directory for additional files\n\t--defaults path          set path to defaults file\n\t--uartA device           set device string for UARTA\n\t--uartB device           set device string for UARTB\n\t--uartC device           set device string for UARTC\n\t--uartD device           set device string for UARTD\n\t--uartE device           set device string for UARTE\n\t--uartF device           set device string for UARTF\n\t--uartG device           set device string for UARTG\n\t--uartH device           set device string for UARTH\n\t--uartI device           set device string for UARTI\n\t--uartJ device           set device string for UARTJ\n\t--serial0 device         set device string for SERIAL0\n\t--serial1 device         set device string for SERIAL1\n\t--serial2 device         set device string for SERIAL2\n\t--serial3 device         set device string for SERIAL3\n\t--serial4 device         set device string for SERIAL4\n\t--serial5 device         set device string for SERIAL5\n\t--serial6 device         set device string for SERIAL6\n\t--serial7 device         set device string for SERIAL7\n\t--serial8 device         set device string for SERIAL8\n\t--serial9 device         set device string for SERIAL9\n\t--rtscts                 enable rtscts on serial ports (default false)\n\t--base-port PORT         set port num for base port(default 5670) must be before -I option\n\t--rc-in-port PORT        set port num for rc in\n\t--sim-address ADDR       set address string for simulator\n\t--sim-port-in PORT       set port num for simulator in\n\t--sim-port-out PORT      set port num for simulator out\n\t--irlock-port PORT       set port num for irlock\n\t--start-time TIMESTR     set simulation start time in UNIX timestamp\n\t--sysid ID               set SYSID_THISMAV\n\t--slave number           set the number of JSON slaves"
+}

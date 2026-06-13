@@ -1,0 +1,180 @@
+experiment:
+  name: minalt_groundcontact_third_scenario
+  version: minalt_groundcontact_v3_wide_range_deterministic
+  artifact_stem: minalt_groundcontact_v3
+  run_prefix: minalt_v3
+  date: "2026-06-13"
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 90.0
+  takeoff_alt_m: 30.0
+  stream_hz: 20
+  speedup: 8
+  h_floor_m: 2.0
+  ground_contact_alt_m: 0.35
+  descent_rate_tolerance_m_s: 1.25
+  descent_rate_audit_quantile: 90
+  fence_trigger_tolerance_m: 2.5
+  pre_fence_activation_settle_s: 1.5
+  max_descent_observation_s: 32.0
+  post_failsafe_observation_s: 5.0
+  cleanup_land_timeout_s: 28.0
+  skip_cleanup_land: 1
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+param_metadata:
+  source_fence: /home/car/ardupilot/libraries/AC_Fence/AC_Fence.h
+  source_copter_action: /home/car/ardupilot/ArduCopter/fence.cpp
+  fence_type_alt_min: 8
+  fence_action_rtl_and_land: 1
+  fence_action_note: "FENCE_ACTION=1 switches to RTL on breach, falling back to Land only if RTL fails."
+  crash_or_ground_contact_note: "CRASH/ground contact is the unsafe outcome oracle, not a preventive contract violation."
+  arming_note: "Fence floor is activated after takeoff because ArduCopter pre-arm checks reject arming below an enabled FENCE_ALT_MIN."
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  SYSID_MYGCS: 255
+  FS_GCS_ENABLE: 0
+  FS_OPTIONS: 0
+  FS_THR_ENABLE: 0
+  SIM_RC_FAIL: 0
+  FENCE_ENABLE: 0
+  FENCE_TYPE: 0
+  FENCE_ALT_MIN: -10
+  FENCE_ACTION: 1
+  FENCE_MARGIN: 2
+  AVOID_ENABLE: 0
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  WPNAV_SPEED: 800
+  WPNAV_SPEED_UP: 300
+  WPNAV_SPEED_DN: 1200
+  WPNAV_ACCEL: 400
+  WPNAV_ACCEL_Z: 1000
+  WPNAV_JERK: 20
+  PSC_JERK_XY: 10
+  PILOT_SPEED_UP: 300
+  PILOT_SPEED_DN: 1200
+  PILOT_ACCEL_Z: 1000
+  RTL_SPEED: 800
+  RTL_ALT: 1800
+  RTL_ALT_FINAL: 1200
+  RTL_CLIMB_MIN: 0
+  RTL_CONE_SLOPE: 0
+  BATT_LOW_VOLT: 0
+  BATT_CRT_VOLT: 0
+  BATT_LOW_MAH: 0
+  BATT_CRT_MAH: 0
+  BATT_FS_LOW_ACT: 0
+  BATT_FS_CRT_ACT: 0
+
+active_fence_params:
+  FENCE_ENABLE: 1
+  FENCE_TYPE: 8
+  FENCE_ACTION: 1
+  AVOID_ENABLE: 0
+
+models:
+  m100:
+    mass_multiplier: 1.0
+    mass_kg: 3.0
+    json: planc/config/minalt_models/mass_3_00.json
+  m125:
+    mass_multiplier: 1.25
+    mass_kg: 3.75
+    json: planc/config/minalt_models/mass_3_75.json
+  m140:
+    mass_multiplier: 1.4
+    mass_kg: 4.2
+    json: planc/config/minalt_models/mass_4_20.json
+  m170:
+    mass_multiplier: 1.7
+    mass_kg: 5.1
+    json: planc/config/minalt_models/mass_5_10.json
+
+premise:
+  sigma_reality_gate: false
+  deterministic_outcome_accepted: true
+  mechanism:
+    layer: low
+    descent_rate_m_s: 8.0
+    model: m125
+  descent_rate_application_points:
+    - {layer: default, descent_rate_m_s: 2.0, model: m100}
+    - {layer: default, descent_rate_m_s: 5.0, model: m100}
+    - {layer: default, descent_rate_m_s: 8.0, model: m100}
+  mass_response:
+    layer: default
+    descent_rate_m_s: 5.0
+    models: [m100, m125, m140, m170]
+    repetitions: 5
+
+noise_floor:
+  k_sigma_margin: 3.0
+  c_sigma_mae_bound: 1.5
+  ci_sigma_multiplier: 2.0
+  noise_repetitions: 3
+  grid_repetitions: 3
+  p_layer_repetitions: 1
+  boundary_points:
+    - {descent_rate_m_s: 5.0, model: m100}
+    - {descent_rate_m_s: 5.3, model: m125}
+    - {descent_rate_m_s: 6.0, model: m170}
+  unsafe_points:
+    - {descent_rate_m_s: 5.0, model: m170}
+    - {descent_rate_m_s: 7.0, model: m125}
+    - {descent_rate_m_s: 8.0, model: m170}
+  preregistered_oracle_note: "d_margin = k * sigma_boundary; unsafe iff mean min-AGL + 2*sigma_boundary < h_floor; safe iff mean min-AGL - 2*sigma_boundary > h_floor. Sigma magnitude is reported, not gated, for v3."
+
+sweep:
+  default_layer: default
+  descent_rates_m_s: [2.0, 3.0, 4.0, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0]
+  model_order: [m100, m125, m140, m170]
+  p_layers:
+    low:
+      FENCE_ALT_MIN: 4.0
+    default:
+      FENCE_ALT_MIN: 5.0
+    high:
+      FENCE_ALT_MIN: 7.0
+
+train_test:
+  interpolation_train_descent_rates_m_s: [2.0, 4.0, 5.5, 6.0]
+  interpolation_train_models: [m100, m125, m140, m170]
+  interpolation_test_descent_rates_m_s: [3.0, 5.0]
+  interpolation_test_models: [m100, m125, m140, m170]
+  extrapolation_train_max_descent_rate_m_s: 6.0
+  extrapolation_train_models: [m100, m125, m140, m170]
+  extrapolation_test_min_descent_rate_m_s: 6.5
+  extrapolation_test_models: [m100, m125, m140, m170]
+  min_extrapolation_gap_m_s: 0.5
+  min_extrapolation_test_width_m_s: 1.5
+  min_extrapolation_test_descent_rate_count: 4
+
+search:
+  bisection_iterations_per_model: 4
+  models: [m100, m125, m140, m170]
+
+v1_comparison:
+  descent_rate_range_m_s: [5.0, 5.5]
+  sigma_boundary_m: 0.014
+  extrapolation_span_m_s: 0.2
