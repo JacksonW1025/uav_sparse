@@ -1,0 +1,274 @@
+{
+  "active_fence_params": {
+    "AVOID_ENABLE": 0,
+    "FENCE_ACTION": 1,
+    "FENCE_ENABLE": 1,
+    "FENCE_TYPE": 8
+  },
+  "ambiguous_band_min_agl_m": [
+    1.9808912377214742,
+    2.0191087622785258
+  ],
+  "boundary_points": [
+    {
+      "descent_rate_m_s": 5.0,
+      "model": "m100"
+    },
+    {
+      "descent_rate_m_s": 5.3,
+      "model": "m125"
+    },
+    {
+      "descent_rate_m_s": 6.0,
+      "model": "m170"
+    }
+  ],
+  "c_sigma_mae_bound": 1.5,
+  "ci_sigma_multiplier": 2.0,
+  "created_at_utc": "2026-06-13T05:04:05.344342+00:00",
+  "d_margin_m": 0.028663143417788712,
+  "grid_repetitions": 5,
+  "h_floor_m": 2.0,
+  "k_sigma_margin": 3.0,
+  "label_rule": "d_margin = k * sigma_boundary; unsafe iff mean min-AGL + 2*sigma_boundary < h_floor; safe iff mean min-AGL - 2*sigma_boundary > h_floor.",
+  "mae_bound_m": 0.014331571708894356,
+  "measured_oracle_written_before_grid": true,
+  "noise_boundary_points": [
+    {
+      "completed_repetitions": 5,
+      "contract_clean_all": true,
+      "contract_violations": [],
+      "descent_rate_m_s": 5.0,
+      "group": "boundary",
+      "mean_min_agl_m": 1.9871897459030152,
+      "min_agl_values_m": [
+        1.9913989305496216,
+        1.9847387075424194,
+        1.9847387075424194,
+        1.9821431636810303,
+        1.992929220199585
+      ],
+      "model_mass_kg": 3.0,
+      "model_mass_multiplier": 1.0,
+      "model_name": "m100",
+      "noise_point_key": "noise_boundary_d050_m100",
+      "point_key": "default_d050_m100",
+      "run_ids": [
+        "minalt_v2_noise_noise_boundary_d050_m100_r01",
+        "minalt_v2_noise_noise_boundary_d050_m100_r02",
+        "minalt_v2_noise_noise_boundary_d050_m100_r03",
+        "minalt_v2_noise_noise_boundary_d050_m100_r04",
+        "minalt_v2_noise_noise_boundary_d050_m100_r05"
+      ],
+      "sample_std_min_agl_m": 0.004694197769685735
+    },
+    {
+      "completed_repetitions": 5,
+      "contract_clean_all": true,
+      "contract_violations": [],
+      "descent_rate_m_s": 5.3,
+      "group": "boundary",
+      "mean_min_agl_m": 2.0918576240539553,
+      "min_agl_values_m": [
+        2.0894060134887695,
+        2.0828869342803955,
+        2.1098074913024902,
+        2.0828869342803955,
+        2.0943007469177246
+      ],
+      "model_mass_kg": 3.75,
+      "model_mass_multiplier": 1.25,
+      "model_name": "m125",
+      "noise_point_key": "noise_boundary_d053_m125",
+      "point_key": "default_d053_m125",
+      "run_ids": [
+        "minalt_v2_noise_noise_boundary_d053_m125_r01",
+        "minalt_v2_noise_noise_boundary_d053_m125_r02",
+        "minalt_v2_noise_noise_boundary_d053_m125_r03",
+        "minalt_v2_noise_noise_boundary_d053_m125_r04",
+        "minalt_v2_noise_noise_boundary_d053_m125_r05"
+      ],
+      "sample_std_min_agl_m": 0.011125685686259188
+    },
+    {
+      "completed_repetitions": 5,
+      "contract_clean_all": true,
+      "contract_violations": [],
+      "descent_rate_m_s": 6.0,
+      "group": "boundary",
+      "mean_min_agl_m": 2.0131595134735107,
+      "min_agl_values_m": [
+        2.002509593963623,
+        2.029555320739746,
+        2.002509593963623,
+        2.017108201980591,
+        2.0141148567199707
+      ],
+      "model_mass_kg": 5.1,
+      "model_mass_multiplier": 1.7,
+      "model_name": "m170",
+      "noise_point_key": "noise_boundary_d060_m170",
+      "point_key": "default_d060_m170",
+      "run_ids": [
+        "minalt_v2_noise_noise_boundary_d060_m170_r01",
+        "minalt_v2_noise_noise_boundary_d060_m170_r02",
+        "minalt_v2_noise_noise_boundary_d060_m170_r03",
+        "minalt_v2_noise_noise_boundary_d060_m170_r04",
+        "minalt_v2_noise_noise_boundary_d060_m170_r05"
+      ],
+      "sample_std_min_agl_m": 0.01131557431916529
+    }
+  ],
+  "noise_repetitions": 5,
+  "noise_unsafe_points": [
+    {
+      "completed_repetitions": 5,
+      "contract_clean_all": true,
+      "contract_violations": [],
+      "descent_rate_m_s": 5.0,
+      "group": "unsafe",
+      "mean_min_agl_m": 1.650150728225708,
+      "min_agl_values_m": [
+        1.6326881647109985,
+        1.6543936729431152,
+        1.6548844575881958,
+        1.6543936729431152,
+        1.6543936729431152
+      ],
+      "model_mass_kg": 5.1,
+      "model_mass_multiplier": 1.7,
+      "model_name": "m170",
+      "noise_point_key": "noise_unsafe_d050_m170",
+      "point_key": "default_d050_m170",
+      "run_ids": [
+        "minalt_v2_noise_noise_unsafe_d050_m170_r01",
+        "minalt_v2_noise_noise_unsafe_d050_m170_r02",
+        "minalt_v2_noise_noise_unsafe_d050_m170_r03",
+        "minalt_v2_noise_noise_unsafe_d050_m170_r04",
+        "minalt_v2_noise_noise_unsafe_d050_m170_r05"
+      ],
+      "sample_std_min_agl_m": 0.009764182733432727
+    },
+    {
+      "completed_repetitions": 5,
+      "contract_clean_all": true,
+      "contract_violations": [],
+      "descent_rate_m_s": 7.0,
+      "group": "unsafe",
+      "mean_min_agl_m": 0.8487584114074707,
+      "min_agl_values_m": [
+        0.8499912619590759,
+        0.8551111221313477,
+        0.8614169359207153,
+        0.8272814750671387,
+        0.8499912619590759
+      ],
+      "model_mass_kg": 3.75,
+      "model_mass_multiplier": 1.25,
+      "model_name": "m125",
+      "noise_point_key": "noise_unsafe_d070_m125",
+      "point_key": "default_d070_m125",
+      "run_ids": [
+        "minalt_v2_noise_noise_unsafe_d070_m125_r01",
+        "minalt_v2_noise_noise_unsafe_d070_m125_r02",
+        "minalt_v2_noise_noise_unsafe_d070_m125_r03",
+        "minalt_v2_noise_noise_unsafe_d070_m125_r04",
+        "minalt_v2_noise_noise_unsafe_d070_m125_r05"
+      ],
+      "sample_std_min_agl_m": 0.0128927674679017
+    },
+    {
+      "completed_repetitions": 5,
+      "contract_clean_all": false,
+      "contract_violations": [
+        "other_ERR_subsystems"
+      ],
+      "descent_rate_m_s": 8.0,
+      "group": "unsafe",
+      "mean_min_agl_m": 0.7077513337135315,
+      "min_agl_values_m": [
+        0.7402887940406799,
+        0.6996169686317444,
+        0.6996169686317444,
+        0.6996169686317444,
+        0.6996169686317444
+      ],
+      "model_mass_kg": 5.1,
+      "model_mass_multiplier": 1.7,
+      "model_name": "m170",
+      "noise_point_key": "noise_unsafe_d080_m170",
+      "point_key": "default_d080_m170",
+      "run_ids": [
+        "minalt_v2_noise_noise_unsafe_d080_m170_r01",
+        "minalt_v2_noise_noise_unsafe_d080_m170_r02",
+        "minalt_v2_noise_noise_unsafe_d080_m170_r03",
+        "minalt_v2_noise_noise_unsafe_d080_m170_r04",
+        "minalt_v2_noise_noise_unsafe_d080_m170_r05"
+      ],
+      "sample_std_min_agl_m": 0.018188993276676613
+    }
+  ],
+  "scenario": "minalt_groundcontact_third_scenario",
+  "sigma_boundary_m": 0.009554381139262904,
+  "sigma_unsafe_m": 0.01405230934582447,
+  "train_test": {
+    "extrapolation_test_min_descent_rate_m_s": 6.0,
+    "extrapolation_test_models": [
+      "m140",
+      "m170"
+    ],
+    "extrapolation_train_max_descent_rate_m_s": 5.0,
+    "extrapolation_train_models": [
+      "m100",
+      "m125",
+      "m140",
+      "m170"
+    ],
+    "interpolation_test_descent_rates_m_s": [
+      3.0,
+      5.0,
+      7.0
+    ],
+    "interpolation_test_models": [
+      "m100",
+      "m125",
+      "m140",
+      "m170"
+    ],
+    "interpolation_train_descent_rates_m_s": [
+      2.0,
+      4.0,
+      6.0,
+      8.0
+    ],
+    "interpolation_train_models": [
+      "m100",
+      "m125",
+      "m140",
+      "m170"
+    ],
+    "min_extrapolation_gap_m_s": 1.0,
+    "min_extrapolation_test_descent_rate_count": 3,
+    "min_extrapolation_test_width_m_s": 2.0
+  },
+  "unsafe_points": [
+    {
+      "descent_rate_m_s": 5.0,
+      "model": "m170"
+    },
+    {
+      "descent_rate_m_s": 7.0,
+      "model": "m125"
+    },
+    {
+      "descent_rate_m_s": 8.0,
+      "model": "m170"
+    }
+  ],
+  "version": "minalt_groundcontact_v2_wide_range_turbulence",
+  "wind_turbulence": {
+    "SIM_WIND_DIR": 270.0,
+    "SIM_WIND_SPD": 4.0,
+    "SIM_WIND_TURB": 0.75
+  }
+}

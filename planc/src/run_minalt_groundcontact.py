@@ -121,6 +121,14 @@ def rel(path: str | Path) -> str:
         return str(path)
 
 
+def artifact_stem(config: dict[str, Any]) -> str:
+    return str(config.get("experiment", {}).get("artifact_stem", "minalt_groundcontact"))
+
+
+def run_prefix(config: dict[str, Any]) -> str:
+    return str(config.get("experiment", {}).get("run_prefix", "minalt"))
+
+
 def config_copy(config: dict[str, Any]) -> dict[str, Any]:
     return copy.deepcopy(config)
 
@@ -153,6 +161,15 @@ def controlled_params(config: dict[str, Any], overrides: dict[str, Any] | None =
     return params
 
 
+def wind_turbulence_settings(config: dict[str, Any]) -> dict[str, float | None]:
+    params = controlled_params(config)
+    return {
+        "SIM_WIND_DIR": None if "SIM_WIND_DIR" not in params else float(params["SIM_WIND_DIR"]),
+        "SIM_WIND_SPD": None if "SIM_WIND_SPD" not in params else float(params["SIM_WIND_SPD"]),
+        "SIM_WIND_TURB": None if "SIM_WIND_TURB" not in params else float(params["SIM_WIND_TURB"]),
+    }
+
+
 def active_fence_params(config: dict[str, Any], fence_alt_min_m: float) -> dict[str, Any]:
     params = dict(config.get("active_fence_params", {}))
     params["FENCE_ALT_MIN"] = float(fence_alt_min_m)
@@ -177,9 +194,32 @@ def run_id_for(layer: str, descent_rate_m_s: float, model_name: str, rep_index: 
     return f"{prefix}_{layer}_d{int(round(float(descent_rate_m_s) * 10)):03d}_{model_name}_r{int(rep_index):02d}"
 
 
-def premise_run_id(kind: str, model_name: str | None = None) -> str:
+def premise_run_id(kind: str, model_name: str | None = None, *, prefix: str = "minalt") -> str:
     suffix = "" if model_name is None else f"_{model_name}"
-    return f"minalt_premise_{kind}{suffix}"
+    return f"{prefix}_premise_{kind}{suffix}"
+
+
+def premise_descent_rate_specs(config: dict[str, Any]) -> list[dict[str, Any]]:
+    raw = config["premise"].get("descent_rate_application_points")
+    if raw is None:
+        raw = config["premise"].get("descent_rate_application")
+    if isinstance(raw, list):
+        return [dict(item) for item in raw]
+    return [dict(raw)]
+
+
+def premise_descent_rate_run_id(config: dict[str, Any], spec: dict[str, Any]) -> str:
+    specs = premise_descent_rate_specs(config)
+    kind = "descent_rate"
+    if len(specs) > 1:
+        kind = f"descent_rate_d{int(round(float(spec['descent_rate_m_s']) * 10)):03d}"
+    return premise_run_id(kind, str(spec["model"]), prefix=run_prefix(config))
+
+
+def premise_mass_response_run_id(config: dict[str, Any], model_name: str, rep_index: int) -> str:
+    reps = int(config["premise"].get("mass_response", {}).get("repetitions", 1))
+    kind = "mass_response" if reps <= 1 else f"mass_response_r{int(rep_index):02d}"
+    return premise_run_id(kind, str(model_name), prefix=run_prefix(config))
 
 
 def _field(data: dict[str, Any], *names: str) -> Any:
@@ -428,6 +468,7 @@ def parse_minalt_dataflash(
     model_mass_multiplier: float,
     h_floor_m: float,
     descent_rate_tolerance_m_s: float,
+    descent_rate_audit_quantile: float,
     fence_trigger_tolerance_m: float,
     ground_contact_alt_m: float,
 ) -> dict[str, Any]:
@@ -579,6 +620,9 @@ def parse_minalt_dataflash(
     median_vd = statistics.median(audit_values) if audit_values else None
     p10_vd = float(np.percentile(np.array(audit_values, dtype=float), 10)) if audit_values else None
     p90_vd = float(np.percentile(np.array(audit_values, dtype=float), 90)) if audit_values else None
+    q = float(descent_rate_audit_quantile)
+    q = max(0.0, min(100.0, q))
+    representative_vd = float(np.percentile(np.array(audit_values, dtype=float), q)) if audit_values else None
     descent_audit = {
         "source": "XKF1 primary core VD in NED frame, between commanded descent start and FENCE_ALT_MIN breach",
         "samples": len(audit_values),
@@ -586,10 +630,13 @@ def parse_minalt_dataflash(
         "median_actual_down_m_s": None if median_vd is None else float(median_vd),
         "p10_actual_down_m_s": p10_vd,
         "p90_actual_down_m_s": p90_vd,
+        "representative_quantile": q,
+        "representative_actual_down_m_s": representative_vd,
         "median_error_m_s": None if median_vd is None else float(median_vd) - float(descent_rate_m_s),
+        "representative_error_m_s": None if representative_vd is None else representative_vd - float(descent_rate_m_s),
         "within_tolerance": bool(
-            median_vd is not None
-            and abs(float(median_vd) - float(descent_rate_m_s)) <= float(descent_rate_tolerance_m_s)
+            representative_vd is not None
+            and abs(float(representative_vd) - float(descent_rate_m_s)) <= float(descent_rate_tolerance_m_s)
         ),
     }
 
@@ -862,6 +909,7 @@ def run_one(
             model_mass_multiplier=float(model["mass_multiplier"]),
             h_floor_m=float(config["experiment"]["h_floor_m"]),
             descent_rate_tolerance_m_s=float(config["experiment"]["descent_rate_tolerance_m_s"]),
+            descent_rate_audit_quantile=float(config["experiment"].get("descent_rate_audit_quantile", 50.0)),
             fence_trigger_tolerance_m=float(config["experiment"]["fence_trigger_tolerance_m"]),
             ground_contact_alt_m=float(config["experiment"]["ground_contact_alt_m"]),
         )
@@ -1125,14 +1173,22 @@ def zone_counts(points: list[dict[str, Any]]) -> dict[str, int]:
     return counts
 
 
-def premise_summary(runs: list[dict[str, Any]], config: dict[str, Any]) -> dict[str, Any]:
+def premise_summary(runs: list[dict[str, Any]], config: dict[str, Any], oracle: dict[str, Any] | None = None) -> dict[str, Any]:
     by_id = {str(r.get("run_id")): r for r in runs}
     mech_cfg = config["premise"]["mechanism"]
-    rate_cfg = config["premise"]["descent_rate_application"]
     mass_cfg = config["premise"]["mass_response"]
-    mechanism = by_id.get(premise_run_id("mechanism", str(mech_cfg["model"])))
-    rate_run = by_id.get(premise_run_id("descent_rate", str(rate_cfg["model"])))
-    mass_runs = [by_id.get(premise_run_id("mass_response", str(m))) for m in mass_cfg["models"]]
+    prefix = run_prefix(config)
+    rate_specs = premise_descent_rate_specs(config)
+    mechanism = by_id.get(premise_run_id("mechanism", str(mech_cfg["model"]), prefix=prefix))
+    rate_runs = [(spec, by_id.get(premise_descent_rate_run_id(config, spec))) for spec in rate_specs]
+    mass_reps = int(mass_cfg.get("repetitions", 1))
+    mass_runs_by_model = {
+        str(model_name): [
+            by_id.get(premise_mass_response_run_id(config, str(model_name), rep))
+            for rep in range(1, mass_reps + 1)
+        ]
+        for model_name in mass_cfg["models"]
+    }
     checks = []
     mechanism_ok = bool(
         mechanism
@@ -1149,45 +1205,98 @@ def premise_summary(runs: list[dict[str, Any]], config: dict[str, Any]) -> dict[
         "fence_action_mode": None if mechanism is None else mechanism.get("fence_action_mode"),
         "contract_violations": [] if mechanism is None else mechanism.get("contract_violations", []),
     })
-    rate_ok = bool(
-        rate_run
-        and not rate_run.get("error")
-        and rate_run.get("descent_rate_audit", {}).get("within_tolerance")
-    )
+    rate_checks = []
+    for spec, run in rate_runs:
+        ok = bool(run and not run.get("error") and run.get("descent_rate_audit", {}).get("within_tolerance"))
+        rate_checks.append({
+            "requested_descent_rate_m_s": float(spec["descent_rate_m_s"]),
+            "model_name": str(spec["model"]),
+            "run_id": None if run is None else run.get("run_id"),
+            "ok": ok,
+            "audit": None if run is None else run.get("descent_rate_audit"),
+        })
+    rate_values = [float(spec["descent_rate_m_s"]) for spec in rate_specs]
+    wide_rate_coverage = bool(rate_values and min(rate_values) <= 2.0 and max(rate_values) >= 8.0)
+    rate_ok = bool(rate_checks and all(bool(c["ok"]) for c in rate_checks) and wide_rate_coverage)
     checks.append({
-        "name": "commanded_descent_rate_applied",
+        "name": "commanded_descent_rates_2_5_8_applied",
         "ok": rate_ok,
-        "run_id": None if rate_run is None else rate_run.get("run_id"),
-        "audit": None if rate_run is None else rate_run.get("descent_rate_audit"),
+        "values": rate_checks,
+        "wide_rate_coverage": wide_rate_coverage,
     })
-    mass_complete = [r for r in mass_runs if r and not r.get("error") and r.get("min_agl_m") is not None]
-    mass_values = [
-        {
-            "model_name": r["model_name"],
-            "mass_multiplier": float(r["model_mass_multiplier"]),
-            "mass_kg": float(r["model_mass_kg"]),
-            "min_agl_m": float(r["min_agl_m"]),
-            "run_id": r["run_id"],
-        }
-        for r in mass_complete
-    ]
+    mass_values = []
+    for model_name, model_runs in mass_runs_by_model.items():
+        complete = [r for r in model_runs if r and not r.get("error") and r.get("min_agl_m") is not None]
+        values = [float(r["min_agl_m"]) for r in complete]
+        model = model_spec(config, model_name)
+        mass_values.append({
+            "model_name": model_name,
+            "mass_multiplier": float(model["mass_multiplier"]),
+            "mass_kg": float(model["mass_kg"]),
+            "min_agl_m": statistics.fmean(values) if values else None,
+            "sample_std_min_agl_m": statistics.stdev(values) if len(values) >= 2 else 0.0 if values else None,
+            "completed_repetitions": len(complete),
+            "required_repetitions": mass_reps,
+            "run_ids": [r["run_id"] for r in complete],
+        })
     mass_values.sort(key=lambda x: x["mass_multiplier"])
     monotone = bool(
         len(mass_values) == len(mass_cfg["models"])
-        and all(mass_values[i]["min_agl_m"] <= mass_values[i - 1]["min_agl_m"] + 0.25 for i in range(1, len(mass_values)))
-        and (mass_values[0]["min_agl_m"] - mass_values[-1]["min_agl_m"] >= 0.2)
+        and all(int(v["completed_repetitions"]) >= int(v["required_repetitions"]) and v["min_agl_m"] is not None for v in mass_values)
+        and all(float(mass_values[i]["min_agl_m"]) <= float(mass_values[i - 1]["min_agl_m"]) + 0.25 for i in range(1, len(mass_values)))
+        and (float(mass_values[0]["min_agl_m"]) - float(mass_values[-1]["min_agl_m"]) >= 0.2)
     )
     checks.append({
         "name": "mass_increase_lowers_min_agl",
         "ok": monotone,
         "values": mass_values,
     })
-    satisfied = mechanism_ok and rate_ok and monotone
+    turbulence_ok = True
+    turbulence_reason = "oracle not measured yet"
+    if oracle is not None and oracle:
+        turb_cfg = config["premise"].get("turbulence_sigma_reality", {})
+        sigma = float(oracle.get("sigma_boundary_m") or 0.0)
+        min_sigma = float(turb_cfg.get("min_sigma_boundary_m", 0.0))
+        max_sigma = float(turb_cfg.get("max_sigma_boundary_m", float("inf")))
+        v1_sigma = turb_cfg.get("v1_sigma_reference_m")
+        raised_from_v1 = True if v1_sigma is None else sigma > float(v1_sigma)
+        boundary_complete = all(
+            int(p.get("completed_repetitions") or 0) >= int(config["noise_floor"]["noise_repetitions"])
+            for p in oracle.get("boundary", {}).get("points", [])
+        )
+        unsafe_complete = all(
+            int(p.get("completed_repetitions") or 0) >= int(config["noise_floor"]["noise_repetitions"])
+            for p in oracle.get("unsafe", {}).get("points", [])
+        )
+        contract_clean = all(
+            bool(p.get("contract_clean_all"))
+            for group in ("boundary", "unsafe")
+            for p in oracle.get(group, {}).get("points", [])
+        )
+        turbulence_ok = bool(
+            raised_from_v1
+            and min_sigma <= sigma <= max_sigma
+            and boundary_complete
+            and unsafe_complete
+            and contract_clean
+        )
+        turbulence_reason = (
+            f"sigma_boundary={sigma:.4f} m, required [{min_sigma:.4f}, {max_sigma:.4f}] m, "
+            f"raised_from_v1={raised_from_v1}, complete={boundary_complete and unsafe_complete}, "
+            f"contract_clean={contract_clean}"
+        )
+    checks.append({
+        "name": "turbulence_raises_sigma_to_realistic_scale",
+        "ok": turbulence_ok,
+        "detail": turbulence_reason,
+        "wind_turbulence": wind_turbulence_settings(config),
+    })
+    satisfied = mechanism_ok and rate_ok and monotone and turbulence_ok
     return {
         "satisfied": satisfied,
         "checks": checks,
         "runs": runs,
-        "reason": "height fence recovery, descent-rate application, and mass response all held"
+        "reason": "height fence recovery, wide descent-rate application, mass response, and turbulence noise gate all held"
         if satisfied
         else "one or more premise gates failed; verdict is not meaningful as a PASS/FAIL",
         "fallback_trigger_used": False,
@@ -1308,6 +1417,65 @@ def evaluate_classification_split(train: list[dict[str, Any]], test: list[dict[s
     }
 
 
+def descent_rate_range(points: list[dict[str, Any]]) -> dict[str, Any]:
+    values = sorted({float(p["descent_rate_m_s"]) for p in points})
+    if not values:
+        return {"min_m_s": None, "max_m_s": None, "values_m_s": [], "count": 0}
+    return {
+        "min_m_s": values[0],
+        "max_m_s": values[-1],
+        "values_m_s": values,
+        "count": len(values),
+    }
+
+
+def split_metadata(splits: dict[str, list[dict[str, Any]]], config: dict[str, Any]) -> dict[str, Any]:
+    cfg = config["train_test"]
+    extra_train = splits["extrapolation_train"]
+    extra_test = splits["extrapolation_test"]
+    train_range = descent_rate_range(extra_train)
+    test_range = descent_rate_range(extra_test)
+    gap = None
+    test_width = None
+    if train_range["max_m_s"] is not None and test_range["min_m_s"] is not None:
+        gap = float(test_range["min_m_s"]) - float(train_range["max_m_s"])
+    if test_range["min_m_s"] is not None and test_range["max_m_s"] is not None:
+        test_width = float(test_range["max_m_s"]) - float(test_range["min_m_s"])
+    min_gap = float(cfg.get("min_extrapolation_gap_m_s", 0.0))
+    min_width = float(cfg.get("min_extrapolation_test_width_m_s", 0.0))
+    min_rates = int(cfg.get("min_extrapolation_test_descent_rate_count", 1))
+    meaningful = bool(
+        gap is not None
+        and gap > 0.0
+        and gap >= min_gap
+        and test_width is not None
+        and test_width >= min_width
+        and int(test_range["count"]) >= min_rates
+        and extra_train
+        and extra_test
+    )
+    return {
+        "interpolation": {
+            "train_descent_rate_range": descent_rate_range(splits["interpolation_train"]),
+            "test_descent_rate_range": descent_rate_range(splits["interpolation_test"]),
+            "train_point_count": len(splits["interpolation_train"]),
+            "test_point_count": len(splits["interpolation_test"]),
+        },
+        "extrapolation": {
+            "train_descent_rate_range": train_range,
+            "test_descent_rate_range": test_range,
+            "train_point_count": len(extra_train),
+            "test_point_count": len(extra_test),
+            "gap_above_train_max_m_s": gap,
+            "test_descent_rate_width_m_s": test_width,
+            "min_required_gap_m_s": min_gap,
+            "min_required_test_width_m_s": min_width,
+            "min_required_test_descent_rate_count": min_rates,
+            "meaningful": meaningful,
+        },
+    }
+
+
 def train_test_classification(points: list[dict[str, Any]], config: dict[str, Any], oracle: dict[str, Any]) -> dict[str, Any]:
     splits = split_points(points, config)
     interpolation = evaluate_classification_split(splits["interpolation_train"], splits["interpolation_test"], oracle)
@@ -1322,6 +1490,7 @@ def train_test_classification(points: list[dict[str, Any]], config: dict[str, An
         "extrapolation": extrapolation,
         "combined_heldout_accuracy": combined_acc,
         "holdout_definition": config["train_test"],
+        "split_metadata": split_metadata(splits, config),
         "ambiguous_exclusion_basis": "Only label uncertainty is excluded from classification; prediction correctness is not consulted.",
     }
 
@@ -1431,6 +1600,14 @@ def verdict_summary(
     severity: dict[str, Any],
 ) -> dict[str, Any]:
     if not premise.get("satisfied"):
+        failed_checks = [
+            str(c.get("name"))
+            for c in premise.get("checks", [])
+            if not bool(c.get("ok"))
+        ]
+        reason = "Premise failed."
+        if failed_checks:
+            reason = f"Premise failed: {', '.join(failed_checks)}."
         return {
             "verdict": "INCONCLUSIVE",
             "premise_satisfied": False,
@@ -1439,7 +1616,7 @@ def verdict_summary(
             "classification_ok": False,
             "severity_ok": False,
             "prediction_ok": False,
-            "reason": "Premise failed.",
+            "reason": reason,
         }
     clean_unsafe = [p for p in default_points if p.get("label") == "clean_unsafe"]
     contract_violated = [p for p in default_points if p.get("label") == "contract_violated"]
@@ -1450,6 +1627,7 @@ def verdict_summary(
     extra_acc = classification.get("extrapolation", {}).get("metrics", {}).get("classification_accuracy")
     combined_acc = classification.get("combined_heldout_accuracy")
     extra_count = int(classification.get("extrapolation", {}).get("metrics", {}).get("count") or 0)
+    extrapolation_meaningful = bool(classification.get("split_metadata", {}).get("extrapolation", {}).get("meaningful"))
     classification_ok = bool(
         interp_acc is not None
         and extra_acc is not None
@@ -1458,6 +1636,7 @@ def verdict_summary(
         and float(extra_acc) >= 0.90
         and float(combined_acc) >= 0.90
         and extra_count > 0
+        and extrapolation_meaningful
     )
     severity_ok = bool(severity.get("metrics", {}).get("pass"))
     prediction_ok = classification_ok and severity_ok
@@ -1472,7 +1651,7 @@ def verdict_summary(
         if not contract_clean_gap:
             missing.append("contract_violated or blocked point present, or clean_unsafe is not contract-clean")
         if not classification_ok:
-            missing.append("noise-aware held-out classification is below 90% or lacks extrapolation")
+            missing.append("noise-aware held-out classification is below 90% or lacks meaningful extrapolation")
         if not severity_ok:
             missing.append("severity regression MAE exceeds the preregistered noise-scale bound")
         reason = "; ".join(missing)
@@ -1491,6 +1670,8 @@ def verdict_summary(
         "interpolation_accuracy": interp_acc,
         "extrapolation_accuracy": extra_acc,
         "combined_heldout_accuracy": combined_acc,
+        "extrapolation_meaningful": extrapolation_meaningful,
+        "extrapolation_metadata": classification.get("split_metadata", {}).get("extrapolation", {}),
         "severity_mae_m": severity.get("metrics", {}).get("mae_m"),
         "severity_mae_bound_m": severity.get("metrics", {}).get("mae_bound_m"),
         "reason": reason,
@@ -1665,22 +1846,24 @@ def plot_severity_regression(severity: dict[str, Any], out_path: Path) -> str:
 
 def make_plots(payload: dict[str, Any]) -> dict[str, str]:
     analysis = PLANC_ROOT / "analysis"
-    plots = {"premise": plot_premise_minalt(payload["premise"], analysis / "minalt_premise.png")}
+    stem = artifact_stem(payload.get("config", {}))
+    plots = {"premise": plot_premise_minalt(payload["premise"], analysis / f"{stem}_premise.png")}
     if payload["verdict"]["verdict"] != "INCONCLUSIVE" or payload.get("default_grid", {}).get("points"):
         default_points = payload.get("default_grid", {}).get("points", [])
         if default_points:
             plots.update({
-                "result_field": plot_result_field(default_points, analysis / "minalt_result_field.png"),
-                "severity": plot_severity_heatmap(default_points, payload["oracle"], analysis / "minalt_severity_heatmap.png"),
-                "p_stratification": plot_p_stratification(payload["p_stratification"]["layers"], analysis / "minalt_p_stratification.png"),
-                "train_test": plot_train_test(payload["classification"], analysis / "minalt_train_test.png"),
-                "severity_regression": plot_severity_regression(payload["severity_regression"], analysis / "minalt_severity_regression.png"),
+                "result_field": plot_result_field(default_points, analysis / f"{stem}_result_field.png"),
+                "severity": plot_severity_heatmap(default_points, payload["oracle"], analysis / f"{stem}_severity_heatmap.png"),
+                "p_stratification": plot_p_stratification(payload["p_stratification"]["layers"], analysis / f"{stem}_p_stratification.png"),
+                "train_test": plot_train_test(payload["classification"], analysis / f"{stem}_train_test.png"),
+                "severity_regression": plot_severity_regression(payload["severity_regression"], analysis / f"{stem}_severity_regression.png"),
             })
     return plots
 
 
 def write_report(payload: dict[str, Any]) -> str:
-    report = PLANC_ROOT / "results" / "minalt_groundcontact_report.md"
+    stem = artifact_stem(payload.get("config", {}))
+    report = PLANC_ROOT / "results" / f"{stem}_report.md"
     report.parent.mkdir(parents=True, exist_ok=True)
     verdict = payload["verdict"]
     oracle = payload.get("oracle", {})
@@ -1689,12 +1872,14 @@ def write_report(payload: dict[str, Any]) -> str:
     lines.append("")
     lines.append("# Minimum Altitude Fence Ground-Contact Scenario")
     lines.append("")
+    lines.append(f"Experiment version: `{payload.get('config', {}).get('experiment', {}).get('version', 'n/a')}`.")
+    lines.append("")
     lines.append("## Decisive Criteria")
     lines.append("")
     lines.append(f"- Premise satisfied: **{verdict.get('premise_satisfied')}**")
     lines.append(f"- Robust clean unsafe region: **{verdict.get('robust_clean_unsafe')}**")
     lines.append(f"- Fence-triggered, contract-clean PGFUZZ-invisible gap: **{verdict.get('contract_clean_gap')}**")
-    lines.append(f"- Prediction gates passed: **{verdict.get('prediction_ok')}** (classification={verdict.get('classification_ok')}, severity={verdict.get('severity_ok')})")
+    lines.append(f"- Prediction gates passed: **{verdict.get('prediction_ok')}** (classification={verdict.get('classification_ok')}, severity={verdict.get('severity_ok')}, meaningful_extrapolation={verdict.get('extrapolation_meaningful')})")
     lines.append(f"- Reason: {verdict.get('reason')}")
     lines.append("")
     lines.append("## Premise")
@@ -1704,12 +1889,15 @@ def write_report(payload: dict[str, Any]) -> str:
     lines.append("| check | ok | detail |")
     lines.append("|---|---:|---|")
     for check in payload["premise"].get("checks", []):
-        detail = check.get("run_id") or json.dumps(check.get("values", check.get("audit", "")), sort_keys=True)
+        detail = check.get("run_id") or check.get("detail") or json.dumps(check.get("values", check.get("audit", "")), sort_keys=True)
         lines.append(f"| {check.get('name')} | {check.get('ok')} | `{detail}` |")
     lines.append("")
     lines.append("The fence floor is activated after takeoff because ArduCopter rejects arming below an enabled `FENCE_ALT_MIN`; the active P parameters are read back before the descent stimulus.")
+    lines.append("The descent-rate premise explicitly covers 2, 5, and 8 m/s with the down-speed limits set above 8 m/s, so this run audits the full wide range rather than a boundary-only band.")
     lines.append("")
     lines.append("## Measurement Precision")
+    lines.append("")
+    lines.append(f"Wind/turbulence settings: `{json.dumps(wind_turbulence_settings(payload.get('config', {})), sort_keys=True)}`.")
     lines.append("")
     lines.append(
         f"`sigma_boundary={fmt(oracle.get('sigma_boundary_m'), 4)} m`, "
@@ -1720,6 +1908,16 @@ def write_report(payload: dict[str, Any]) -> str:
     )
     lines.append("")
     lines.append("Ambiguous points are excluded from classification only when their label CI crosses `h_floor`; they remain in severity-regression holdout accounting.")
+    lines.append("")
+    lines.append("| noise group | point | mean min-AGL m | sample std m | repetitions | contract clean | violations |")
+    lines.append("|---|---|---:|---:|---:|---:|---|")
+    for group_name in ("boundary", "unsafe"):
+        for point in oracle.get(group_name, {}).get("points", []):
+            lines.append(
+                f"| {group_name} | {point.get('point_key')} | {fmt(point.get('mean_min_agl_m'), 3)} | "
+                f"{fmt(point.get('sample_std_min_agl_m'), 4)} | {point.get('completed_repetitions')} | "
+                f"{point.get('contract_clean_all')} | {', '.join(point.get('contract_violations', [])) or 'none'} |"
+            )
     lines.append("")
     lines.append("| point | label | mean min-AGL m | CI low | CI high | basis |")
     lines.append("|---|---:|---:|---:|---:|---|")
@@ -1738,6 +1936,8 @@ def write_report(payload: dict[str, Any]) -> str:
         f"clean_unsafe={counts.get('clean_unsafe', 0)}, ambiguous={counts.get('ambiguous', 0)}, "
         f"contract_violated={counts.get('contract_violated', 0)}, blocked={counts.get('blocked', 0)}."
     )
+    if counts.get("blocked", 0) and not any(counts.get(k, 0) for k in ("clean_safe", "clean_unsafe", "ambiguous", "contract_violated")):
+        lines.append("The wide grid was not executed because the phase-0 premise gate was not satisfied; blocked rows below are scheduled grid points with zero completed repetitions.")
     lines.append("")
     lines.append("| point | down m/s | mass x | mean min-AGL m | label | contract violations | runs |")
     lines.append("|---|---:|---:|---:|---|---|---|")
@@ -1754,10 +1954,22 @@ def write_report(payload: dict[str, Any]) -> str:
     lines.append("")
     cls = payload.get("classification", {})
     sev = payload.get("severity_regression", {})
+    extra_meta = cls.get("split_metadata", {}).get("extrapolation", {})
+    extra_train = extra_meta.get("train_descent_rate_range", {})
+    extra_test = extra_meta.get("test_descent_rate_range", {})
     lines.append(
         f"Classification: interpolation accuracy={fmt(cls.get('interpolation', {}).get('metrics', {}).get('classification_accuracy'), 3)}, "
         f"extrapolation accuracy={fmt(cls.get('extrapolation', {}).get('metrics', {}).get('classification_accuracy'), 3)}, "
         f"combined={fmt(cls.get('combined_heldout_accuracy'), 3)}."
+    )
+    lines.append(
+        f"Extrapolation split: train descent rates {extra_train.get('values_m_s', [])} "
+        f"(range {fmt(extra_train.get('min_m_s'), 1)}-{fmt(extra_train.get('max_m_s'), 1)} m/s), "
+        f"test descent rates {extra_test.get('values_m_s', [])} "
+        f"(range {fmt(extra_test.get('min_m_s'), 1)}-{fmt(extra_test.get('max_m_s'), 1)} m/s), "
+        f"gap above train max={fmt(extra_meta.get('gap_above_train_max_m_s'), 1)} m/s, "
+        f"test width={fmt(extra_meta.get('test_descent_rate_width_m_s'), 1)} m/s, "
+        f"meaningful={extra_meta.get('meaningful')}."
     )
     lines.append(
         f"Severity regression: MAE={fmt(sev.get('metrics', {}).get('mae_m'), 4)} m, "
@@ -1782,6 +1994,18 @@ def write_report(payload: dict[str, Any]) -> str:
     search = payload.get("search_efficiency", {})
     lines.append(f"{search.get('strategy', 'n/a')}: {search.get('query_count')} queries versus {search.get('full_grid_count')} full-grid points.")
     lines.append("")
+    lines.append("## Dual-Zone Comparison")
+    lines.append("")
+    v1 = payload.get("config", {}).get("v1_comparison", {})
+    lines.append(
+        f"v1 used descent rates {v1.get('descent_rate_range_m_s', [5.0, 5.5])} m/s, "
+        f"`sigma_boundary={v1.get('sigma_boundary_m', 0.014)} m`, and an extrapolation span of about "
+        f"{v1.get('extrapolation_span_m_s', 0.2)} m/s. "
+        f"v2 uses descent rates {payload.get('config', {}).get('sweep', {}).get('descent_rates_m_s', [])} m/s with wind/turbulence enabled; "
+        f"the measured `sigma_boundary` is {fmt(oracle.get('sigma_boundary_m'), 4)} m and the reported extrapolation gap is "
+        f"{fmt(extra_meta.get('gap_above_train_max_m_s'), 1)} m/s over a {fmt(extra_meta.get('test_descent_rate_width_m_s'), 1)} m/s held-out high-rate field."
+    )
+    lines.append("")
     lines.append("## Three-Dimensional Unified Claim")
     lines.append("")
     lines.append("The three planc scenarios use the same threshold-insufficiency machine across three subsystems and dimensions: energy budget (`BATT_LOW_MAH`), time budget (`FS_GCS_TIMEOUT`), and height budget (`FENCE_ALT_MIN`). In this scenario the configured minimum-altitude fence triggers the specified RTL recovery, but the height budget can be insufficient under legal high descent rate and mass conditions.")
@@ -1794,14 +2018,21 @@ def write_report(payload: dict[str, Any]) -> str:
     lines.append("")
     for name, path in payload.get("artifacts", {}).get("plots", {}).items():
         lines.append(f"- {name}: `{rel(path)}`")
-    lines.append("- Structured results: `planc/results/minalt_groundcontact_results.json`")
-    lines.append("- Parsed logs and sidecars: `planc/logs/minalt_*_params.json`, `planc/logs/minalt_*_parsed.csv`, `planc/logs/minalt_*_parsed.oracle.json`")
-    lines.append("- Local raw DataFlash logs: `planc/logs/minalt_*.BIN` (ignored by Git, retained in this workspace when present)")
+    lines.append(f"- Structured results: `planc/results/{stem}_results.json`")
+    lines.append(f"- Oracle preregistration: `planc/results/{stem}_oracle_preregistered.json`")
+    lines.append(f"- Parsed logs and sidecars: `planc/logs/{run_prefix(payload.get('config', {}))}_*_params.json`, `planc/logs/{run_prefix(payload.get('config', {}))}_*_parsed.csv`, `planc/logs/{run_prefix(payload.get('config', {}))}_*_parsed.oracle.json`")
+    lines.append(f"- Local raw DataFlash logs: `planc/logs/{run_prefix(payload.get('config', {}))}_*.BIN` (ignored by Git, retained in this workspace when present)")
     report.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return str(report)
 
 
-def write_preregister(config: dict[str, Any], path: Path) -> dict[str, Any]:
+def write_preregister(
+    config: dict[str, Any],
+    path: Path,
+    oracle: dict[str, Any] | None = None,
+    *,
+    force: bool = False,
+) -> dict[str, Any]:
     payload = {
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "scenario": config["experiment"]["name"],
@@ -1814,16 +2045,30 @@ def write_preregister(config: dict[str, Any], path: Path) -> dict[str, Any]:
         "grid_repetitions": int(config["noise_floor"]["grid_repetitions"]),
         "boundary_points": config["noise_floor"]["boundary_points"],
         "unsafe_points": config["noise_floor"]["unsafe_points"],
+        "wind_turbulence": wind_turbulence_settings(config),
+        "active_fence_params": config.get("active_fence_params", {}),
+        "train_test": config.get("train_test", {}),
         "label_rule": config["noise_floor"]["preregistered_oracle_note"],
     }
-    if not path.exists():
+    if oracle is not None and oracle:
+        payload.update({
+            "measured_oracle_written_before_grid": True,
+            "sigma_boundary_m": float(oracle.get("sigma_boundary_m") or 0.0),
+            "sigma_unsafe_m": float(oracle.get("sigma_unsafe_m") or 0.0),
+            "d_margin_m": float(oracle.get("d_margin_m") or 0.0),
+            "ambiguous_band_min_agl_m": oracle.get("ambiguous_band_min_agl_m"),
+            "mae_bound_m": float(oracle.get("mae_bound_m") or 0.0),
+            "noise_boundary_points": oracle.get("boundary", {}).get("points", []),
+            "noise_unsafe_points": oracle.get("unsafe", {}).get("points", []),
+        })
+    if force or not path.exists():
         write_json(path, payload)
     return load_json(path, payload)
 
 
 def build_payload(config: dict[str, Any], env: dict[str, Any], premise_runs: list[dict[str, Any]], noise_runs: list[dict[str, Any]], grid_runs: list[dict[str, Any]]) -> dict[str, Any]:
-    premise = premise_summary(premise_runs, config)
     oracle = summarize_noise_runs(noise_runs, config)
+    premise = premise_summary(premise_runs, config, oracle)
     default_layer = str(config["sweep"]["default_layer"])
     default_points = aggregate_layer(
         grid_runs,
@@ -1886,11 +2131,12 @@ def load_runs(path: Path, resume: bool) -> list[dict[str, Any]]:
 
 def schedule_premise(config: dict[str, Any], runs: list[dict[str, Any]], partial_path: Path, state: dict[str, int | None]) -> None:
     mech = config["premise"]["mechanism"]
+    prefix = run_prefix(config)
     run_or_reuse(
         config,
         runs,
         partial_path,
-        run_id=premise_run_id("mechanism", str(mech["model"])),
+        run_id=premise_run_id("mechanism", str(mech["model"]), prefix=prefix),
         run_kind="premise",
         layer=str(mech["layer"]),
         descent_rate_m_s=float(mech["descent_rate_m_s"]),
@@ -1899,39 +2145,42 @@ def schedule_premise(config: dict[str, Any], runs: list[dict[str, Any]], partial
         roles=["premise_mechanism"],
         max_new_runs_state=state,
     )
-    rate = config["premise"]["descent_rate_application"]
-    run_or_reuse(
-        config,
-        runs,
-        partial_path,
-        run_id=premise_run_id("descent_rate", str(rate["model"])),
-        run_kind="premise",
-        layer=str(rate["layer"]),
-        descent_rate_m_s=float(rate["descent_rate_m_s"]),
-        model_name=str(rate["model"]),
-        rep_index=1,
-        roles=["premise_descent_rate_application"],
-        max_new_runs_state=state,
-    )
-    mass = config["premise"]["mass_response"]
-    for model_name in mass["models"]:
+    for rate in premise_descent_rate_specs(config):
         run_or_reuse(
             config,
             runs,
             partial_path,
-            run_id=premise_run_id("mass_response", str(model_name)),
+            run_id=premise_descent_rate_run_id(config, rate),
             run_kind="premise",
-            layer=str(mass["layer"]),
-            descent_rate_m_s=float(mass["descent_rate_m_s"]),
-            model_name=str(model_name),
+            layer=str(rate["layer"]),
+            descent_rate_m_s=float(rate["descent_rate_m_s"]),
+            model_name=str(rate["model"]),
             rep_index=1,
-            roles=["premise_mass_response"],
+            roles=["premise_descent_rate_application"],
             max_new_runs_state=state,
-        )
+    )
+    mass = config["premise"]["mass_response"]
+    mass_reps = int(mass.get("repetitions", 1))
+    for model_name in mass["models"]:
+        for rep in range(1, mass_reps + 1):
+            run_or_reuse(
+                config,
+                runs,
+                partial_path,
+                run_id=premise_mass_response_run_id(config, str(model_name), rep),
+                run_kind="premise",
+                layer=str(mass["layer"]),
+                descent_rate_m_s=float(mass["descent_rate_m_s"]),
+                model_name=str(model_name),
+                rep_index=rep,
+                roles=["premise_mass_response"],
+                max_new_runs_state=state,
+            )
 
 
 def schedule_noise(config: dict[str, Any], runs: list[dict[str, Any]], partial_path: Path, state: dict[str, int | None]) -> None:
     reps = int(config["noise_floor"]["noise_repetitions"])
+    prefix = f"{run_prefix(config)}_noise"
     for group_name, cfg_name in (("boundary", "boundary_points"), ("unsafe", "unsafe_points")):
         layer = f"noise_{group_name}"
         for spec in config["noise_floor"][cfg_name]:
@@ -1940,7 +2189,7 @@ def schedule_noise(config: dict[str, Any], runs: list[dict[str, Any]], partial_p
                     config,
                     runs,
                     partial_path,
-                    run_id=run_id_for(layer, float(spec["descent_rate_m_s"]), str(spec["model"]), rep, prefix="minalt_noise"),
+                    run_id=run_id_for(layer, float(spec["descent_rate_m_s"]), str(spec["model"]), rep, prefix=prefix),
                     run_kind="noise",
                     layer=layer,
                     descent_rate_m_s=float(spec["descent_rate_m_s"]),
@@ -1953,6 +2202,7 @@ def schedule_noise(config: dict[str, Any], runs: list[dict[str, Any]], partial_p
 
 def schedule_grid(config: dict[str, Any], runs: list[dict[str, Any]], partial_path: Path, state: dict[str, int | None]) -> None:
     default_layer = str(config["sweep"]["default_layer"])
+    prefix = run_prefix(config)
     for layer in config["sweep"]["p_layers"]:
         reps = int(config["noise_floor"]["grid_repetitions"]) if str(layer) == default_layer else int(config["noise_floor"]["p_layer_repetitions"])
         for rate in config["sweep"]["descent_rates_m_s"]:
@@ -1962,7 +2212,7 @@ def schedule_grid(config: dict[str, Any], runs: list[dict[str, Any]], partial_pa
                         config,
                         runs,
                         partial_path,
-                        run_id=run_id_for(str(layer), float(rate), str(model_name), rep),
+                        run_id=run_id_for(str(layer), float(rate), str(model_name), rep, prefix=prefix),
                         run_kind="grid",
                         layer=str(layer),
                         descent_rate_m_s=float(rate),
@@ -1984,12 +2234,13 @@ def main() -> int:
     config = load_config(args.config)
     results_dir = PLANC_ROOT / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
-    premise_partial_path = results_dir / "minalt_groundcontact_premise_partial.json"
-    noise_partial_path = results_dir / "minalt_groundcontact_noise_partial.json"
-    grid_partial_path = results_dir / "minalt_groundcontact_grid_partial.json"
-    final_path = results_dir / "minalt_groundcontact_results.json"
-    prereg_path = results_dir / "minalt_groundcontact_oracle_preregistered.json"
-    env_path = results_dir / "env_minalt_groundcontact.json"
+    stem = artifact_stem(config)
+    premise_partial_path = results_dir / f"{stem}_premise_partial.json"
+    noise_partial_path = results_dir / f"{stem}_noise_partial.json"
+    grid_partial_path = results_dir / f"{stem}_grid_partial.json"
+    final_path = results_dir / f"{stem}_results.json"
+    prereg_path = results_dir / f"{stem}_oracle_preregistered.json"
+    env_path = results_dir / f"env_{stem}.json"
 
     prereg = write_preregister(config, prereg_path)
     env = probe_environment(config, REPO_ROOT)
@@ -2042,6 +2293,10 @@ def main() -> int:
     if args.phase in {"all", "noise"}:
         schedule_noise(config, noise_runs, noise_partial_path, state)
         write_json(noise_partial_path, {"runs": noise_runs, "updated_at_utc": datetime.now(timezone.utc).isoformat()})
+        noise_oracle = summarize_noise_runs(noise_runs, config)
+        prereg = write_preregister(config, prereg_path, noise_oracle, force=True)
+        env["oracle_preregistration"] = prereg
+        write_env(env, env_path)
 
     if args.phase == "noise" or (args.phase == "all" and args.max_new_runs is not None and int(state.get("remaining") or 0) <= 0):
         payload = build_payload(config, env, premise_runs, noise_runs, grid_runs)
