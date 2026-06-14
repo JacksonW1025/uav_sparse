@@ -1,0 +1,6 @@
+split,D_m,observed_margin_proxy_m,pred_margin_proxy_m,abs_margin_error_m,observed_binary,margin_sign_pred_binary,margin_sign_binary_error,naive_classifier_kind,naive_boundary_D_m,naive_pred_binary,naive_binary_error,final_home_distance_m
+train,60.0,49.675570231405715,50.457636650695996,0.7820664192902811,1,1,0,constant_near_segment_class,,1,0.0,0.05419639250029568
+train,100.0,20.003315102393273,17.657115844522522,2.346199257870751,1,1,0,constant_near_segment_class,,1,0.0,0.32727444117028626
+train,120.0,-0.3072773971447589,1.256855441435789,1.564132838580548,1,1,0,constant_near_segment_class,,1,0.0,7.231240562045613
+holdout,140.0,-19.61035845584945,-15.143404961650944,4.466953494198506,0,0,0,constant_near_segment_class,,1,1.0,26.546933478670443
+holdout,160.0,-40.452060057908696,-31.543665364737663,8.908394693171033,0,0,0,constant_near_segment_class,,1,1.0,47.25053310130556

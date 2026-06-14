@@ -1,0 +1,1761 @@
+{
+  "runs": [
+    {
+      "actual_desroll_p95_rate_deg_s": 24.009603841534048,
+      "actual_desroll_peak_abs_deg": 8.95,
+      "actual_rcin_p95_rate_pwm_s": 1920.7683073230094,
+      "actual_rcin_peak_abs_pwm": 450.0,
+      "actual_roll_peak_abs_deg": 8.96,
+      "angle_max_cd": 1000,
+      "authority_timeseries_csv": "/mnt/nvme/px4_work/uav_sparse/planc/explore/data/bbs_probe2_stage0_low_angle_high_turb_r4800_authority_timeseries.csv",
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/bbs_probe2_stage0_low_angle_high_turb_r4800.BIN",
+      "command_amplitude_pwm": 450,
+      "command_window_end_s": 82.18418,
+      "command_window_start_s": 64.284909,
+      "commanded_r_deg_s_proxy": 288.0,
+      "commanded_r_pwm_s": 4800.0,
+      "crash_text_seen": false,
+      "loss_of_control_proxy": false,
+      "max_drop_m": 0.021329879760742188,
+      "min_alt_m": 23.92827796936035,
+      "min_motor_limit_margin_pwm": 379.0,
+      "min_motor_pwm": 1538.0,
+      "mode_sequence": "STABILIZE;GUIDED;GUIDED;ALT_HOLD;LAND",
+      "model_json": "/mnt/nvme/px4_work/uav_sparse/planc/config/minalt_models/mass_6_00.json",
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 255.0,
+          "name": "SYSID_MYGCS",
+          "ok": true,
+          "readback": 255.0,
+          "requested": 255.0
+        },
+        {
+          "before": 0.0,
+          "name": "FS_GCS_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 1.0,
+          "name": "FS_THR_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_RC_FAIL",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 3.0,
+          "name": "AVOID_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 10.5,
+          "name": "BATT_LOW_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_LOW_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_LOW_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_CRT_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 4.0,
+          "requested": 4.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 2.5,
+          "requested": 2.5
+        },
+        {
+          "before": 3000.0,
+          "name": "ANGLE_MAX",
+          "ok": true,
+          "readback": 1000.0,
+          "requested": 1000.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_SPEED_UP",
+          "ok": true,
+          "readback": 300.0,
+          "requested": 300.0
+        },
+        {
+          "before": 0.0,
+          "name": "PILOT_SPEED_DN",
+          "ok": true,
+          "readback": 1200.0,
+          "requested": 1200.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_ACCEL_Z",
+          "ok": true,
+          "readback": 1000.0,
+          "requested": 1000.0
+        },
+        {
+          "before": 176126.0,
+          "name": "LOG_BITMASK",
+          "ok": true,
+          "readback": 131071.0,
+          "requested": 131071.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/explore/log_refs/bbs_probe2_stage0_low_angle_high_turb_r4800_params.json",
+      "param_snapshot": {
+        "ANGLE_MAX": 1000.0,
+        "AVOID_ENABLE": 0.0,
+        "BATT_CRT_MAH": 0.0,
+        "BATT_CRT_VOLT": 0.0,
+        "BATT_FS_CRT_ACT": 0.0,
+        "BATT_FS_LOW_ACT": 0.0,
+        "BATT_LOW_MAH": 0.0,
+        "BATT_LOW_VOLT": 0.0,
+        "FENCE_ENABLE": 0.0,
+        "FENCE_TYPE": 0.0,
+        "FS_GCS_ENABLE": 0.0,
+        "FS_THR_ENABLE": 0.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_BITMASK": 131071.0,
+        "LOG_DISARMED": 1.0,
+        "PILOT_ACCEL_Z": 1000.0,
+        "PILOT_SPEED_DN": 1200.0,
+        "PILOT_SPEED_UP": 300.0,
+        "SIM_RC_FAIL": 0.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 2.5,
+        "SYSID_MYGCS": 255.0
+      },
+      "params_requested": {
+        "ANGLE_MAX": 1000,
+        "AVOID_ENABLE": 0,
+        "BATT_CRT_MAH": 0,
+        "BATT_CRT_VOLT": 0,
+        "BATT_FS_CRT_ACT": 0,
+        "BATT_FS_LOW_ACT": 0,
+        "BATT_LOW_MAH": 0,
+        "BATT_LOW_VOLT": 0,
+        "FENCE_ENABLE": 0,
+        "FENCE_TYPE": 0,
+        "FS_GCS_ENABLE": 0,
+        "FS_THR_ENABLE": 0,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_BITMASK": 131071,
+        "LOG_DISARMED": 1,
+        "PILOT_ACCEL_Z": 1000,
+        "PILOT_SPEED_DN": 1200,
+        "PILOT_SPEED_UP": 300,
+        "SIM_RC_FAIL": 0,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 2.5,
+        "SYSID_MYGCS": 255
+      },
+      "peak_att_error_deg": 0.4001249804748515,
+      "peak_motor_pwm": 1621.0,
+      "peak_motor_saturation_fraction": 0.621,
+      "peak_pitch_error_deg": 0.02,
+      "peak_roll_error_deg": 0.40000000000000036,
+      "reused_existing_bin": true,
+      "run_id": "bbs_probe2_stage0_low_angle_high_turb_r4800",
+      "stage": "stage0",
+      "start_alt_m": 23.949607849121094,
+      "statustext": "EKF3 IMU1 origin set;Field Elevation Set: 16m;Arm: Need Position Estimate;PreArm: Need Position Estimate;Arm: Need Position Estimate;EKF3 IMU1 is using GPS;EKF3 IMU0 is using GPS;Arming motors;EKF3 IMU0 MAG0 in-flight yaw alignment complete;EKF3 IMU1 MAG0 in-flight yaw alignment complete;SIM Hit ground at 0.408950 m/s;Disarming motors",
+      "sustained_att_error_gt20deg_1s": false,
+      "touch_or_near_ground": false,
+      "turbulence": 2.5,
+      "wind_speed_m_s": 4.0
+    },
+    {
+      "actual_desroll_p95_rate_deg_s": 12.004801920766846,
+      "actual_desroll_peak_abs_deg": 26.87,
+      "actual_rcin_p95_rate_pwm_s": 60.024009603852576,
+      "actual_rcin_peak_abs_pwm": 450.0,
+      "actual_roll_peak_abs_deg": 26.89,
+      "angle_max_cd": 3000,
+      "authority_timeseries_csv": "/mnt/nvme/px4_work/uav_sparse/planc/explore/data/bbs_probe2_main_turb15_r0150_authority_timeseries.csv",
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/bbs_probe2_main_turb15_r0150.BIN",
+      "command_amplitude_pwm": 450,
+      "command_window_end_s": 138.094307,
+      "command_window_start_s": 64.794705,
+      "commanded_r_deg_s_proxy": 9.0,
+      "commanded_r_pwm_s": 150.0,
+      "crash_text_seen": false,
+      "loss_of_control_proxy": false,
+      "max_drop_m": 0.011685371398925781,
+      "min_alt_m": 23.938045501708984,
+      "min_motor_limit_margin_pwm": 362.0,
+      "min_motor_pwm": 1540.0,
+      "mode_sequence": "STABILIZE;GUIDED;GUIDED;ALT_HOLD;LAND",
+      "model_json": "/mnt/nvme/px4_work/uav_sparse/planc/config/minalt_models/mass_6_00.json",
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 255.0,
+          "name": "SYSID_MYGCS",
+          "ok": true,
+          "readback": 255.0,
+          "requested": 255.0
+        },
+        {
+          "before": 0.0,
+          "name": "FS_GCS_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 1.0,
+          "name": "FS_THR_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_RC_FAIL",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 3.0,
+          "name": "AVOID_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 10.5,
+          "name": "BATT_LOW_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_LOW_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_LOW_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_CRT_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 4.0,
+          "requested": 4.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 1.5,
+          "requested": 1.5
+        },
+        {
+          "before": 3000.0,
+          "name": "ANGLE_MAX",
+          "ok": true,
+          "readback": 3000.0,
+          "requested": 3000.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_SPEED_UP",
+          "ok": true,
+          "readback": 300.0,
+          "requested": 300.0
+        },
+        {
+          "before": 0.0,
+          "name": "PILOT_SPEED_DN",
+          "ok": true,
+          "readback": 1200.0,
+          "requested": 1200.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_ACCEL_Z",
+          "ok": true,
+          "readback": 1000.0,
+          "requested": 1000.0
+        },
+        {
+          "before": 176126.0,
+          "name": "LOG_BITMASK",
+          "ok": true,
+          "readback": 131071.0,
+          "requested": 131071.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/explore/log_refs/bbs_probe2_main_turb15_r0150_params.json",
+      "param_snapshot": {
+        "ANGLE_MAX": 3000.0,
+        "AVOID_ENABLE": 0.0,
+        "BATT_CRT_MAH": 0.0,
+        "BATT_CRT_VOLT": 0.0,
+        "BATT_FS_CRT_ACT": 0.0,
+        "BATT_FS_LOW_ACT": 0.0,
+        "BATT_LOW_MAH": 0.0,
+        "BATT_LOW_VOLT": 0.0,
+        "FENCE_ENABLE": 0.0,
+        "FENCE_TYPE": 0.0,
+        "FS_GCS_ENABLE": 0.0,
+        "FS_THR_ENABLE": 0.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_BITMASK": 131071.0,
+        "LOG_DISARMED": 1.0,
+        "PILOT_ACCEL_Z": 1000.0,
+        "PILOT_SPEED_DN": 1200.0,
+        "PILOT_SPEED_UP": 300.0,
+        "SIM_RC_FAIL": 0.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255.0
+      },
+      "params_requested": {
+        "ANGLE_MAX": 3000,
+        "AVOID_ENABLE": 0,
+        "BATT_CRT_MAH": 0,
+        "BATT_CRT_VOLT": 0,
+        "BATT_FS_CRT_ACT": 0,
+        "BATT_FS_LOW_ACT": 0,
+        "BATT_LOW_MAH": 0,
+        "BATT_LOW_VOLT": 0,
+        "FENCE_ENABLE": 0,
+        "FENCE_TYPE": 0,
+        "FS_GCS_ENABLE": 0,
+        "FS_THR_ENABLE": 0,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_BITMASK": 131071,
+        "LOG_DISARMED": 1,
+        "PILOT_ACCEL_Z": 1000,
+        "PILOT_SPEED_DN": 1200,
+        "PILOT_SPEED_UP": 300,
+        "SIM_RC_FAIL": 0,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255
+      },
+      "peak_att_error_deg": 0.3199999999999985,
+      "peak_motor_pwm": 1638.0,
+      "peak_motor_saturation_fraction": 0.638,
+      "peak_pitch_error_deg": 0.04,
+      "peak_roll_error_deg": 0.3199999999999985,
+      "reused_existing_bin": true,
+      "run_id": "bbs_probe2_main_turb15_r0150",
+      "stage": "main",
+      "start_alt_m": 23.94973087310791,
+      "statustext": "EKF3 IMU1 origin set;Field Elevation Set: 16m;Arm: Need Position Estimate;PreArm: Need Position Estimate;Arm: Need Position Estimate;EKF3 IMU1 is using GPS;EKF3 IMU0 is using GPS;Arming motors;EKF3 IMU0 MAG0 in-flight yaw alignment complete;EKF3 IMU1 MAG0 in-flight yaw alignment complete;SIM Hit ground at 0.452008 m/s;Disarming motors",
+      "sustained_att_error_gt20deg_1s": false,
+      "touch_or_near_ground": false,
+      "turbulence": 1.5,
+      "wind_speed_m_s": 4.0
+    },
+    {
+      "actual_desroll_p95_rate_deg_s": 16.006402561022462,
+      "actual_desroll_peak_abs_deg": 26.87,
+      "actual_rcin_p95_rate_pwm_s": 120.04801920768809,
+      "actual_rcin_peak_abs_pwm": 450.0,
+      "actual_roll_peak_abs_deg": 26.89,
+      "angle_max_cd": 3000,
+      "authority_timeseries_csv": "/mnt/nvme/px4_work/uav_sparse/planc/explore/data/bbs_probe2_main_turb15_r0300_authority_timeseries.csv",
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/bbs_probe2_main_turb15_r0300.BIN",
+      "command_amplitude_pwm": 450,
+      "command_window_end_s": 111.69487099999999,
+      "command_window_start_s": 64.49482499999999,
+      "commanded_r_deg_s_proxy": 18.0,
+      "commanded_r_pwm_s": 300.0,
+      "crash_text_seen": false,
+      "loss_of_control_proxy": false,
+      "max_drop_m": 0.013660430908203125,
+      "min_alt_m": 23.9365177154541,
+      "min_motor_limit_margin_pwm": 369.0,
+      "min_motor_pwm": 1539.0,
+      "mode_sequence": "STABILIZE;GUIDED;GUIDED;ALT_HOLD;LAND",
+      "model_json": "/mnt/nvme/px4_work/uav_sparse/planc/config/minalt_models/mass_6_00.json",
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 255.0,
+          "name": "SYSID_MYGCS",
+          "ok": true,
+          "readback": 255.0,
+          "requested": 255.0
+        },
+        {
+          "before": 0.0,
+          "name": "FS_GCS_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 1.0,
+          "name": "FS_THR_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_RC_FAIL",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 3.0,
+          "name": "AVOID_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 10.5,
+          "name": "BATT_LOW_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_LOW_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_LOW_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_CRT_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 4.0,
+          "requested": 4.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 1.5,
+          "requested": 1.5
+        },
+        {
+          "before": 3000.0,
+          "name": "ANGLE_MAX",
+          "ok": true,
+          "readback": 3000.0,
+          "requested": 3000.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_SPEED_UP",
+          "ok": true,
+          "readback": 300.0,
+          "requested": 300.0
+        },
+        {
+          "before": 0.0,
+          "name": "PILOT_SPEED_DN",
+          "ok": true,
+          "readback": 1200.0,
+          "requested": 1200.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_ACCEL_Z",
+          "ok": true,
+          "readback": 1000.0,
+          "requested": 1000.0
+        },
+        {
+          "before": 176126.0,
+          "name": "LOG_BITMASK",
+          "ok": true,
+          "readback": 131071.0,
+          "requested": 131071.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/explore/log_refs/bbs_probe2_main_turb15_r0300_params.json",
+      "param_snapshot": {
+        "ANGLE_MAX": 3000.0,
+        "AVOID_ENABLE": 0.0,
+        "BATT_CRT_MAH": 0.0,
+        "BATT_CRT_VOLT": 0.0,
+        "BATT_FS_CRT_ACT": 0.0,
+        "BATT_FS_LOW_ACT": 0.0,
+        "BATT_LOW_MAH": 0.0,
+        "BATT_LOW_VOLT": 0.0,
+        "FENCE_ENABLE": 0.0,
+        "FENCE_TYPE": 0.0,
+        "FS_GCS_ENABLE": 0.0,
+        "FS_THR_ENABLE": 0.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_BITMASK": 131071.0,
+        "LOG_DISARMED": 1.0,
+        "PILOT_ACCEL_Z": 1000.0,
+        "PILOT_SPEED_DN": 1200.0,
+        "PILOT_SPEED_UP": 300.0,
+        "SIM_RC_FAIL": 0.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255.0
+      },
+      "params_requested": {
+        "ANGLE_MAX": 3000,
+        "AVOID_ENABLE": 0,
+        "BATT_CRT_MAH": 0,
+        "BATT_CRT_VOLT": 0,
+        "BATT_FS_CRT_ACT": 0,
+        "BATT_FS_LOW_ACT": 0,
+        "BATT_LOW_MAH": 0,
+        "BATT_LOW_VOLT": 0,
+        "FENCE_ENABLE": 0,
+        "FENCE_TYPE": 0,
+        "FS_GCS_ENABLE": 0,
+        "FS_THR_ENABLE": 0,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_BITMASK": 131071,
+        "LOG_DISARMED": 1,
+        "PILOT_ACCEL_Z": 1000,
+        "PILOT_SPEED_DN": 1200,
+        "PILOT_SPEED_UP": 300,
+        "SIM_RC_FAIL": 0,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255
+      },
+      "peak_att_error_deg": 0.6300000000000026,
+      "peak_motor_pwm": 1631.0,
+      "peak_motor_saturation_fraction": 0.631,
+      "peak_pitch_error_deg": 0.05,
+      "peak_roll_error_deg": 0.6300000000000026,
+      "reused_existing_bin": true,
+      "run_id": "bbs_probe2_main_turb15_r0300",
+      "stage": "main",
+      "start_alt_m": 23.950178146362305,
+      "statustext": "EKF3 IMU1 origin set;Field Elevation Set: 16m;Arm: Need Position Estimate;PreArm: Need Position Estimate;Arm: Need Position Estimate;EKF3 IMU1 is using GPS;EKF3 IMU0 is using GPS;Arming motors;EKF3 IMU0 MAG0 in-flight yaw alignment complete;EKF3 IMU1 MAG0 in-flight yaw alignment complete;SIM Hit ground at 0.487949 m/s;Disarming motors",
+      "sustained_att_error_gt20deg_1s": false,
+      "touch_or_near_ground": false,
+      "turbulence": 1.5,
+      "wind_speed_m_s": 4.0
+    },
+    {
+      "actual_desroll_p95_rate_deg_s": 16.006402561022817,
+      "actual_desroll_peak_abs_deg": 26.87,
+      "actual_rcin_p95_rate_pwm_s": 240.09603841537617,
+      "actual_rcin_peak_abs_pwm": 450.0,
+      "actual_roll_peak_abs_deg": 26.89,
+      "angle_max_cd": 3000,
+      "authority_timeseries_csv": "/mnt/nvme/px4_work/uav_sparse/planc/explore/data/bbs_probe2_main_turb15_r0600_authority_timeseries.csv",
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/bbs_probe2_main_turb15_r0600.BIN",
+      "command_amplitude_pwm": 450,
+      "command_window_end_s": 98.7942,
+      "command_window_start_s": 65.394465,
+      "commanded_r_deg_s_proxy": 36.0,
+      "commanded_r_pwm_s": 600.0,
+      "crash_text_seen": false,
+      "loss_of_control_proxy": false,
+      "max_drop_m": 0.02106475830078125,
+      "min_alt_m": 23.92656135559082,
+      "min_motor_limit_margin_pwm": 357.0,
+      "min_motor_pwm": 1544.0,
+      "mode_sequence": "STABILIZE;GUIDED;GUIDED;ALT_HOLD;LAND",
+      "model_json": "/mnt/nvme/px4_work/uav_sparse/planc/config/minalt_models/mass_6_00.json",
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 255.0,
+          "name": "SYSID_MYGCS",
+          "ok": true,
+          "readback": 255.0,
+          "requested": 255.0
+        },
+        {
+          "before": 0.0,
+          "name": "FS_GCS_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 1.0,
+          "name": "FS_THR_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_RC_FAIL",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 3.0,
+          "name": "AVOID_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 10.5,
+          "name": "BATT_LOW_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_LOW_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_LOW_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_CRT_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 4.0,
+          "requested": 4.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 1.5,
+          "requested": 1.5
+        },
+        {
+          "before": 3000.0,
+          "name": "ANGLE_MAX",
+          "ok": true,
+          "readback": 3000.0,
+          "requested": 3000.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_SPEED_UP",
+          "ok": true,
+          "readback": 300.0,
+          "requested": 300.0
+        },
+        {
+          "before": 0.0,
+          "name": "PILOT_SPEED_DN",
+          "ok": true,
+          "readback": 1200.0,
+          "requested": 1200.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_ACCEL_Z",
+          "ok": true,
+          "readback": 1000.0,
+          "requested": 1000.0
+        },
+        {
+          "before": 176126.0,
+          "name": "LOG_BITMASK",
+          "ok": true,
+          "readback": 131071.0,
+          "requested": 131071.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/explore/log_refs/bbs_probe2_main_turb15_r0600_params.json",
+      "param_snapshot": {
+        "ANGLE_MAX": 3000.0,
+        "AVOID_ENABLE": 0.0,
+        "BATT_CRT_MAH": 0.0,
+        "BATT_CRT_VOLT": 0.0,
+        "BATT_FS_CRT_ACT": 0.0,
+        "BATT_FS_LOW_ACT": 0.0,
+        "BATT_LOW_MAH": 0.0,
+        "BATT_LOW_VOLT": 0.0,
+        "FENCE_ENABLE": 0.0,
+        "FENCE_TYPE": 0.0,
+        "FS_GCS_ENABLE": 0.0,
+        "FS_THR_ENABLE": 0.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_BITMASK": 131071.0,
+        "LOG_DISARMED": 1.0,
+        "PILOT_ACCEL_Z": 1000.0,
+        "PILOT_SPEED_DN": 1200.0,
+        "PILOT_SPEED_UP": 300.0,
+        "SIM_RC_FAIL": 0.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255.0
+      },
+      "params_requested": {
+        "ANGLE_MAX": 3000,
+        "AVOID_ENABLE": 0,
+        "BATT_CRT_MAH": 0,
+        "BATT_CRT_VOLT": 0,
+        "BATT_FS_CRT_ACT": 0,
+        "BATT_FS_LOW_ACT": 0,
+        "BATT_LOW_MAH": 0,
+        "BATT_LOW_VOLT": 0,
+        "FENCE_ENABLE": 0,
+        "FENCE_TYPE": 0,
+        "FS_GCS_ENABLE": 0,
+        "FS_THR_ENABLE": 0,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_BITMASK": 131071,
+        "LOG_DISARMED": 1,
+        "PILOT_ACCEL_Z": 1000,
+        "PILOT_SPEED_DN": 1200,
+        "PILOT_SPEED_UP": 300,
+        "SIM_RC_FAIL": 0,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255
+      },
+      "peak_att_error_deg": 0.9800000000000004,
+      "peak_motor_pwm": 1643.0,
+      "peak_motor_saturation_fraction": 0.643,
+      "peak_pitch_error_deg": 0.11,
+      "peak_roll_error_deg": 0.9800000000000004,
+      "reused_existing_bin": true,
+      "run_id": "bbs_probe2_main_turb15_r0600",
+      "stage": "main",
+      "start_alt_m": 23.9476261138916,
+      "statustext": "EKF3 IMU1 origin set;Field Elevation Set: 16m;Arm: Need Position Estimate;PreArm: Need Position Estimate;Arm: Need Position Estimate;EKF3 IMU1 is using GPS;EKF3 IMU0 is using GPS;Arming motors;EKF3 IMU0 MAG0 in-flight yaw alignment complete;EKF3 IMU1 MAG0 in-flight yaw alignment complete;SIM Hit ground at 0.494071 m/s;Disarming motors",
+      "sustained_att_error_gt20deg_1s": false,
+      "touch_or_near_ground": false,
+      "turbulence": 1.5,
+      "wind_speed_m_s": 4.0
+    },
+    {
+      "actual_desroll_p95_rate_deg_s": 24.009603841535114,
+      "actual_desroll_peak_abs_deg": 26.87,
+      "actual_rcin_p95_rate_pwm_s": 480.19207683075234,
+      "actual_rcin_peak_abs_pwm": 450.0,
+      "actual_roll_peak_abs_deg": 26.89,
+      "angle_max_cd": 3000,
+      "authority_timeseries_csv": "/mnt/nvme/px4_work/uav_sparse/planc/explore/data/bbs_probe2_main_turb15_r1200_authority_timeseries.csv",
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/bbs_probe2_main_turb15_r1200.BIN",
+      "command_amplitude_pwm": 450,
+      "command_window_end_s": 91.794501,
+      "command_window_start_s": 65.294505,
+      "commanded_r_deg_s_proxy": 72.0,
+      "commanded_r_pwm_s": 1200.0,
+      "crash_text_seen": false,
+      "loss_of_control_proxy": false,
+      "max_drop_m": 0.013339996337890625,
+      "min_alt_m": 23.935314178466797,
+      "min_motor_limit_margin_pwm": 370.0,
+      "min_motor_pwm": 1537.0,
+      "mode_sequence": "STABILIZE;GUIDED;GUIDED;ALT_HOLD;LAND",
+      "model_json": "/mnt/nvme/px4_work/uav_sparse/planc/config/minalt_models/mass_6_00.json",
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 255.0,
+          "name": "SYSID_MYGCS",
+          "ok": true,
+          "readback": 255.0,
+          "requested": 255.0
+        },
+        {
+          "before": 0.0,
+          "name": "FS_GCS_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 1.0,
+          "name": "FS_THR_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_RC_FAIL",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 3.0,
+          "name": "AVOID_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 10.5,
+          "name": "BATT_LOW_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_LOW_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_LOW_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_CRT_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 4.0,
+          "requested": 4.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 1.5,
+          "requested": 1.5
+        },
+        {
+          "before": 3000.0,
+          "name": "ANGLE_MAX",
+          "ok": true,
+          "readback": 3000.0,
+          "requested": 3000.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_SPEED_UP",
+          "ok": true,
+          "readback": 300.0,
+          "requested": 300.0
+        },
+        {
+          "before": 0.0,
+          "name": "PILOT_SPEED_DN",
+          "ok": true,
+          "readback": 1200.0,
+          "requested": 1200.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_ACCEL_Z",
+          "ok": true,
+          "readback": 1000.0,
+          "requested": 1000.0
+        },
+        {
+          "before": 176126.0,
+          "name": "LOG_BITMASK",
+          "ok": true,
+          "readback": 131071.0,
+          "requested": 131071.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/explore/log_refs/bbs_probe2_main_turb15_r1200_params.json",
+      "param_snapshot": {
+        "ANGLE_MAX": 3000.0,
+        "AVOID_ENABLE": 0.0,
+        "BATT_CRT_MAH": 0.0,
+        "BATT_CRT_VOLT": 0.0,
+        "BATT_FS_CRT_ACT": 0.0,
+        "BATT_FS_LOW_ACT": 0.0,
+        "BATT_LOW_MAH": 0.0,
+        "BATT_LOW_VOLT": 0.0,
+        "FENCE_ENABLE": 0.0,
+        "FENCE_TYPE": 0.0,
+        "FS_GCS_ENABLE": 0.0,
+        "FS_THR_ENABLE": 0.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_BITMASK": 131071.0,
+        "LOG_DISARMED": 1.0,
+        "PILOT_ACCEL_Z": 1000.0,
+        "PILOT_SPEED_DN": 1200.0,
+        "PILOT_SPEED_UP": 300.0,
+        "SIM_RC_FAIL": 0.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255.0
+      },
+      "params_requested": {
+        "ANGLE_MAX": 3000,
+        "AVOID_ENABLE": 0,
+        "BATT_CRT_MAH": 0,
+        "BATT_CRT_VOLT": 0,
+        "BATT_FS_CRT_ACT": 0,
+        "BATT_FS_LOW_ACT": 0,
+        "BATT_LOW_MAH": 0,
+        "BATT_LOW_VOLT": 0,
+        "FENCE_ENABLE": 0,
+        "FENCE_TYPE": 0,
+        "FS_GCS_ENABLE": 0,
+        "FS_THR_ENABLE": 0,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_BITMASK": 131071,
+        "LOG_DISARMED": 1,
+        "PILOT_ACCEL_Z": 1000,
+        "PILOT_SPEED_DN": 1200,
+        "PILOT_SPEED_UP": 300,
+        "SIM_RC_FAIL": 0,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255
+      },
+      "peak_att_error_deg": 0.379999999999999,
+      "peak_motor_pwm": 1630.0,
+      "peak_motor_saturation_fraction": 0.63,
+      "peak_pitch_error_deg": 0.08,
+      "peak_roll_error_deg": 0.379999999999999,
+      "reused_existing_bin": true,
+      "run_id": "bbs_probe2_main_turb15_r1200",
+      "stage": "main",
+      "start_alt_m": 23.948654174804688,
+      "statustext": "EKF3 IMU1 origin set;Field Elevation Set: 16m;Arm: Need Position Estimate;PreArm: Need Position Estimate;Arm: Need Position Estimate;EKF3 IMU1 is using GPS;EKF3 IMU0 is using GPS;Arming motors;EKF3 IMU0 MAG0 in-flight yaw alignment complete;EKF3 IMU1 MAG0 in-flight yaw alignment complete;SIM Hit ground at 0.503018 m/s;Disarming motors",
+      "sustained_att_error_gt20deg_1s": false,
+      "touch_or_near_ground": false,
+      "turbulence": 1.5,
+      "wind_speed_m_s": 4.0
+    },
+    {
+      "actual_desroll_p95_rate_deg_s": 44.01760704281248,
+      "actual_desroll_peak_abs_deg": 26.87,
+      "actual_rcin_p95_rate_pwm_s": 960.3841536615047,
+      "actual_rcin_peak_abs_pwm": 450.0,
+      "actual_roll_peak_abs_deg": 26.87,
+      "angle_max_cd": 3000,
+      "authority_timeseries_csv": "/mnt/nvme/px4_work/uav_sparse/planc/explore/data/bbs_probe2_main_turb15_r2400_authority_timeseries.csv",
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/bbs_probe2_main_turb15_r2400.BIN",
+      "command_amplitude_pwm": 450,
+      "command_window_end_s": 85.194642,
+      "command_window_start_s": 64.49482499999999,
+      "commanded_r_deg_s_proxy": 144.0,
+      "commanded_r_pwm_s": 2400.0,
+      "crash_text_seen": false,
+      "loss_of_control_proxy": false,
+      "max_drop_m": 0.0131072998046875,
+      "min_alt_m": 23.934040069580078,
+      "min_motor_limit_margin_pwm": 362.0,
+      "min_motor_pwm": 1540.0,
+      "mode_sequence": "STABILIZE;GUIDED;GUIDED;ALT_HOLD;LAND",
+      "model_json": "/mnt/nvme/px4_work/uav_sparse/planc/config/minalt_models/mass_6_00.json",
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 255.0,
+          "name": "SYSID_MYGCS",
+          "ok": true,
+          "readback": 255.0,
+          "requested": 255.0
+        },
+        {
+          "before": 0.0,
+          "name": "FS_GCS_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 1.0,
+          "name": "FS_THR_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_RC_FAIL",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 3.0,
+          "name": "AVOID_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 10.5,
+          "name": "BATT_LOW_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_LOW_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_LOW_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_CRT_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 4.0,
+          "requested": 4.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 1.5,
+          "requested": 1.5
+        },
+        {
+          "before": 3000.0,
+          "name": "ANGLE_MAX",
+          "ok": true,
+          "readback": 3000.0,
+          "requested": 3000.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_SPEED_UP",
+          "ok": true,
+          "readback": 300.0,
+          "requested": 300.0
+        },
+        {
+          "before": 0.0,
+          "name": "PILOT_SPEED_DN",
+          "ok": true,
+          "readback": 1200.0,
+          "requested": 1200.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_ACCEL_Z",
+          "ok": true,
+          "readback": 1000.0,
+          "requested": 1000.0
+        },
+        {
+          "before": 176126.0,
+          "name": "LOG_BITMASK",
+          "ok": true,
+          "readback": 131071.0,
+          "requested": 131071.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/explore/log_refs/bbs_probe2_main_turb15_r2400_params.json",
+      "param_snapshot": {
+        "ANGLE_MAX": 3000.0,
+        "AVOID_ENABLE": 0.0,
+        "BATT_CRT_MAH": 0.0,
+        "BATT_CRT_VOLT": 0.0,
+        "BATT_FS_CRT_ACT": 0.0,
+        "BATT_FS_LOW_ACT": 0.0,
+        "BATT_LOW_MAH": 0.0,
+        "BATT_LOW_VOLT": 0.0,
+        "FENCE_ENABLE": 0.0,
+        "FENCE_TYPE": 0.0,
+        "FS_GCS_ENABLE": 0.0,
+        "FS_THR_ENABLE": 0.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_BITMASK": 131071.0,
+        "LOG_DISARMED": 1.0,
+        "PILOT_ACCEL_Z": 1000.0,
+        "PILOT_SPEED_DN": 1200.0,
+        "PILOT_SPEED_UP": 300.0,
+        "SIM_RC_FAIL": 0.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255.0
+      },
+      "params_requested": {
+        "ANGLE_MAX": 3000,
+        "AVOID_ENABLE": 0,
+        "BATT_CRT_MAH": 0,
+        "BATT_CRT_VOLT": 0,
+        "BATT_FS_CRT_ACT": 0,
+        "BATT_FS_LOW_ACT": 0,
+        "BATT_LOW_MAH": 0,
+        "BATT_LOW_VOLT": 0,
+        "FENCE_ENABLE": 0,
+        "FENCE_TYPE": 0,
+        "FS_GCS_ENABLE": 0,
+        "FS_THR_ENABLE": 0,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_BITMASK": 131071,
+        "LOG_DISARMED": 1,
+        "PILOT_ACCEL_Z": 1000,
+        "PILOT_SPEED_DN": 1200,
+        "PILOT_SPEED_UP": 300,
+        "SIM_RC_FAIL": 0,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255
+      },
+      "peak_att_error_deg": 0.6300000000000026,
+      "peak_motor_pwm": 1638.0,
+      "peak_motor_saturation_fraction": 0.638,
+      "peak_pitch_error_deg": 0.16,
+      "peak_roll_error_deg": 0.6300000000000026,
+      "reused_existing_bin": true,
+      "run_id": "bbs_probe2_main_turb15_r2400",
+      "stage": "main",
+      "start_alt_m": 23.947147369384766,
+      "statustext": "EKF3 IMU1 origin set;Field Elevation Set: 16m;Arm: Need Position Estimate;PreArm: Need Position Estimate;Arm: Need Position Estimate;EKF3 IMU1 is using GPS;EKF3 IMU0 is using GPS;Arming motors;EKF3 IMU0 MAG0 in-flight yaw alignment complete;EKF3 IMU1 MAG0 in-flight yaw alignment complete;SIM Hit ground at 0.483929 m/s;Disarming motors",
+      "sustained_att_error_gt20deg_1s": false,
+      "touch_or_near_ground": false,
+      "turbulence": 1.5,
+      "wind_speed_m_s": 4.0
+    },
+    {
+      "actual_desroll_p95_rate_deg_s": 68.02721088434619,
+      "actual_desroll_peak_abs_deg": 26.87,
+      "actual_rcin_p95_rate_pwm_s": 1920.7683073230094,
+      "actual_rcin_peak_abs_pwm": 450.0,
+      "actual_roll_peak_abs_deg": 26.87,
+      "angle_max_cd": 3000,
+      "authority_timeseries_csv": "/mnt/nvme/px4_work/uav_sparse/planc/explore/data/bbs_probe2_main_turb15_r4800_authority_timeseries.csv",
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/bbs_probe2_main_turb15_r4800.BIN",
+      "command_amplitude_pwm": 450,
+      "command_window_end_s": 83.179615,
+      "command_window_start_s": 65.279511,
+      "commanded_r_deg_s_proxy": 288.0,
+      "commanded_r_pwm_s": 4800.0,
+      "crash_text_seen": false,
+      "loss_of_control_proxy": false,
+      "max_drop_m": 0.009432792663574219,
+      "min_alt_m": 23.93898582458496,
+      "min_motor_limit_margin_pwm": 356.0,
+      "min_motor_pwm": 1531.0,
+      "mode_sequence": "STABILIZE;GUIDED;GUIDED;ALT_HOLD;LAND",
+      "model_json": "/mnt/nvme/px4_work/uav_sparse/planc/config/minalt_models/mass_6_00.json",
+      "param_readbacks": [
+        {
+          "before": 1.0,
+          "name": "LOG_BACKEND_TYPE",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 0.0,
+          "name": "LOG_DISARMED",
+          "ok": true,
+          "readback": 1.0,
+          "requested": 1.0
+        },
+        {
+          "before": 255.0,
+          "name": "SYSID_MYGCS",
+          "ok": true,
+          "readback": 255.0,
+          "requested": 255.0
+        },
+        {
+          "before": 0.0,
+          "name": "FS_GCS_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 1.0,
+          "name": "FS_THR_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_RC_FAIL",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "FENCE_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 7.0,
+          "name": "FENCE_TYPE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 3.0,
+          "name": "AVOID_ENABLE",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 10.5,
+          "name": "BATT_LOW_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_VOLT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_LOW_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_CRT_MAH",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_LOW_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 0.0,
+          "name": "BATT_FS_CRT_ACT",
+          "ok": true,
+          "readback": 0.0,
+          "requested": 0.0
+        },
+        {
+          "before": 180.0,
+          "name": "SIM_WIND_DIR",
+          "ok": true,
+          "readback": 270.0,
+          "requested": 270.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_SPD",
+          "ok": true,
+          "readback": 4.0,
+          "requested": 4.0
+        },
+        {
+          "before": 0.0,
+          "name": "SIM_WIND_TURB",
+          "ok": true,
+          "readback": 1.5,
+          "requested": 1.5
+        },
+        {
+          "before": 3000.0,
+          "name": "ANGLE_MAX",
+          "ok": true,
+          "readback": 3000.0,
+          "requested": 3000.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_SPEED_UP",
+          "ok": true,
+          "readback": 300.0,
+          "requested": 300.0
+        },
+        {
+          "before": 0.0,
+          "name": "PILOT_SPEED_DN",
+          "ok": true,
+          "readback": 1200.0,
+          "requested": 1200.0
+        },
+        {
+          "before": 250.0,
+          "name": "PILOT_ACCEL_Z",
+          "ok": true,
+          "readback": 1000.0,
+          "requested": 1000.0
+        },
+        {
+          "before": 176126.0,
+          "name": "LOG_BITMASK",
+          "ok": true,
+          "readback": 131071.0,
+          "requested": 131071.0
+        }
+      ],
+      "param_records_path": "/mnt/nvme/px4_work/uav_sparse/planc/explore/log_refs/bbs_probe2_main_turb15_r4800_params.json",
+      "param_snapshot": {
+        "ANGLE_MAX": 3000.0,
+        "AVOID_ENABLE": 0.0,
+        "BATT_CRT_MAH": 0.0,
+        "BATT_CRT_VOLT": 0.0,
+        "BATT_FS_CRT_ACT": 0.0,
+        "BATT_FS_LOW_ACT": 0.0,
+        "BATT_LOW_MAH": 0.0,
+        "BATT_LOW_VOLT": 0.0,
+        "FENCE_ENABLE": 0.0,
+        "FENCE_TYPE": 0.0,
+        "FS_GCS_ENABLE": 0.0,
+        "FS_THR_ENABLE": 0.0,
+        "LOG_BACKEND_TYPE": 1.0,
+        "LOG_BITMASK": 131071.0,
+        "LOG_DISARMED": 1.0,
+        "PILOT_ACCEL_Z": 1000.0,
+        "PILOT_SPEED_DN": 1200.0,
+        "PILOT_SPEED_UP": 300.0,
+        "SIM_RC_FAIL": 0.0,
+        "SIM_WIND_DIR": 270.0,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255.0
+      },
+      "params_requested": {
+        "ANGLE_MAX": 3000,
+        "AVOID_ENABLE": 0,
+        "BATT_CRT_MAH": 0,
+        "BATT_CRT_VOLT": 0,
+        "BATT_FS_CRT_ACT": 0,
+        "BATT_FS_LOW_ACT": 0,
+        "BATT_LOW_MAH": 0,
+        "BATT_LOW_VOLT": 0,
+        "FENCE_ENABLE": 0,
+        "FENCE_TYPE": 0,
+        "FS_GCS_ENABLE": 0,
+        "FS_THR_ENABLE": 0,
+        "LOG_BACKEND_TYPE": 1,
+        "LOG_BITMASK": 131071,
+        "LOG_DISARMED": 1,
+        "PILOT_ACCEL_Z": 1000,
+        "PILOT_SPEED_DN": 1200,
+        "PILOT_SPEED_UP": 300,
+        "SIM_RC_FAIL": 0,
+        "SIM_WIND_DIR": 270,
+        "SIM_WIND_SPD": 4.0,
+        "SIM_WIND_TURB": 1.5,
+        "SYSID_MYGCS": 255
+      },
+      "peak_att_error_deg": 1.2300000000000004,
+      "peak_motor_pwm": 1644.0,
+      "peak_motor_saturation_fraction": 0.644,
+      "peak_pitch_error_deg": 0.09,
+      "peak_roll_error_deg": 1.2300000000000004,
+      "reused_existing_bin": true,
+      "run_id": "bbs_probe2_main_turb15_r4800",
+      "stage": "main",
+      "start_alt_m": 23.948418617248535,
+      "statustext": "EKF3 IMU1 origin set;Field Elevation Set: 16m;Arm: Need Position Estimate;PreArm: Need Position Estimate;Arm: Need Position Estimate;EKF3 IMU1 is using GPS;EKF3 IMU0 is using GPS;Arming motors;EKF3 IMU0 MAG0 in-flight yaw alignment complete;EKF3 IMU1 MAG0 in-flight yaw alignment complete;SIM Hit ground at 0.463549 m/s;Disarming motors",
+      "sustained_att_error_gt20deg_1s": false,
+      "touch_or_near_ground": false,
+      "turbulence": 1.5,
+      "wind_speed_m_s": 4.0
+    }
+  ]
+}

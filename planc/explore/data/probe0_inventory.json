@@ -1,0 +1,938 @@
+{
+  "AHR2": {
+    "count": 2693,
+    "fields": [
+      "Alt",
+      "Lat",
+      "Lng",
+      "Pitch",
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "Roll",
+      "TimeUS",
+      "Yaw"
+    ]
+  },
+  "ARM": {
+    "count": 2,
+    "fields": [
+      "ArmChecks",
+      "ArmState",
+      "Forced",
+      "Method",
+      "TimeUS"
+    ]
+  },
+  "ATT": {
+    "count": 43443,
+    "fields": [
+      "AEKF",
+      "DesPitch",
+      "DesRoll",
+      "DesYaw",
+      "ErrRP",
+      "ErrYaw",
+      "Pitch",
+      "Roll",
+      "TimeUS",
+      "Yaw"
+    ]
+  },
+  "AUXF": {
+    "count": 1,
+    "fields": [
+      "TimeUS",
+      "function",
+      "pos",
+      "result",
+      "source"
+    ]
+  },
+  "BARO": {
+    "count": 2194,
+    "fields": [
+      "Alt",
+      "CRt",
+      "GndTemp",
+      "Health",
+      "I",
+      "Offset",
+      "Press",
+      "SMS",
+      "Temp",
+      "TimeUS"
+    ]
+  },
+  "BAT": {
+    "count": 1097,
+    "fields": [
+      "Curr",
+      "CurrTot",
+      "EnrgTot",
+      "Instance",
+      "RemPct",
+      "Res",
+      "Temp",
+      "TimeUS",
+      "Volt",
+      "VoltR"
+    ]
+  },
+  "CTRL": {
+    "count": 1097,
+    "fields": [
+      "RMSPitchD",
+      "RMSPitchP",
+      "RMSRollD",
+      "RMSRollP",
+      "RMSYaw",
+      "TimeUS"
+    ]
+  },
+  "CTUN": {
+    "count": 1097,
+    "fields": [
+      "ABst",
+      "Alt",
+      "BAlt",
+      "CRt",
+      "DAlt",
+      "DCRt",
+      "DSAlt",
+      "SAlt",
+      "TAlt",
+      "ThH",
+      "ThI",
+      "ThO",
+      "TimeUS"
+    ]
+  },
+  "D32": {
+    "count": 1,
+    "fields": [
+      "Id",
+      "TimeUS",
+      "Value"
+    ]
+  },
+  "DSF": {
+    "count": 109,
+    "fields": [
+      "Blk",
+      "Bytes",
+      "Dp",
+      "FAv",
+      "FMn",
+      "FMx",
+      "TimeUS"
+    ]
+  },
+  "DU32": {
+    "count": 109,
+    "fields": [
+      "Id",
+      "TimeUS",
+      "Value"
+    ]
+  },
+  "ERR": {
+    "count": 1,
+    "fields": [
+      "ECode",
+      "Subsys",
+      "TimeUS"
+    ]
+  },
+  "ESC": {
+    "count": 42408,
+    "fields": [
+      "CTot",
+      "Curr",
+      "Err",
+      "Instance",
+      "MotTemp",
+      "RPM",
+      "RawRPM",
+      "Temp",
+      "TimeUS",
+      "Volt"
+    ]
+  },
+  "EV": {
+    "count": 11,
+    "fields": [
+      "Id",
+      "TimeUS"
+    ]
+  },
+  "FILE": {
+    "count": 519,
+    "fields": [
+      "Data",
+      "FileName",
+      "Length",
+      "Offset"
+    ]
+  },
+  "FMT": {
+    "count": 175,
+    "fields": [
+      "Columns",
+      "Format",
+      "Length",
+      "Name",
+      "Type"
+    ]
+  },
+  "FMTU": {
+    "count": 175,
+    "fields": [
+      "FmtType",
+      "MultIds",
+      "TimeUS",
+      "UnitIds"
+    ]
+  },
+  "GPA": {
+    "count": 519,
+    "fields": [
+      "Delta",
+      "HAcc",
+      "I",
+      "SAcc",
+      "SMS",
+      "TimeUS",
+      "Und",
+      "VAcc",
+      "VDop",
+      "VV",
+      "YAcc"
+    ]
+  },
+  "GPS": {
+    "count": 519,
+    "fields": [
+      "Alt",
+      "GCrs",
+      "GMS",
+      "GWk",
+      "HDop",
+      "I",
+      "Lat",
+      "Lng",
+      "NSats",
+      "Spd",
+      "Status",
+      "TimeUS",
+      "U",
+      "VZ",
+      "Yaw"
+    ]
+  },
+  "GUIP": {
+    "count": 3,
+    "fields": [
+      "Terrain",
+      "TimeUS",
+      "Type",
+      "aX",
+      "aY",
+      "aZ",
+      "pX",
+      "pY",
+      "pZ",
+      "vX",
+      "vY",
+      "vZ"
+    ]
+  },
+  "IMU": {
+    "count": 5486,
+    "fields": [
+      "AH",
+      "AHz",
+      "AccX",
+      "AccY",
+      "AccZ",
+      "EA",
+      "EG",
+      "GH",
+      "GHz",
+      "GyrX",
+      "GyrY",
+      "GyrZ",
+      "I",
+      "T",
+      "TimeUS"
+    ]
+  },
+  "MAG": {
+    "count": 3294,
+    "fields": [
+      "Health",
+      "I",
+      "MOX",
+      "MOY",
+      "MOZ",
+      "MagX",
+      "MagY",
+      "MagZ",
+      "OfsX",
+      "OfsY",
+      "OfsZ",
+      "S",
+      "TimeUS"
+    ]
+  },
+  "MAV": {
+    "count": 109,
+    "fields": [
+      "TimeUS",
+      "chan",
+      "flags",
+      "rxdp",
+      "rxp",
+      "ss",
+      "tf",
+      "txp"
+    ]
+  },
+  "MAVC": {
+    "count": 9,
+    "fields": [
+      "Cmd",
+      "Fr",
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "Res",
+      "SC",
+      "SS",
+      "TC",
+      "TS",
+      "TimeUS",
+      "WL",
+      "X",
+      "Y",
+      "Z"
+    ]
+  },
+  "MODE": {
+    "count": 5,
+    "fields": [
+      "Mode",
+      "ModeNum",
+      "Rsn",
+      "TimeUS"
+    ]
+  },
+  "MOTB": {
+    "count": 11,
+    "fields": [
+      "BatVolt",
+      "FailFlags",
+      "LiftMax",
+      "ThLimit",
+      "ThrAvMx",
+      "ThrOut",
+      "TimeUS"
+    ]
+  },
+  "MSG": {
+    "count": 35,
+    "fields": [
+      "Message",
+      "TimeUS"
+    ]
+  },
+  "MULT": {
+    "count": 15,
+    "fields": [
+      "Id",
+      "Mult",
+      "TimeUS"
+    ]
+  },
+  "ORGN": {
+    "count": 4,
+    "fields": [
+      "Alt",
+      "Lat",
+      "Lng",
+      "TimeUS",
+      "Type"
+    ]
+  },
+  "PARM": {
+    "count": 1365,
+    "fields": [
+      "Default",
+      "Name",
+      "TimeUS",
+      "Value"
+    ]
+  },
+  "PIDA": {
+    "count": 43432,
+    "fields": [
+      "Act",
+      "D",
+      "Dmod",
+      "Err",
+      "FF",
+      "I",
+      "Limit",
+      "P",
+      "SRate",
+      "Tar",
+      "TimeUS"
+    ]
+  },
+  "PIDE": {
+    "count": 34338,
+    "fields": [
+      "Act",
+      "D",
+      "Dmod",
+      "Err",
+      "FF",
+      "I",
+      "Limit",
+      "P",
+      "SRate",
+      "Tar",
+      "TimeUS"
+    ]
+  },
+  "PIDN": {
+    "count": 34338,
+    "fields": [
+      "Act",
+      "D",
+      "Dmod",
+      "Err",
+      "FF",
+      "I",
+      "Limit",
+      "P",
+      "SRate",
+      "Tar",
+      "TimeUS"
+    ]
+  },
+  "PIDP": {
+    "count": 43432,
+    "fields": [
+      "Act",
+      "D",
+      "Dmod",
+      "Err",
+      "FF",
+      "I",
+      "Limit",
+      "P",
+      "SRate",
+      "Tar",
+      "TimeUS"
+    ]
+  },
+  "PIDR": {
+    "count": 43432,
+    "fields": [
+      "Act",
+      "D",
+      "Dmod",
+      "Err",
+      "FF",
+      "I",
+      "Limit",
+      "P",
+      "SRate",
+      "Tar",
+      "TimeUS"
+    ]
+  },
+  "PIDY": {
+    "count": 43432,
+    "fields": [
+      "Act",
+      "D",
+      "Dmod",
+      "Err",
+      "FF",
+      "I",
+      "Limit",
+      "P",
+      "SRate",
+      "Tar",
+      "TimeUS"
+    ]
+  },
+  "PM": {
+    "count": 10,
+    "fields": [
+      "ErrC",
+      "ErrL",
+      "Ex",
+      "I2CC",
+      "I2CI",
+      "IntE",
+      "LR",
+      "Load",
+      "MaxT",
+      "Mem",
+      "NL",
+      "NLon",
+      "SPIC",
+      "TimeUS"
+    ]
+  },
+  "POS": {
+    "count": 2586,
+    "fields": [
+      "Alt",
+      "Lat",
+      "Lng",
+      "RelHomeAlt",
+      "RelOriginAlt",
+      "TimeUS"
+    ]
+  },
+  "PSCD": {
+    "count": 1030,
+    "fields": [
+      "AD",
+      "DAD",
+      "DVD",
+      "PD",
+      "TAD",
+      "TPD",
+      "TVD",
+      "TimeUS",
+      "VD"
+    ]
+  },
+  "PSCE": {
+    "count": 858,
+    "fields": [
+      "AE",
+      "DAE",
+      "DVE",
+      "PE",
+      "TAE",
+      "TPE",
+      "TVE",
+      "TimeUS",
+      "VE"
+    ]
+  },
+  "PSCN": {
+    "count": 858,
+    "fields": [
+      "AN",
+      "DAN",
+      "DVN",
+      "PN",
+      "TAN",
+      "TPN",
+      "TVN",
+      "TimeUS",
+      "VN"
+    ]
+  },
+  "RATE": {
+    "count": 43443,
+    "fields": [
+      "A",
+      "ADes",
+      "AOut",
+      "AOutSlew",
+      "P",
+      "PDes",
+      "POut",
+      "R",
+      "RDes",
+      "ROut",
+      "TimeUS",
+      "Y",
+      "YDes",
+      "YOut"
+    ]
+  },
+  "RCI2": {
+    "count": 188,
+    "fields": [
+      "C15",
+      "C16",
+      "OMask",
+      "TimeUS"
+    ]
+  },
+  "RCIN": {
+    "count": 1098,
+    "fields": [
+      "C1",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C14",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6",
+      "C7",
+      "C8",
+      "C9",
+      "TimeUS"
+    ]
+  },
+  "RCO2": {
+    "count": 1097,
+    "fields": [
+      "C15",
+      "C16",
+      "C17",
+      "C18",
+      "TimeUS"
+    ]
+  },
+  "RCOU": {
+    "count": 1097,
+    "fields": [
+      "C1",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C14",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6",
+      "C7",
+      "C8",
+      "C9",
+      "TimeUS"
+    ]
+  },
+  "SIM": {
+    "count": 2725,
+    "fields": [
+      "Alt",
+      "Lat",
+      "Lng",
+      "Pitch",
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "Roll",
+      "TimeUS",
+      "Yaw"
+    ]
+  },
+  "SIM2": {
+    "count": 43895,
+    "fields": [
+      "As",
+      "PD",
+      "PE",
+      "PN",
+      "TimeUS",
+      "VD",
+      "VE",
+      "VN"
+    ]
+  },
+  "SRTL": {
+    "count": 29,
+    "fields": [
+      "Action",
+      "Active",
+      "D",
+      "E",
+      "MaxPts",
+      "N",
+      "NumPts",
+      "TimeUS"
+    ]
+  },
+  "TERR": {
+    "count": 103,
+    "fields": [
+      "CHeight",
+      "Lat",
+      "Lng",
+      "Loaded",
+      "Pending",
+      "ROfs",
+      "Spacing",
+      "Status",
+      "TerrH",
+      "TimeUS"
+    ]
+  },
+  "UNIT": {
+    "count": 36,
+    "fields": [
+      "Id",
+      "Label",
+      "TimeUS"
+    ]
+  },
+  "VER": {
+    "count": 1,
+    "fields": [
+      "APJ",
+      "BST",
+      "BT",
+      "FWS",
+      "FWT",
+      "GH",
+      "Maj",
+      "Min",
+      "Pat",
+      "TimeUS"
+    ]
+  },
+  "VIBE": {
+    "count": 2194,
+    "fields": [
+      "Clip",
+      "IMU",
+      "TimeUS",
+      "VibeX",
+      "VibeY",
+      "VibeZ"
+    ]
+  },
+  "XKF1": {
+    "count": 5430,
+    "fields": [
+      "C",
+      "GX",
+      "GY",
+      "GZ",
+      "OH",
+      "PD",
+      "PE",
+      "PN",
+      "Pitch",
+      "Roll",
+      "TimeUS",
+      "VD",
+      "VE",
+      "VN",
+      "Yaw",
+      "dPD"
+    ]
+  },
+  "XKF2": {
+    "count": 5430,
+    "fields": [
+      "AX",
+      "AY",
+      "AZ",
+      "C",
+      "IDX",
+      "IDY",
+      "IS",
+      "MD",
+      "ME",
+      "MN",
+      "MX",
+      "MY",
+      "MZ",
+      "TimeUS",
+      "VWE",
+      "VWN"
+    ]
+  },
+  "XKF3": {
+    "count": 5430,
+    "fields": [
+      "C",
+      "ErSc",
+      "IMX",
+      "IMY",
+      "IMZ",
+      "IPD",
+      "IPE",
+      "IPN",
+      "IVD",
+      "IVE",
+      "IVN",
+      "IVT",
+      "IYAW",
+      "RErr",
+      "TimeUS"
+    ]
+  },
+  "XKF4": {
+    "count": 5430,
+    "fields": [
+      "C",
+      "FS",
+      "GPS",
+      "OFE",
+      "OFN",
+      "PI",
+      "SH",
+      "SM",
+      "SP",
+      "SS",
+      "SV",
+      "SVT",
+      "TS",
+      "TimeUS",
+      "errRP"
+    ]
+  },
+  "XKF5": {
+    "count": 2715,
+    "fields": [
+      "AFI",
+      "C",
+      "FIX",
+      "FIY",
+      "HAGL",
+      "Herr",
+      "NI",
+      "RI",
+      "TimeUS",
+      "eAng",
+      "ePos",
+      "eVel",
+      "offset",
+      "rng"
+    ]
+  },
+  "XKFS": {
+    "count": 5430,
+    "fields": [
+      "AI",
+      "BI",
+      "C",
+      "GI",
+      "MI",
+      "SS",
+      "TimeUS"
+    ]
+  },
+  "XKQ": {
+    "count": 5430,
+    "fields": [
+      "C",
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "TimeUS"
+    ]
+  },
+  "XKT": {
+    "count": 44,
+    "fields": [
+      "AngMax",
+      "AngMin",
+      "C",
+      "Cnt",
+      "EKFMax",
+      "EKFMin",
+      "IMUMax",
+      "IMUMin",
+      "TimeUS",
+      "VMax",
+      "VMin"
+    ]
+  },
+  "XKTV": {
+    "count": 426,
+    "fields": [
+      "C",
+      "TVD",
+      "TVS",
+      "TimeUS"
+    ]
+  },
+  "XKV1": {
+    "count": 209,
+    "fields": [
+      "C",
+      "TimeUS",
+      "V00",
+      "V01",
+      "V02",
+      "V03",
+      "V04",
+      "V05",
+      "V06",
+      "V07",
+      "V08",
+      "V09",
+      "V10",
+      "V11"
+    ]
+  },
+  "XKV2": {
+    "count": 209,
+    "fields": [
+      "C",
+      "TimeUS",
+      "V12",
+      "V13",
+      "V14",
+      "V15",
+      "V16",
+      "V17",
+      "V18",
+      "V19",
+      "V20",
+      "V21",
+      "V22",
+      "V23"
+    ]
+  },
+  "XKY0": {
+    "count": 3432,
+    "fields": [
+      "C",
+      "TimeUS",
+      "W0",
+      "W1",
+      "W2",
+      "W3",
+      "W4",
+      "Y0",
+      "Y1",
+      "Y2",
+      "Y3",
+      "Y4",
+      "YC",
+      "YCS"
+    ]
+  },
+  "XKY1": {
+    "count": 3432,
+    "fields": [
+      "C",
+      "IVE0",
+      "IVE1",
+      "IVE2",
+      "IVE3",
+      "IVE4",
+      "IVN0",
+      "IVN1",
+      "IVN2",
+      "IVN3",
+      "IVN4",
+      "TimeUS"
+    ]
+  }
+}
