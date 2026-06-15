@@ -1,0 +1,75 @@
+experiment:
+  name: control_authority_demand_reparameterization_v1
+  version: demand_v1
+  artifact_stem: demand_v1
+  date: "2026-06-15"
+  source_oracleA_tag: planc/ctrlauth-oracleA-v1-20260615
+  source_oracleA_result: planc/results/oracleA_v1_result.json
+  analysis_short_circuit: true
+  analysis_short_circuit_rule: "Use the existing 65 oracleA-v1 runs first. If an achieved-trajectory demand feature reaches AUC >= 0.90 or |Spearman rho| >= 0.90, classify LEARNABLE from that feature without running the E/P confirmation grid in this v1 turn. If no eligible non-outcome-proxy feature reaches the threshold, classify COMPLEX and do not run the E/P grid because Phi* is not defined."
+
+decision:
+  learnable_boundary: "A non-outcome-proxy achieved-trajectory demand feature Phi makes clean_unsafe monotone enough: AUC >= 0.90 or |Spearman rho| >= 0.90."
+  complex_boundary: "No eligible candidate Phi reaches the monotonicity threshold; the LOC region remains multimodal in available trajectory coordinates."
+  auc_threshold: 0.90
+  spearman_abs_threshold: 0.90
+
+labels:
+  positive: clean_unsafe
+  negative:
+    - recovered
+    - safe
+
+candidate_phi:
+  eligible_primary:
+    - actual_rate_peak_deg_s
+    - actual_rate_rms_deg_s
+    - actual_rate_p95_deg_s
+    - actual_rate_impulse_deg
+    - desired_rate_impulse_deg
+    - desired_rate_peak_deg_s
+    - desired_rate_p95_deg_s
+    - desired_over_command_rate_ratio
+    - actual_over_command_rate_ratio
+    - actual_roll_range_maneuver_deg
+    - actual_roll_abs_peak_maneuver_deg
+    - command_rate_impulse_deg
+    - command_peak_accel_proxy_deg_s2
+    - command_high_rate_time_s
+    - reversal_phase_ratio
+  diagnostic_outcome_proxies:
+    - altitude_loss_m
+    - min_altitude_neg_m
+    - max_attitude_error_deg
+    - final_error_deg
+    - attitude_error_impulse_deg_s
+    - attitude_error_high_time_s
+
+feature_extraction:
+  rate_high_thresholds_deg_s: [120.0, 180.0]
+  attitude_error_threshold_deg: 60.0
+  csv_time_step_fallback_s: 0.02
+  maneuver_only_features: true
+  reversal_phase:
+    response_peak_search_s: 1.5
+    min_command_rate_deg_s: 5.0
+
+confirm_grid_if_needed:
+  status: preregistered_not_run_by_default
+  turbulence_layers:
+    - {layer: default, wind_m_s: 0.0, turbulence_m_s: 0.0}
+    - {layer: low, wind_m_s: 4.0, turbulence_m_s: 2.0}
+    - {layer: high, wind_m_s: 15.0, turbulence_m_s: 8.0}
+  angle_max_layers:
+    - {layer: tight, angle_max_cd: 3000}
+    - {layer: default, angle_max_cd: 4500}
+    - {layer: legal_upper, angle_max_cd: 8000}
+  target_r_values_deg_s: [120.0, 180.0, 300.0, 420.0, 540.0, 600.0]
+  seeds_per_cell: 10
+  oracle: "Reuse oracleA_v1 hardened A and B hygiene: GCS_COMMAND excluded, cleanup after oracle window by disarm."
+
+reachability_check:
+  status: not_run_in_analysis_short_circuit
+  planned_inputs:
+    - "sustained aggressive guided velocity/position profile"
+    - "strong-sidewind sustained maneuver"

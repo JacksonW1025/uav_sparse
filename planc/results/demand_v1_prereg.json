@@ -1,0 +1,118 @@
+{
+  "candidate_phi": {
+    "diagnostic_outcome_proxies": [
+      "altitude_loss_m",
+      "min_altitude_neg_m",
+      "max_attitude_error_deg",
+      "final_error_deg",
+      "attitude_error_impulse_deg_s",
+      "attitude_error_high_time_s"
+    ],
+    "eligible_primary": [
+      "actual_rate_peak_deg_s",
+      "actual_rate_rms_deg_s",
+      "actual_rate_p95_deg_s",
+      "actual_rate_impulse_deg",
+      "desired_rate_impulse_deg",
+      "desired_rate_peak_deg_s",
+      "desired_rate_p95_deg_s",
+      "desired_over_command_rate_ratio",
+      "actual_over_command_rate_ratio",
+      "actual_roll_range_maneuver_deg",
+      "actual_roll_abs_peak_maneuver_deg",
+      "command_rate_impulse_deg",
+      "command_peak_accel_proxy_deg_s2",
+      "command_high_rate_time_s",
+      "reversal_phase_ratio"
+    ]
+  },
+  "confirm_grid_if_needed": {
+    "angle_max_layers": [
+      {
+        "angle_max_cd": 3000,
+        "layer": "tight"
+      },
+      {
+        "angle_max_cd": 4500,
+        "layer": "default"
+      },
+      {
+        "angle_max_cd": 8000,
+        "layer": "legal_upper"
+      }
+    ],
+    "oracle": "Reuse oracleA_v1 hardened A and B hygiene: GCS_COMMAND excluded, cleanup after oracle window by disarm.",
+    "seeds_per_cell": 10,
+    "status": "preregistered_not_run_by_default",
+    "target_r_values_deg_s": [
+      120.0,
+      180.0,
+      300.0,
+      420.0,
+      540.0,
+      600.0
+    ],
+    "turbulence_layers": [
+      {
+        "layer": "default",
+        "turbulence_m_s": 0.0,
+        "wind_m_s": 0.0
+      },
+      {
+        "layer": "low",
+        "turbulence_m_s": 2.0,
+        "wind_m_s": 4.0
+      },
+      {
+        "layer": "high",
+        "turbulence_m_s": 8.0,
+        "wind_m_s": 15.0
+      }
+    ]
+  },
+  "decision": {
+    "auc_threshold": 0.9,
+    "complex_boundary": "No eligible candidate Phi reaches the monotonicity threshold; the LOC region remains multimodal in available trajectory coordinates.",
+    "learnable_boundary": "A non-outcome-proxy achieved-trajectory demand feature Phi makes clean_unsafe monotone enough: AUC >= 0.90 or |Spearman rho| >= 0.90.",
+    "spearman_abs_threshold": 0.9
+  },
+  "experiment": {
+    "analysis_short_circuit": true,
+    "analysis_short_circuit_rule": "Use the existing 65 oracleA-v1 runs first. If an achieved-trajectory demand feature reaches AUC >= 0.90 or |Spearman rho| >= 0.90, classify LEARNABLE from that feature without running the E/P confirmation grid in this v1 turn. If no eligible non-outcome-proxy feature reaches the threshold, classify COMPLEX and do not run the E/P grid because Phi* is not defined.",
+    "artifact_stem": "demand_v1",
+    "date": "2026-06-15",
+    "name": "control_authority_demand_reparameterization_v1",
+    "source_oracleA_result": "planc/results/oracleA_v1_result.json",
+    "source_oracleA_tag": "planc/ctrlauth-oracleA-v1-20260615",
+    "version": "demand_v1"
+  },
+  "feature_extraction": {
+    "attitude_error_threshold_deg": 60.0,
+    "csv_time_step_fallback_s": 0.02,
+    "maneuver_only_features": true,
+    "rate_high_thresholds_deg_s": [
+      120.0,
+      180.0
+    ],
+    "reversal_phase": {
+      "min_command_rate_deg_s": 5.0,
+      "response_peak_search_s": 1.5
+    }
+  },
+  "labels": {
+    "negative": [
+      "recovered",
+      "safe"
+    ],
+    "positive": "clean_unsafe"
+  },
+  "reachability_check": {
+    "planned_inputs": [
+      "sustained aggressive guided velocity/position profile",
+      "strong-sidewind sustained maneuver"
+    ],
+    "status": "not_run_in_analysis_short_circuit"
+  },
+  "status": "preregistered",
+  "written_at_utc": "2026-06-15T08:19:39.385312+00:00"
+}
