@@ -1,0 +1,168 @@
+experiment:
+  name: control_authority_stage0_v2
+  version: stage0_v2
+  artifact_stem: stage0_v2
+  run_prefix: stage0v2
+  date: "2026-06-15"
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 90.0
+  takeoff_alt_m: 12.0
+  stream_hz: 50
+  speedup: 8
+  pre_maneuver_hold_s: 1.0
+  post_maneuver_hold_s: 1.0
+  cleanup_land_timeout_s: 22.0
+  use_mode: GUIDED_NOGPS
+  yaw_deg: 90.0
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+param_metadata:
+  angle_max_source: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/Parameters.cpp
+  angle_max_legal_range_cd: [1000, 8000]
+  guided_attitude_source: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/GCS_Mavlink.cpp
+  guided_nogps_source: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/mode_guided_nogps.cpp
+  turbulence_seed_note: "ArduCopter 4.4.1 exposes SIM_WIND_TURB but no writable turbulence seed parameter; seed labels are fixed repetition IDs."
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  SYSID_MYGCS: 255
+  FS_GCS_ENABLE: 0
+  FS_OPTIONS: 0
+  FS_THR_ENABLE: 0
+  SIM_RC_FAIL: 0
+  FENCE_ENABLE: 0
+  FENCE_TYPE: 0
+  AVOID_ENABLE: 0
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  WPNAV_SPEED_UP: 300
+  WPNAV_SPEED_DN: 300
+  WPNAV_ACCEL_Z: 1000
+  PILOT_SPEED_UP: 300
+  PILOT_SPEED_DN: 300
+  PILOT_ACCEL_Z: 1000
+  BATT_LOW_VOLT: 0
+  BATT_CRT_VOLT: 0
+  BATT_LOW_MAH: 0
+  BATT_CRT_MAH: 0
+  BATT_FS_LOW_ACT: 0
+  BATT_FS_CRT_ACT: 0
+  FS_CRASH_CHECK: 1
+  FS_EKF_ACTION: 1
+  ANGLE_MAX: 4500
+
+oracle:
+  divergence_error_deg: 60.0
+  divergence_duration_s: 0.5
+  path_fidelity_min_ratio: 0.9
+  command_angle_guard_deg: 1.0
+  command_angle_limit_tolerance_deg: 0.1
+  attitude_active_threshold_deg: 2.0
+  rate_active_threshold_deg_s: 5.0
+  preventive_failsafe_subsystems:
+    - FAILSAFE_RADIO
+    - FAILSAFE_BATT
+    - FAILSAFE_GPS
+    - FAILSAFE_GCS
+    - FAILSAFE_FENCE
+    - CRASH_CHECK
+    - EKFCHECK
+    - FAILSAFE_EKFINAV
+    - FAILSAFE_ADSB
+    - FAILSAFE_TERRAIN
+    - THRUST_LOSS_CHECK
+    - FAILSAFE_SENSORS
+    - FAILSAFE_LEAK
+    - FAILSAFE_VIBE
+    - INTERNAL_ERROR
+    - FAILSAFE_DEADRECKON
+  preventive_text_markers:
+    - "failsafe"
+    - "ekf failsafe"
+    - "crash check"
+    - "thrust loss"
+    - "deadreckon"
+
+command:
+  axis: roll
+  attitude_target_mode: rate_only
+  amplitude_fraction_of_angle_max: 0.98
+  max_nominal_amplitude_deg: 79.0
+  hold_s: 0.55
+  cycles: 5
+  neutral_between_cycles_s: 0.0
+  thrust: 0.5
+
+fidelity:
+  runs:
+    - {role: fidelity_mid, r_deg_s: 180.0, turbulence_m_s: 0.0, wind_m_s: 0.0, seed: 0}
+    - {role: fidelity_high, r_deg_s: 300.0, turbulence_m_s: 0.0, wind_m_s: 0.0, seed: 0}
+
+pressure:
+  seeds: [0, 1, 2]
+  default_turbulence_m_s: 0.0
+  default_wind_m_s: 0.0
+  default_model: m100
+  r_sweep_deg_s: [120.0, 180.0, 240.0, 360.0, 540.0, 720.0, 960.0]
+  target_error_deg: 30.0
+  target_authority_signal: "ThrOut/ThrAvMx >= 0.92 or RATE output/AOutSlew high"
+  legal_knobs_order:
+    - wind_turbulence
+    - lower_twr
+    - angle_max
+    - sharper_doublet
+  wind_turbulence_layers:
+    - {layer: default, wind_m_s: 0.0, turbulence_m_s: 0.0}
+    - {layer: moderate, wind_m_s: 8.0, turbulence_m_s: 4.0}
+    - {layer: high, wind_m_s: 15.0, turbulence_m_s: 8.0}
+  angle_max_layers:
+    - {layer: default, angle_max_cd: 4500}
+    - {layer: legal_upper, angle_max_cd: 8000}
+    - {layer: tight_direction_check, angle_max_cd: 3000}
+  sharper_r_sweep_deg_s: [1200.0, 1500.0]
+
+models:
+  m100:
+    mass_multiplier: 1.0
+    mass_kg: 3.0
+    json: planc/config/minalt_models/mass_3_00.json
+  m125:
+    mass_multiplier: 1.25
+    mass_kg: 3.75
+    json: planc/config/minalt_models/mass_3_75.json
+  m140:
+    mass_multiplier: 1.4
+    mass_kg: 4.2
+    json: planc/config/minalt_models/mass_4_20.json
+  m170:
+    mass_multiplier: 1.7
+    mass_kg: 5.1
+    json: planc/config/minalt_models/mass_5_10.json
+
+boundary_grid:
+  turbulence_layers:
+    - {layer: default, wind_m_s: 0.0, turbulence_m_s: 0.0}
+    - {layer: moderate, wind_m_s: 8.0, turbulence_m_s: 4.0}
+    - {layer: high, wind_m_s: 15.0, turbulence_m_s: 8.0}
+  r_radius_steps: [-120.0, 0.0, 120.0, 240.0]
+  seeds: [0, 1, 2]

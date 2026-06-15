@@ -1,0 +1,233 @@
+{
+  "decision_table": {
+    "GO": "robust nontrivial OverDraw: A inside and B outside for legal commands, stable across seeds",
+    "NEEDS_TUNING": "path fidelity or consequence path is blocked by a tunable issue",
+    "NO_GO_contract_bug_side": "all A points are also B inside",
+    "NO_GO_mechanism_inconclusive": "configured legal pressure knobs are exhausted without entering A"
+  },
+  "experiment": {
+    "artifact_stem": "stage0_v2",
+    "cleanup_land_timeout_s": 22.0,
+    "date": "2026-06-15",
+    "home": {
+      "alt_m": 16.0,
+      "lat": 37.4275,
+      "lon": -122.1697,
+      "yaw_deg": 90.0
+    },
+    "name": "control_authority_stage0_v2",
+    "post_maneuver_hold_s": 1.0,
+    "pre_maneuver_hold_s": 1.0,
+    "run_prefix": "stage0v2",
+    "speedup": 8,
+    "stream_hz": 50,
+    "takeoff_alt_m": 12.0,
+    "use_mode": "GUIDED_NOGPS",
+    "version": "stage0_v2",
+    "yaw_deg": 90.0
+  },
+  "fixed_P": {
+    "angle_max_default_cd": 4500,
+    "angle_max_legal_range_cd": [
+      1000,
+      8000
+    ],
+    "avoidance_disabled": true,
+    "baseline_params": {
+      "ANGLE_MAX": 4500,
+      "AVOID_ENABLE": 0,
+      "BATT_CRT_MAH": 0,
+      "BATT_CRT_VOLT": 0,
+      "BATT_FS_CRT_ACT": 0,
+      "BATT_FS_LOW_ACT": 0,
+      "BATT_LOW_MAH": 0,
+      "BATT_LOW_VOLT": 0,
+      "FENCE_ENABLE": 0,
+      "FENCE_TYPE": 0,
+      "FS_CRASH_CHECK": 1,
+      "FS_EKF_ACTION": 1,
+      "FS_GCS_ENABLE": 0,
+      "FS_OPTIONS": 0,
+      "FS_THR_ENABLE": 0,
+      "LOG_BACKEND_TYPE": 1,
+      "LOG_DISARMED": 1,
+      "PILOT_ACCEL_Z": 1000,
+      "PILOT_SPEED_DN": 300,
+      "PILOT_SPEED_UP": 300,
+      "SIM_RC_FAIL": 0,
+      "SIM_WIND_DIR": 270,
+      "SIM_WIND_SPD": 0,
+      "SIM_WIND_TURB": 0,
+      "SYSID_MYGCS": 255,
+      "WPNAV_ACCEL_Z": 1000,
+      "WPNAV_SPEED_DN": 300,
+      "WPNAV_SPEED_UP": 300
+    },
+    "mode": "GUIDED_NOGPS"
+  },
+  "input_path": {
+    "command": {
+      "amplitude_fraction_of_angle_max": 0.98,
+      "attitude_target_mode": "rate_only",
+      "axis": "roll",
+      "cycles": 5,
+      "hold_s": 0.55,
+      "max_nominal_amplitude_deg": 79.0,
+      "neutral_between_cycles_s": 0.0,
+      "thrust": 0.5
+    },
+    "mavlink_message": "SET_ATTITUDE_TARGET",
+    "mode_sequence": "GUIDED takeoff, then GUIDED_NOGPS attitude/rate stream",
+    "r_definition": "r_deg_s is the signed ramp slope and angular-rate feed-forward amplitude used when the bounded attitude doublet reverses between +/- amplitude."
+  },
+  "oracle_A": {
+    "consequence": "SITL crash/ground hit before cleanup LAND",
+    "divergence": "|actual-command attitude error| > 60.0 deg for 0.5 s"
+  },
+  "oracle_B": {
+    "command_angle_limit": "max command tilt touches ANGLE_MAX within configured tolerance",
+    "preventive_failsafe_subsystems": [
+      "FAILSAFE_RADIO",
+      "FAILSAFE_BATT",
+      "FAILSAFE_GPS",
+      "FAILSAFE_GCS",
+      "FAILSAFE_FENCE",
+      "CRASH_CHECK",
+      "EKFCHECK",
+      "FAILSAFE_EKFINAV",
+      "FAILSAFE_ADSB",
+      "FAILSAFE_TERRAIN",
+      "THRUST_LOSS_CHECK",
+      "FAILSAFE_SENSORS",
+      "FAILSAFE_LEAK",
+      "FAILSAFE_VIBE",
+      "INTERNAL_ERROR",
+      "FAILSAFE_DEADRECKON"
+    ],
+    "preventive_text_markers": [
+      "failsafe",
+      "ekf failsafe",
+      "crash check",
+      "thrust loss",
+      "deadreckon"
+    ]
+  },
+  "p1_fidelity": {
+    "runs": [
+      {
+        "r_deg_s": 180.0,
+        "role": "fidelity_mid",
+        "seed": 0,
+        "turbulence_m_s": 0.0,
+        "wind_m_s": 0.0
+      },
+      {
+        "r_deg_s": 300.0,
+        "role": "fidelity_high",
+        "seed": 0,
+        "turbulence_m_s": 0.0,
+        "wind_m_s": 0.0
+      }
+    ]
+  },
+  "p2_pressure": {
+    "angle_max_layers": [
+      {
+        "angle_max_cd": 4500,
+        "layer": "default"
+      },
+      {
+        "angle_max_cd": 8000,
+        "layer": "legal_upper"
+      },
+      {
+        "angle_max_cd": 3000,
+        "layer": "tight_direction_check"
+      }
+    ],
+    "default_model": "m100",
+    "default_turbulence_m_s": 0.0,
+    "default_wind_m_s": 0.0,
+    "legal_knobs_order": [
+      "wind_turbulence",
+      "lower_twr",
+      "angle_max",
+      "sharper_doublet"
+    ],
+    "r_sweep_deg_s": [
+      120.0,
+      180.0,
+      240.0,
+      360.0,
+      540.0,
+      720.0,
+      960.0
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "sharper_r_sweep_deg_s": [
+      1200.0,
+      1500.0
+    ],
+    "target_authority_signal": "ThrOut/ThrAvMx >= 0.92 or RATE output/AOutSlew high",
+    "target_error_deg": 30.0,
+    "wind_turbulence_layers": [
+      {
+        "layer": "default",
+        "turbulence_m_s": 0.0,
+        "wind_m_s": 0.0
+      },
+      {
+        "layer": "moderate",
+        "turbulence_m_s": 4.0,
+        "wind_m_s": 8.0
+      },
+      {
+        "layer": "high",
+        "turbulence_m_s": 8.0,
+        "wind_m_s": 15.0
+      }
+    ]
+  },
+  "p3_boundary_grid": {
+    "r_radius_steps": [
+      -120.0,
+      0.0,
+      120.0,
+      240.0
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "turbulence_layers": [
+      {
+        "layer": "default",
+        "turbulence_m_s": 0.0,
+        "wind_m_s": 0.0
+      },
+      {
+        "layer": "moderate",
+        "turbulence_m_s": 4.0,
+        "wind_m_s": 8.0
+      },
+      {
+        "layer": "high",
+        "turbulence_m_s": 8.0,
+        "wind_m_s": 15.0
+      }
+    ]
+  },
+  "seed_group": [
+    0,
+    1,
+    2
+  ],
+  "seed_limitation": "ArduCopter 4.4.1 exposes SIM_WIND_TURB but no writable turbulence seed parameter; seed labels are fixed repetition IDs.",
+  "status": "preregistered",
+  "written_at_utc": "2026-06-15T03:34:45.796105+00:00"
+}
