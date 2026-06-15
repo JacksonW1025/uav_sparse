@@ -1,0 +1,242 @@
+{
+  "decision": {
+    "bug_side": "Hardened oracle A true only with flight-controller preventive B before the hard consequence.",
+    "real_gap": "Legal bounded attitude command, hardened oracle A true, B_preventive=0 with GCS_COMMAND excluded, and at least one cell has >= robust_min_clean_unsafe_per_cell clean-unsafe runs.",
+    "soft_oracle": "The v2 unsafe region recovers under hardened oracle A, or no legal pressure escalation produces hardened A."
+  },
+  "experiment": {
+    "artifact_stem": "oracleA_v1",
+    "cleanup_disarm_timeout_s": 8.0,
+    "date": "2026-06-15",
+    "home": {
+      "alt_m": 16.0,
+      "lat": 37.4275,
+      "lon": -122.1697,
+      "yaw_deg": 90.0
+    },
+    "name": "control_authority_oracleA_v1",
+    "observation_after_profile_s": 18.0,
+    "post_maneuver_hold_s": 1.0,
+    "pre_maneuver_hold_s": 1.0,
+    "run_prefix": "oracleAv1",
+    "source_island_result": "planc/results/island_v1_result.json",
+    "source_island_tag": "planc/ctrlauth-island-v1-20260615",
+    "source_stage0_result": "planc/results/stage0_v2_result.json",
+    "source_stage0_tag": "planc/ctrlauth-stage0-v2-20260615",
+    "speedup": 8,
+    "stream_hz": 50,
+    "takeoff_alt_m": 45.0,
+    "use_mode": "GUIDED_NOGPS",
+    "version": "oracleA_v1",
+    "yaw_deg": 90.0
+  },
+  "fixed_P": {
+    "baseline_params": {
+      "ANGLE_MAX": 4500,
+      "AVOID_ENABLE": 0,
+      "BATT_CRT_MAH": 0,
+      "BATT_CRT_VOLT": 0,
+      "BATT_FS_CRT_ACT": 0,
+      "BATT_FS_LOW_ACT": 0,
+      "BATT_LOW_MAH": 0,
+      "BATT_LOW_VOLT": 0,
+      "FENCE_ENABLE": 0,
+      "FENCE_TYPE": 0,
+      "FS_CRASH_CHECK": 1,
+      "FS_EKF_ACTION": 1,
+      "FS_GCS_ENABLE": 0,
+      "FS_OPTIONS": 0,
+      "FS_THR_ENABLE": 0,
+      "LOG_BACKEND_TYPE": 1,
+      "LOG_DISARMED": 1,
+      "PILOT_ACCEL_Z": 1000,
+      "PILOT_SPEED_DN": 300,
+      "PILOT_SPEED_UP": 300,
+      "SIM_RC_FAIL": 0,
+      "SIM_WIND_DIR": 270,
+      "SIM_WIND_SPD": 0,
+      "SIM_WIND_TURB": 0,
+      "SYSID_MYGCS": 255,
+      "WPNAV_ACCEL_Z": 1000,
+      "WPNAV_SPEED_DN": 300,
+      "WPNAV_SPEED_UP": 300
+    },
+    "cleanup": "MAV_CMD_COMPONENT_ARM_DISARM after the oracle window; no harness LAND inside oracle B.",
+    "command": {
+      "amplitude_fraction_of_angle_max": 0.98,
+      "attitude_target_mode": "rate_only",
+      "axis": "roll",
+      "cycles": 5,
+      "hold_s": 0.55,
+      "max_nominal_amplitude_deg": 79.0,
+      "neutral_between_cycles_s": 0.0,
+      "thrust": 0.5
+    },
+    "mavlink_message": "SET_ATTITUDE_TARGET",
+    "mode": "GUIDED_NOGPS"
+  },
+  "hardened_oracle_A": {
+    "altitude_loss": "RelHomeAlt drop > 15.0 m inside oracle window.",
+    "crash_or_contact": "SITL ground/contact message, or RelHomeAlt < 1.0 m with downward speed > 2.0 m/s",
+    "transient_recovery": "A transient >60 deg/0.5s that recovers before window end is safe under hardened A.",
+    "unrecovered_divergence": "attitude error > 60.0 deg for 0.5 s and window-end error remains above 60.0 deg, or tail slope >= 5.0 deg/s with final error >= 45.0 deg"
+  },
+  "oracle_B": {
+    "B_clamp": "command touches/exceeds ANGLE_MAX within tolerance",
+    "B_preventive": "flight-controller preventive MODE reason, ERR subsystem, or failsafe text before the hard A trigger; MODE.Rsn=GCS_COMMAND is harness and excluded",
+    "preventive_failsafe_subsystems": [
+      "FAILSAFE_RADIO",
+      "FAILSAFE_BATT",
+      "FAILSAFE_GPS",
+      "FAILSAFE_GCS",
+      "FAILSAFE_FENCE",
+      "CRASH_CHECK",
+      "EKFCHECK",
+      "FAILSAFE_EKFINAV",
+      "FAILSAFE_ADSB",
+      "FAILSAFE_TERRAIN",
+      "THRUST_LOSS_CHECK",
+      "FAILSAFE_SENSORS",
+      "FAILSAFE_LEAK",
+      "FAILSAFE_VIBE",
+      "INTERNAL_ERROR",
+      "FAILSAFE_DEADRECKON"
+    ],
+    "preventive_mode_reasons": [
+      "RADIO_FAILSAFE",
+      "BATTERY_FAILSAFE",
+      "GCS_FAILSAFE",
+      "EKF_FAILSAFE",
+      "GPS_GLITCH",
+      "FENCE_BREACHED",
+      "TERRAIN_FAILSAFE",
+      "AVOIDANCE",
+      "TERMINATE",
+      "CRASH_FAILSAFE",
+      "FAILSAFE",
+      "LEAK_FAILSAFE",
+      "DEADRECKON_FAILSAFE"
+    ]
+  },
+  "sampling_plan": {
+    "boundary_if_real": {
+      "angle_max_cd": 4500,
+      "layer": "default",
+      "model": "m100",
+      "r_deg_s": [
+        120.0,
+        180.0,
+        240.0,
+        300.0,
+        360.0,
+        420.0,
+        480.0,
+        540.0,
+        600.0
+      ],
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "turbulence_m_s": 0.0,
+      "wind_m_s": 0.0
+    },
+    "core": {
+      "angle_max_cd": 4500,
+      "layer": "default",
+      "model": "m100",
+      "r_deg_s": [
+        180.0,
+        360.0,
+        480.0,
+        600.0
+      ],
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "turbulence_m_s": 0.0,
+      "wind_m_s": 0.0
+    },
+    "escalation_if_soft": [
+      {
+        "angle_max_cd": 4500,
+        "layer": "high_r",
+        "model": "m100",
+        "name": "higher_r",
+        "r_deg_s": [
+          720.0,
+          960.0,
+          1200.0,
+          1500.0
+        ],
+        "seeds": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "turbulence_m_s": 0.0,
+        "wind_m_s": 0.0
+      },
+      {
+        "angle_max_cd": 4500,
+        "layer": "lower_twr_m170",
+        "model": "m170",
+        "name": "lower_twr",
+        "r_deg_s": [
+          720.0,
+          960.0,
+          1200.0
+        ],
+        "seeds": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "turbulence_m_s": 0.0,
+        "wind_m_s": 0.0
+      },
+      {
+        "angle_max_cd": 4500,
+        "layer": "high_wind_turb",
+        "model": "m100",
+        "name": "high_wind_turbulence",
+        "r_deg_s": [
+          720.0,
+          960.0,
+          1200.0
+        ],
+        "seeds": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "turbulence_m_s": 8.0,
+        "wind_m_s": 15.0
+      }
+    ]
+  },
+  "source": {
+    "island_tag": "planc/ctrlauth-island-v1-20260615",
+    "stage0_tag": "planc/ctrlauth-stage0-v2-20260615"
+  },
+  "status": "preregistered",
+  "written_at_utc": "2026-06-15T07:44:03.870427+00:00"
+}

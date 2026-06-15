@@ -1,0 +1,214 @@
+experiment:
+  name: control_authority_oracleA_v1
+  version: oracleA_v1
+  artifact_stem: oracleA_v1
+  run_prefix: oracleAv1
+  date: "2026-06-15"
+  source_stage0_tag: planc/ctrlauth-stage0-v2-20260615
+  source_island_tag: planc/ctrlauth-island-v1-20260615
+  source_stage0_result: planc/results/stage0_v2_result.json
+  source_island_result: planc/results/island_v1_result.json
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 90.0
+  takeoff_alt_m: 45.0
+  stream_hz: 50
+  speedup: 8
+  pre_maneuver_hold_s: 1.0
+  post_maneuver_hold_s: 1.0
+  observation_after_profile_s: 18.0
+  cleanup_disarm_timeout_s: 8.0
+  use_mode: GUIDED_NOGPS
+  yaw_deg: 90.0
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+param_metadata:
+  angle_max_source: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/Parameters.cpp
+  angle_max_legal_range_cd: [1000, 8000]
+  guided_attitude_source: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/GCS_Mavlink.cpp
+  guided_nogps_source: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/mode_guided_nogps.cpp
+  turbulence_seed_note: "ArduCopter 4.4.1 exposes SIM_WIND_TURB but no writable turbulence seed parameter; seed labels are fixed repetition IDs."
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  SYSID_MYGCS: 255
+  FS_GCS_ENABLE: 0
+  FS_OPTIONS: 0
+  FS_THR_ENABLE: 0
+  SIM_RC_FAIL: 0
+  FENCE_ENABLE: 0
+  FENCE_TYPE: 0
+  AVOID_ENABLE: 0
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  WPNAV_SPEED_UP: 300
+  WPNAV_SPEED_DN: 300
+  WPNAV_ACCEL_Z: 1000
+  PILOT_SPEED_UP: 300
+  PILOT_SPEED_DN: 300
+  PILOT_ACCEL_Z: 1000
+  BATT_LOW_VOLT: 0
+  BATT_CRT_VOLT: 0
+  BATT_LOW_MAH: 0
+  BATT_CRT_MAH: 0
+  BATT_FS_LOW_ACT: 0
+  BATT_FS_CRT_ACT: 0
+  FS_CRASH_CHECK: 1
+  FS_EKF_ACTION: 1
+  ANGLE_MAX: 4500
+
+pressure:
+  default_model: m100
+  default_wind_m_s: 0.0
+  default_turbulence_m_s: 0.0
+  seeds_10: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  seeds_5: [0, 1, 2, 3, 4]
+
+models:
+  m100:
+    mass_multiplier: 1.0
+    mass_kg: 3.0
+    json: planc/config/minalt_models/mass_3_00.json
+  m125:
+    mass_multiplier: 1.25
+    mass_kg: 3.75
+    json: planc/config/minalt_models/mass_3_75.json
+  m140:
+    mass_multiplier: 1.4
+    mass_kg: 4.2
+    json: planc/config/minalt_models/mass_4_20.json
+  m170:
+    mass_multiplier: 1.7
+    mass_kg: 5.1
+    json: planc/config/minalt_models/mass_5_10.json
+
+command:
+  axis: roll
+  attitude_target_mode: rate_only
+  amplitude_fraction_of_angle_max: 0.98
+  max_nominal_amplitude_deg: 79.0
+  hold_s: 0.55
+  cycles: 5
+  neutral_between_cycles_s: 0.0
+  thrust: 0.5
+
+oracle:
+  divergence_error_deg: 60.0
+  divergence_duration_s: 0.5
+  divergence_tail_s: 1.0
+  divergence_trend_s: 2.0
+  divergence_worsening_slope_deg_s: 5.0
+  divergence_worsening_min_final_deg: 45.0
+  altitude_loss_thresh_m: 15.0
+  h_floor_m: 1.0
+  floor_descent_rate_m_s: 2.0
+  command_angle_guard_deg: 1.0
+  command_angle_limit_tolerance_deg: 0.1
+  attitude_active_threshold_deg: 2.0
+  rate_active_threshold_deg_s: 5.0
+  robust_min_clean_unsafe_per_cell: 2
+  preventive_mode_reasons:
+    - RADIO_FAILSAFE
+    - BATTERY_FAILSAFE
+    - GCS_FAILSAFE
+    - EKF_FAILSAFE
+    - GPS_GLITCH
+    - FENCE_BREACHED
+    - TERRAIN_FAILSAFE
+    - AVOIDANCE
+    - TERMINATE
+    - CRASH_FAILSAFE
+    - FAILSAFE
+    - LEAK_FAILSAFE
+    - DEADRECKON_FAILSAFE
+  harness_cleanup_mode_reason: GCS_COMMAND
+  preventive_failsafe_subsystems:
+    - FAILSAFE_RADIO
+    - FAILSAFE_BATT
+    - FAILSAFE_GPS
+    - FAILSAFE_GCS
+    - FAILSAFE_FENCE
+    - CRASH_CHECK
+    - EKFCHECK
+    - FAILSAFE_EKFINAV
+    - FAILSAFE_ADSB
+    - FAILSAFE_TERRAIN
+    - THRUST_LOSS_CHECK
+    - FAILSAFE_SENSORS
+    - FAILSAFE_LEAK
+    - FAILSAFE_VIBE
+    - INTERNAL_ERROR
+    - FAILSAFE_DEADRECKON
+  preventive_text_markers:
+    - "failsafe"
+    - "ekf failsafe"
+    - "crash check"
+    - "thrust loss"
+    - "deadreckon"
+
+sampling_plan:
+  core:
+    layer: default
+    r_deg_s: [180.0, 360.0, 480.0, 600.0]
+    seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    wind_m_s: 0.0
+    turbulence_m_s: 0.0
+    angle_max_cd: 4500
+    model: m100
+  boundary_if_real:
+    layer: default
+    r_deg_s: [120.0, 180.0, 240.0, 300.0, 360.0, 420.0, 480.0, 540.0, 600.0]
+    seeds: [0, 1, 2, 3, 4]
+    wind_m_s: 0.0
+    turbulence_m_s: 0.0
+    angle_max_cd: 4500
+    model: m100
+  escalation_if_soft:
+    - name: higher_r
+      layer: high_r
+      r_deg_s: [720.0, 960.0, 1200.0, 1500.0]
+      seeds: [0, 1, 2, 3, 4]
+      wind_m_s: 0.0
+      turbulence_m_s: 0.0
+      angle_max_cd: 4500
+      model: m100
+    - name: lower_twr
+      layer: lower_twr_m170
+      r_deg_s: [720.0, 960.0, 1200.0]
+      seeds: [0, 1, 2, 3, 4]
+      wind_m_s: 0.0
+      turbulence_m_s: 0.0
+      angle_max_cd: 4500
+      model: m170
+    - name: high_wind_turbulence
+      layer: high_wind_turb
+      r_deg_s: [720.0, 960.0, 1200.0]
+      seeds: [0, 1, 2, 3, 4]
+      wind_m_s: 15.0
+      turbulence_m_s: 8.0
+      angle_max_cd: 4500
+      model: m100
+
+decision:
+  real_gap: "Legal bounded attitude command, hardened oracle A true, B_preventive=0 with GCS_COMMAND excluded, and at least one cell has >= robust_min_clean_unsafe_per_cell clean-unsafe runs."
+  soft_oracle: "The v2 unsafe region recovers under hardened oracle A, or no legal pressure escalation produces hardened A."
+  bug_side: "Hardened oracle A true only with flight-controller preventive B before the hard consequence."
