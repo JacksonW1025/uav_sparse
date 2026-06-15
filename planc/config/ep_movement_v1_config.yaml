@@ -1,0 +1,213 @@
+experiment:
+  name: control_authority_ep_movement_v1
+  version: ep_movement_v1
+  artifact_stem: ep_movement_v1
+  run_prefix: epmovev1
+  date: "2026-06-15"
+  source_oracleA_tag: planc/ctrlauth-oracleA-v1-20260615
+  source_oracleA_result: planc/results/oracleA_v1_result.json
+  source_demand_tag: planc/ctrlauth-demand-v1-20260615
+  source_demand_result: planc/results/demand_v1_result.json
+  use_mode: GUIDED_NOGPS
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 90.0
+  takeoff_alt_m: 45.0
+  stream_hz: 50
+  speedup: 8
+  pre_maneuver_hold_s: 1.0
+  post_maneuver_hold_s: 1.0
+  observation_after_profile_s: 18.0
+  cleanup_disarm_timeout_s: 8.0
+  yaw_deg: 90.0
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+param_metadata:
+  angle_max_source: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/Parameters.cpp
+  angle_max_legal_range_cd: [1000, 8000]
+  guided_attitude_source: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/GCS_Mavlink.cpp
+  guided_nogps_source: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/mode_guided_nogps.cpp
+  turbulence_seed_note: "ArduCopter 4.4.1 exposes SIM_WIND_TURB but no writable turbulence seed parameter; seed labels are fixed repetition IDs."
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  SYSID_MYGCS: 255
+  FS_GCS_ENABLE: 0
+  FS_OPTIONS: 0
+  FS_THR_ENABLE: 0
+  SIM_RC_FAIL: 0
+  FENCE_ENABLE: 0
+  FENCE_TYPE: 0
+  AVOID_ENABLE: 0
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  WPNAV_SPEED_UP: 300
+  WPNAV_SPEED_DN: 300
+  WPNAV_ACCEL_Z: 1000
+  PILOT_SPEED_UP: 300
+  PILOT_SPEED_DN: 300
+  PILOT_ACCEL_Z: 1000
+  BATT_LOW_VOLT: 0
+  BATT_CRT_VOLT: 0
+  BATT_LOW_MAH: 0
+  BATT_CRT_MAH: 0
+  BATT_FS_LOW_ACT: 0
+  BATT_FS_CRT_ACT: 0
+  FS_CRASH_CHECK: 1
+  FS_EKF_ACTION: 1
+  ANGLE_MAX: 4500
+
+pressure:
+  default_model: m100
+  default_wind_m_s: 0.0
+  default_turbulence_m_s: 0.0
+  seeds_10: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+models:
+  m100:
+    mass_multiplier: 1.0
+    mass_kg: 3.0
+    json: planc/config/minalt_models/mass_3_00.json
+
+command:
+  axis: roll
+  attitude_target_mode: rate_only
+  amplitude_fraction_of_angle_max: 0.98
+  max_nominal_amplitude_deg: 79.0
+  hold_s: 0.55
+  cycles: 5
+  neutral_between_cycles_s: 0.0
+  thrust: 0.5
+
+oracle:
+  divergence_error_deg: 60.0
+  divergence_duration_s: 0.5
+  divergence_tail_s: 1.0
+  divergence_trend_s: 2.0
+  divergence_worsening_slope_deg_s: 5.0
+  divergence_worsening_min_final_deg: 45.0
+  altitude_loss_thresh_m: 15.0
+  h_floor_m: 1.0
+  floor_descent_rate_m_s: 2.0
+  command_angle_guard_deg: 1.0
+  command_angle_limit_tolerance_deg: 0.1
+  attitude_active_threshold_deg: 2.0
+  rate_active_threshold_deg_s: 5.0
+  robust_min_clean_unsafe_per_cell: 2
+  preventive_mode_reasons:
+    - RADIO_FAILSAFE
+    - BATTERY_FAILSAFE
+    - GCS_FAILSAFE
+    - EKF_FAILSAFE
+    - GPS_GLITCH
+    - FENCE_BREACHED
+    - TERRAIN_FAILSAFE
+    - AVOIDANCE
+    - TERMINATE
+    - CRASH_FAILSAFE
+    - FAILSAFE
+    - LEAK_FAILSAFE
+    - DEADRECKON_FAILSAFE
+  harness_cleanup_mode_reason: GCS_COMMAND
+  preventive_failsafe_subsystems:
+    - FAILSAFE_RADIO
+    - FAILSAFE_BATT
+    - FAILSAFE_GPS
+    - FAILSAFE_GCS
+    - FAILSAFE_FENCE
+    - CRASH_CHECK
+    - EKFCHECK
+    - FAILSAFE_EKFINAV
+    - FAILSAFE_ADSB
+    - FAILSAFE_TERRAIN
+    - THRUST_LOSS_CHECK
+    - FAILSAFE_SENSORS
+    - FAILSAFE_LEAK
+    - FAILSAFE_VIBE
+    - INTERNAL_ERROR
+    - FAILSAFE_DEADRECKON
+  preventive_text_markers:
+    - "failsafe"
+    - "ekf failsafe"
+    - "crash check"
+    - "thrust loss"
+    - "deadreckon"
+
+mechanisms:
+  source_runs: existing_oracleA_v1
+  clean_label: clean_unsafe
+  negative_labels: [recovered, safe]
+  rate_feature: actual_rate_peak_deg_s
+  high_bank_threshold_candidates_deg: [40.0, 50.0, 60.0, 70.0, 80.0]
+  selected_high_bank_threshold_deg: 60.0
+  classifier_auc_threshold: 0.90
+  feature_window: pre_consequence_clipped_to_maneuver
+  score: zscore(actual_rate_peak_deg_s) + zscore(high_bank_dwell_impulse_deg_s)
+
+ep_grid:
+  enabled: true
+  r_deg_s: [120.0, 180.0, 300.0, 420.0, 540.0, 600.0]
+  seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  turbulence_layers:
+    - {name: E0, wind_m_s: 0.0, turbulence_m_s: 0.0}
+    - {name: Elow, wind_m_s: 4.0, turbulence_m_s: 2.0}
+    - {name: Ehigh, wind_m_s: 15.0, turbulence_m_s: 8.0}
+  angle_max_layers:
+    - {name: P30, angle_max_cd: 3000}
+    - {name: P45, angle_max_cd: 4500}
+    - {name: P80, angle_max_cd: 8000}
+  boundary_probability: 0.5
+  model: m100
+
+reachability:
+  enabled: true
+  inputs:
+    - name: sidewind_sustained_bank_P45
+      description: non-doublet sustained sidewind bank, legal 45 deg angle limit
+      wind_m_s: 15.0
+      turbulence_m_s: 8.0
+      angle_max_cd: 4500
+      seed: 0
+      profile: sustained_bank
+      attitude_target_mode: attitude_and_rate
+      axis: roll
+      amplitude_fraction_of_angle_max: 0.98
+      max_nominal_amplitude_deg: 44.0
+      ramp_rate_deg_s: 90.0
+      hold_s: 22.0
+      thrust: 0.5
+      model: m100
+    - name: sidewind_sustained_bank_P80
+      description: non-doublet sustained sidewind bank, legal upper angle limit
+      wind_m_s: 15.0
+      turbulence_m_s: 8.0
+      angle_max_cd: 8000
+      seed: 0
+      profile: sustained_bank
+      attitude_target_mode: attitude_and_rate
+      axis: roll
+      amplitude_fraction_of_angle_max: 0.86
+      max_nominal_amplitude_deg: 68.0
+      ramp_rate_deg_s: 110.0
+      hold_s: 18.0
+      thrust: 0.5
+      model: m100
