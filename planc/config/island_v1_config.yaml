@@ -1,0 +1,60 @@
+experiment:
+  name: control_authority_overdraw_island_v1
+  version: island_v1
+  artifact_stem: island_v1
+  run_prefix: islandv1
+  date: "2026-06-15"
+  source_stage0_result: planc/results/stage0_v2_result.json
+  source_stage0_tag: planc/ctrlauth-stage0-v2-20260615
+  source_log_prefix: stage0v2
+
+audit:
+  allow_stage1_short_circuit: true
+  short_circuit_reason: "If v2 B-positive labels are caused by harness GCS_COMMAND cleanup rather than B_clamp or flight-controller preventive failsafe, the island is an oracle/trigger artifact and no new SITL sampling is required."
+  primary_scope:
+    role: p3
+    description: "Stage-0 v2 boundary grid, including the tight ANGLE_MAX direction check; this is the 8-overdraw-run island audit scope."
+  preventive_mode_reasons:
+    - RADIO_FAILSAFE
+    - BATTERY_FAILSAFE
+    - GCS_FAILSAFE
+    - EKF_FAILSAFE
+    - GPS_GLITCH
+    - FENCE_BREACHED
+    - TERRAIN_FAILSAFE
+    - AVOIDANCE
+    - TERMINATE
+    - CRASH_FAILSAFE
+    - FAILSAFE
+    - LEAK_FAILSAFE
+    - DEADRECKON_FAILSAFE
+  harness_cleanup_mode_reason: GCS_COMMAND
+  crash_check_thresholds:
+    angle_error_deg: 30.0
+    lean_angle_deg: 15.0
+    speed_m_s: 10.0
+    accel_m_s_s: 3.0
+    duration_s: 2.0
+  ekf_fs_flag_field: XKF4.FS
+  ekf_variance_threshold_param: FS_EKF_THRESH
+
+sampling_plan:
+  enabled_after_clean_audit: true
+  depth:
+    layer: default
+    r_deg_s: [360.0, 420.0, 480.0, 540.0, 600.0]
+    repetitions_per_cell: 25
+  fine_scan:
+    r_start_deg_s: 120.0
+    r_stop_deg_s: 720.0
+    r_step_deg_s: 60.0
+    repetitions_per_cell: 10
+  turbulence_layers:
+    - {layer: default, wind_m_s: 0.0, turbulence_m_s: 0.0}
+    - {layer: low, wind_m_s: 4.0, turbulence_m_s: 2.0}
+    - {layer: high, wind_m_s: 15.0, turbulence_m_s: 8.0}
+
+decision:
+  island_real: "smooth reproducible OverDraw probability with p >= 0.5 continuous region, positive evidence that preventive failsafe predicates were evaluated and unmet, and a consistent B-component mechanism."
+  island_flaky: "unstructured seed noise, v2 oracle漏判/误判 of B_failsafe, harness-trigger artifact, or cross-seed incoherence."
+  needs_tuning: "mechanism identifiable but sampling or observable口径 is blocked."

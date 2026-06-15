@@ -1,0 +1,95 @@
+{
+  "audit": {
+    "allow_stage1_short_circuit": true,
+    "crash_check_thresholds": {
+      "accel_m_s_s": 3.0,
+      "angle_error_deg": 30.0,
+      "duration_s": 2.0,
+      "lean_angle_deg": 15.0,
+      "speed_m_s": 10.0
+    },
+    "ekf_fs_flag_field": "XKF4.FS",
+    "ekf_variance_threshold_param": "FS_EKF_THRESH",
+    "harness_cleanup_mode_reason": "GCS_COMMAND",
+    "preventive_mode_reasons": [
+      "RADIO_FAILSAFE",
+      "BATTERY_FAILSAFE",
+      "GCS_FAILSAFE",
+      "EKF_FAILSAFE",
+      "GPS_GLITCH",
+      "FENCE_BREACHED",
+      "TERRAIN_FAILSAFE",
+      "AVOIDANCE",
+      "TERMINATE",
+      "CRASH_FAILSAFE",
+      "FAILSAFE",
+      "LEAK_FAILSAFE",
+      "DEADRECKON_FAILSAFE"
+    ],
+    "primary_scope": {
+      "description": "Stage-0 v2 boundary grid, including the tight ANGLE_MAX direction check; this is the 8-overdraw-run island audit scope.",
+      "role": "p3"
+    },
+    "short_circuit_reason": "If v2 B-positive labels are caused by harness GCS_COMMAND cleanup rather than B_clamp or flight-controller preventive failsafe, the island is an oracle/trigger artifact and no new SITL sampling is required."
+  },
+  "decision": {
+    "island_flaky": "unstructured seed noise, v2 oracle\u6f0f\u5224/\u8bef\u5224 of B_failsafe, harness-trigger artifact, or cross-seed incoherence.",
+    "island_real": "smooth reproducible OverDraw probability with p >= 0.5 continuous region, positive evidence that preventive failsafe predicates were evaluated and unmet, and a consistent B-component mechanism.",
+    "needs_tuning": "mechanism identifiable but sampling or observable\u53e3\u5f84 is blocked."
+  },
+  "experiment": {
+    "artifact_stem": "island_v1",
+    "date": "2026-06-15",
+    "name": "control_authority_overdraw_island_v1",
+    "run_prefix": "islandv1",
+    "source_log_prefix": "stage0v2",
+    "source_stage0_result": "planc/results/stage0_v2_result.json",
+    "source_stage0_tag": "planc/ctrlauth-stage0-v2-20260615",
+    "version": "island_v1"
+  },
+  "oracle_B_decomposition": {
+    "B_clamp": "command touches/exceeds ANGLE_MAX",
+    "B_failsafe": "flight-controller preventive ERR/MSG or MODE with preventive ModeReason",
+    "B_harness_cleanup": "MODE change with ModeReason=GCS_COMMAND from the test harness; this is not preventive B"
+  },
+  "sampling_plan": {
+    "depth": {
+      "layer": "default",
+      "r_deg_s": [
+        360.0,
+        420.0,
+        480.0,
+        540.0,
+        600.0
+      ],
+      "repetitions_per_cell": 25
+    },
+    "enabled_after_clean_audit": true,
+    "fine_scan": {
+      "r_start_deg_s": 120.0,
+      "r_step_deg_s": 60.0,
+      "r_stop_deg_s": 720.0,
+      "repetitions_per_cell": 10
+    },
+    "turbulence_layers": [
+      {
+        "layer": "default",
+        "turbulence_m_s": 0.0,
+        "wind_m_s": 0.0
+      },
+      {
+        "layer": "low",
+        "turbulence_m_s": 2.0,
+        "wind_m_s": 4.0
+      },
+      {
+        "layer": "high",
+        "turbulence_m_s": 8.0,
+        "wind_m_s": 15.0
+      }
+    ]
+  },
+  "short_circuit_rule": "If v2 B-positive labels are caused by harness GCS_COMMAND cleanup rather than B_clamp or flight-controller preventive failsafe, the island is an oracle/trigger artifact and no new SITL sampling is required.",
+  "status": "preregistered",
+  "written_at_utc": "2026-06-15T05:22:23.576434+00:00"
+}
