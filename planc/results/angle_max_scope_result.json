@@ -1,0 +1,65 @@
+{
+  "investigation": "angle_max_scope_v1",
+  "date": "2026-06-16",
+  "type": "firmware source + documentation investigation",
+  "target": {
+    "vehicle": "ArduCopter",
+    "version": "4.4.1",
+    "git_tag": "Copter-4.4.1",
+    "head_commit": "e010f97906087a3a1975e1c4fcc1f88a249599ce",
+    "source_tree": "/mnt/nvme/UAVFuzzing/ardupilot-home",
+    "remote": "https://github.com/ArduPilot/ardupilot.git"
+  },
+  "question": "Is ANGLE_MAX not constraining the body-rate command path (input_rate_bf_roll_pitch_yaw) BY-DESIGN or OVERSIGHT?",
+  "verdict": "BY-DESIGN",
+  "confidence": 0.87,
+  "criteria": {
+    "I1_scope_confirmed": true,
+    "I2_intent": true,
+    "I3_interface_legitimacy": true,
+    "I5_not_simply_fixable": true
+  },
+  "criteria_notes": {
+    "I1_scope_confirmed": "ANGLE_MAX is a caller-side clamp on the lean-angle command path; the attitude controller's input_rate_bf_roll_pitch_yaw integrates rate into the quaternion target with no angle limit. Independently re-derived from the ANGLE_MAX call-graph.",
+    "I2_intent": "Documented as 'maximum lean angle' (an angle-command concept); ACRO documented as aerobatic/non-self-leveling with its own rate governance (ACRO_RP_RATE etc.); ANGLE_MAX reaches the rate context only via the opt-in ACRO_TRAINER=2 feature.",
+    "I3_interface_legitimacy": "TRUE with nuance. SET_ATTITUDE_TARGET is a standard MAVLink message routed to input_rate_bf in code; ACRO is a fully supported mode on the same primitive. CAVEAT: ArduPilot's GUIDED dev-doc marks the body-rate fields 'not supported' (advisory, not enforced) -> paper should anchor the demonstration on ACRO or a supported GUIDED quaternion target, both of which are also unclamped by ANGLE_MAX.",
+    "I5_not_simply_fixable": "input_rate_bf_roll_pitch_yaw is shared by FLIP (deliberate ~400 deg/s inverted flip) and ACRO; clamping it to ANGLE_MAX would break intended aerobatics -> SOTIF insufficiency, not a one-line FuSA fix."
+  },
+  "implication_for_overdraw": {
+    "claim": "C2/C3",
+    "result": "SOTIF specification-insufficiency framing STANDS and C3 is STRENGTHENED (the gap is not reliably closable by a single clamp without breaking intended aerobatic capability).",
+    "recommended_framing": "Non-composition: ANGLE_MAX (an angle-command-path safety mechanism) by design does not compose onto the attitude controller's rate and quaternion interfaces. This is stronger than 'ANGLE_MAX is intentionally limited' and is independent of the GUIDED body-rate supported/unsupported debate.",
+    "recommended_witness_anchor": "Anchor the demonstration on ACRO (ACRO_TRAINER=0, documented config) or a GUIDED attitude-quaternion target > ANGLE_MAX (input_quaternion is also unclamped), rather than solely on the GUIDED body-rate field which the dev-doc marks 'not supported'."
+  },
+  "key_sources": {
+    "code": [
+      "ArduCopter/version.h:9 (ArduCopter V4.4.1)",
+      "ArduCopter/Parameters.cpp:350-357 (ANGLE_MAX = 'Maximum lean angle in all flight modes', cdeg, 1000-8000)",
+      "libraries/AC_AttitudeControl/AC_AttitudeControl.cpp:421-455 (input_rate_bf_roll_pitch_yaw: quaternion integration, NO angle clamp; lines 444-446)",
+      "libraries/AC_AttitudeControl/AC_AttitudeControl.cpp:231-266 (input_quaternion: only ang_vel_limit, NO ANGLE_MAX)",
+      "libraries/AP_Math/control.cpp:546-561 (rc_input_to_roll_pitch: pilot lean-angle clamp, hard-capped 85 deg)",
+      "ArduCopter/mode.cpp:415-431 (get_pilot_desired_lean_angles passes aparm.angle_max)",
+      "libraries/AC_AttitudeControl/AC_PosControl.cpp:506-509 / 996-1004 (position controller accel->lean clamp at ANGLE_MAX)",
+      "ArduCopter/mode_acro.cpp:122-128 (rate request from ACRO_RP_RATE/EXPO), :149-162 (ANGLE_MAX only via opt-in ACRO_TRAINER=LIMITED, soft pull-back)",
+      "ArduCopter/mode_acro.cpp:65 + mode_flip.cpp:118-175 (ACRO and FLIP drive input_rate_bf; FLIP ~400 deg/s through inversion)",
+      "ArduCopter/GCS_Mavlink.cpp:1122-1195 (SET_ATTITUDE_TARGET handler) + mode_guided.cpp:626,911,964-965 (body-rate -> input_rate_bf) + mode_guided_nogps.cpp:13 (GUIDED_NOGPS angle_control_start)",
+      "ArduCopter/Parameters.cpp:1058-1098 (ACRO_RP_RATE/EXPO/TC) ; AC_AttitudeControl.cpp:113-141 (ATC_RATE_R/P/Y_MAX)"
+    ],
+    "docs": [
+      "https://ardupilot.org/copter/docs/acro-mode.html (ACRO aerobatic by design; ACRO_TRAINER=0 = 'full Rate control with no automatic leveling nor angle-limiting'; ACRO_RP_RATE governance)",
+      "https://mavlink.io/en/messages/common.html#SET_ATTITUDE_TARGET (body_roll/pitch/yaw_rate are standard documented fields, rad/s, with type_mask ignore bits)",
+      "https://ardupilot.org/dev/docs/copter-commands-in-guided-mode.html (CAVEAT: GUIDED body-rate fields marked 'not supported'; type_mask should always be 0x07 / attitude-only)"
+    ],
+    "history": [
+      "commit c53ba22daa 'AC_AttitudeControl: add new rate only attitude control' (rate-only path a deliberate feature; verified in local clone)",
+      "git log -S angle_max -- AC_AttitudeControl.cpp: no commit ever added an ANGLE_MAX clamp to the rate path (verified)",
+      "https://github.com/ArduPilot/ardupilot/issues/11888 (Copter/Enhancement, Closed: user REQUESTED ACRO angle-limiting like Betaflight -> added as opt-in; baseline no-clamp is deliberate; verified via WebFetch)",
+      "https://github.com/ArduPilot/ardupilot/issues/10524 (the one ANGLE_MAX bug found was in the stabilized lean-angle path, NOT the rate path; agent-reported)"
+    ]
+  },
+  "honest_caveats": [
+    "The ANGLE_MAX param string 'Maximum lean angle in all flight modes' is the single phrase a reviewer can read as OVERSIGHT; rebutted via the angle-vs-rate distinction, the opt-in ACRO_TRAINER, and FLIP being impossible under a global attitude bound. This residual ambiguity is why confidence is 0.87, not ~0.95.",
+    "No verbatim maintainer sentence 'the rate path is intentionally not bound by ANGLE_MAX' was found; intent is expressed structurally (opt-in trainer feature) and in the wiki, plus the absence of any bug report and the enhancement-not-bugfix history.",
+    "The history sub-agent had some implausible commit dates and an unconfirmed 'stable through 4.6.3' claim; load-bearing items (#11888, c53ba22daa, the -S angle_max history) were independently re-verified; cross-version stability confirmed only for 4.3.x->4.4.1 in the pinned clone."
+  ]
+}

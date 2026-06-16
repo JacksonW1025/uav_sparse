@@ -1,0 +1,35 @@
+{
+  "investigation": {
+    "name": "angle_max_scope_v1",
+    "question": "Is the fact that ANGLE_MAX does NOT constrain the body-rate command path (input_rate_bf_roll_pitch_yaw) attitude a BY-DESIGN scope limitation or an OVERSIGHT/bug?",
+    "why_it_matters": "Determines whether OverDraw claims C2/C3 rest on a SOTIF specification-insufficiency (by-design scope gap, contract holds on the rate path) or a FuSA bug (a missing clamp that a reviewer can patch). Load-bearing for the whole framework.",
+    "date": "2026-06-16",
+    "type": "firmware source + documentation investigation (NOT a SITL experiment)",
+    "predecessor": "planc/contract-baseline-v1-20260616 (confirmed C2: ANGLE_MAX clamps the angle-command path; GUIDED_NOGPS body-rate path integrates rate into the attitude target unclamped, demanded attitude escapes to ~177 deg)",
+    "discipline": "Independent re-derivation: grep the ANGLE_MAX call-graph from scratch; do NOT reuse the predecessor probe's path assertions. Every claim sourced (file:line for code, URL/section for docs, commit/PR/issue for history). Evidence grade labelled: documented-intent > code-structure > comment/commit > inference."
+  },
+  "pinned_target": {
+    "vehicle": "ArduCopter",
+    "version": "4.4.1",
+    "firmware_string": "ArduCopter V4.4.1 (ArduCopter/version.h:9)",
+    "git_tag": "Copter-4.4.1",
+    "head_commit": "e010f97906087a3a1975e1c4fcc1f88a249599ce",
+    "local_source_tree": "/mnt/nvme/UAVFuzzing/ardupilot-home",
+    "canonical_remote": "https://github.com/ArduPilot/ardupilot.git",
+    "corroborating_doc_source": "https://ardupilot.org (ArduCopter docs + parameter reference)"
+  },
+  "verdict_criteria": {
+    "BY-DESIGN": "Convergent evidence that: (1) ANGLE_MAX is intentionally scoped to the angle-command path; (2) the body-rate path is by-design not bound by ANGLE_MAX (to allow acro/full attitude freedom) AND has its own independent governance (rate limits etc.), not left ungoverned; (3) the rate interfaces (GUIDED_NOGPS / ACRO + SET_ATTITUDE_TARGET body-rate) are documented, supported interfaces; (4) clamping the rate path to ANGLE_MAX would break intended functionality (flips/acro). => contract genuinely holds on the rate path => SOTIF framing stands and strengthens C3 (gap not reliably fixed by a clamp).",
+    "OVERSIGHT": "Evidence that ANGLE_MAX was meant to bound attitude itself, OR the rate-path bypass is undocumented/unanticipated, OR it was once treated as a bug (fixed/discussed). => closer to a FuSA bug => paper framing must soften / pivot.",
+    "AMBIGUOUS": "Docs silent/contradictory, no clear intent signal. => arguable; paper must handle explicitly and reframe to 'safety mechanisms do not compose across interfaces' (not relying on 'intentionally scoped')."
+  },
+  "result_schema": {
+    "I1_scope_confirmed": "bool: ANGLE_MAX clamps the angle-command path and does NOT clamp input_rate_bf_roll_pitch_yaw, confirmed independently by call-graph.",
+    "I2_intent": "bool: documented intent that ACRO/rate flight permits attitude beyond ANGLE_MAX AND the rate path has its own independent governance.",
+    "I3_interface_legitimacy": "bool: GUIDED_NOGPS + SET_ATTITUDE_TARGET body-rate is a documented/supported interface routing to input_rate_bf_*.",
+    "I5_not_simply_fixable": "bool: clamping the rate path to ANGLE_MAX would break intended acro/flip functionality (design tension, not a one-line fix).",
+    "verdict": "BY-DESIGN | OVERSIGHT | AMBIGUOUS",
+    "confidence": "0..1"
+  },
+  "anti_bias_note": "Willing to return OVERSIGHT. If evidence points to a bug, report OVERSIGHT honestly even though it forces the paper to revise its framing. Do not back-stop 'by-design'."
+}
