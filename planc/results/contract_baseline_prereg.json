@@ -1,0 +1,87 @@
+{
+  "experiment": {
+    "name": "contract_testing_baseline_v1",
+    "claim": "C2",
+    "claim_statement": "Contract-clean unsafe states (OverDraw, region A AND NOT B) are structurally invisible to contract testing (PGFUZZ / RVFuzzer family, which flag only rule violations). This experiment independently confirms C2 by running an independently implemented, documentation-faithful PGFUZZ-style contract/policy checker on the already-produced OverDraw traces and on real contract-violation positive controls.",
+    "date": "2026-06-16",
+    "research_plan_section": "planc/docs/overdraw_research_plan.md section 4.3",
+    "checker_module": "planc/src/contract_baseline_v1.py",
+    "tag": "planc/contract-baseline-v1-20260616"
+  },
+  "two_defence_lines": {
+    "anti_circularity": "Tier-1 (contract) policies may read ONLY what a contract tester can see: operator commands, modes, documented failsafe trigger conditions, documented policy predicates. They MUST NOT read any oracle-A consequence signal (ground-contact, altitude-loss, attitude-divergence, raw EKF fault bitmask). Enforced by the static anti-leakage audit (section 5).",
+    "anti_strawman": "Every policy carries a documentation source, and the checker is proven non-trivial on real positive controls where Tier-1 genuinely fires."
+  },
+  "verdict_block": {
+    "CONFIRMED": "ALL three hold: (1) Tier-1 violations == 0 across every OverDraw run; (2) the checker produces a non-trivial Tier-1 hit on >= 1 positive control; (3) the anti-leakage audit passes (no oracle-A consequence field enters any Tier-1 policy). Tier-2 results reported and discussed.",
+    "REFUTED": "Some OverDraw run has Tier-1 > 0 -> those runs are not contract-clean -> re-check / re-label oracle B; do not force a pass.",
+    "INCONCLUSIVE": "The checker cannot be shown non-trivial (it fails to fire even on positive controls), OR no usable positive control is obtained -> fix the checker / add controls; no conclusion."
+  },
+  "datasets": {
+    "overdraw_set": {
+      "description": "All runs from the two OverDraw experiments. Tier-1 expected 0.",
+      "sources": [
+        {"experiment": "oracleA_v1", "tag": "planc/ctrlauth-oracleA-v1-20260615", "run_glob": "planc/logs/oracleAv1_*_parsed.csv", "expected_runs": 65, "clean_unsafe_runs": 49},
+        {"experiment": "ep_movement_v1", "tag": "planc/ctrlauth-ep-v1-20260615", "run_glob": "planc/logs/epmovev1_*_parsed.csv", "expected_runs": 542}
+      ],
+      "data_inputs": "raw decoded DataFlash message dump (*_parsed.csv) + operator command profile (*_command_profile.json) + parameter snapshot (*_params.json). The *.oracle.json sidecars (oracle A/B verdicts) are NEVER read."
+    },
+    "positive_controls": {
+      "description": "Real same-domain (ArduCopter SITL) traces with genuine contract violations, to prove the checker is not trivially silent.",
+      "controls": [
+        {"id": "PC_FENCE", "source": "legacy geofence-breach runs (gate A/B/D witness, gradient, minalt)", "run_glob": "planc/logs/A_witness_r*.BIN, planc/logs/B_nominal_r1.BIN, planc/logs/grad_*.BIN, planc/logs/minalt_*.BIN", "new_sitl": false, "expected_tier1": ["T1b_no_preventive_failsafe", "T1c_configured_limit_compliance", "T1d_mode_transition_legitimacy"], "mechanism": "FENCE_BREACHED mode transition + FAILSAFE_FENCE ERR (real geofence breach -> RTL)"},
+        {"id": "PC_GCS", "source": "legacy link-loss runs (linkloss_conservative)", "run_glob": "planc/logs/linkloss_conservative_*.BIN", "new_sitl": false, "expected_tier1": ["T1b_no_preventive_failsafe", "T1d_mode_transition_legitimacy"], "mechanism": "GCS_FAILSAFE mode transition + FAILSAFE_GCS ERR (real GCS link-loss failsafe -> RTL)"},
+        {"id": "PC_CLAMP", "source": "small new SITL batch via the oracleA harness with the command-amplitude guard removed so the commanded lean amplitude exceeds ANGLE_MAX", "new_sitl": true, "runner": "planc/src/run_contract_poscontrol_v1.py", "expected_tier1": ["T1a_angle_max_command_clamp"], "mechanism": "operator commands lean amplitude ~58.5 deg > ANGLE_MAX 45 deg", "fallback_if_sitl_unavailable": "constructed command profile fed to the checker (clearly labelled synthetic) to demonstrate the T1a predicate fires"}
+      ],
+      "note": "CADET (legacy/) was evaluated and REJECTED as a control: it is PX4-only, its parsed logs lack failsafe/ERR/mode-reason fields, and its contract_grid found zero violations."
+    }
+  },
+  "tier1_policies": {
+    "_doc": "CONTRACT layer (ISO 26262 / FuSA). Expected 0 across the OverDraw set. Documentation sources and the exact raw input fields each policy reads are embedded in planc/src/contract_baseline_v1.py POLICY_META.",
+    "T1a_angle_max_command_clamp": {
+      "name": "Commanded lean angle within ANGLE_MAX",
+      "doc_source": "ArduPilot ANGLE_MAX parameter (ArduCopter/Parameters.cpp; 'maximum lean angle in all flight modes'; legal range 1000-8000 cd).",
+      "violation": "Operator-commanded lean amplitude (hypot of command-profile roll_deg/pitch_deg) > ANGLE_MAX + 0.1 deg tolerance.",
+      "input_fields": ["command_profile.roll_deg", "command_profile.pitch_deg", "params.ANGLE_MAX"],
+      "scope_note": "ANGLE_MAX governs lean-angle COMMANDS, not body-rate setpoints. Rate-commanded demanded attitude (ATT.DesRoll/DesPitch) excursions are OUT OF CONTRACT SCOPE and are recorded under Tier-2 (T2a), not here. This is the OverDraw insufficiency mechanism, not a contract violation."
+    },
+    "T1b_no_preventive_failsafe": {
+      "name": "No spurious preventive failsafe trigger",
+      "doc_source": "ArduPilot failsafe docs (radio / battery / GCS / EKF / GPS / geofence / terrain / leak / deadreckon).",
+      "violation": "A preventive failsafe ERR subsystem (FAILSAFE_RADIO/BATT/GPS/GCS/FENCE, EKFCHECK, FAILSAFE_EKFINAV, ...), a failsafe MODE reason, or a failsafe STATUSTEXT occurs.",
+      "exclusions": "MODE.Rsn=GCS_COMMAND is harness cleanup (artifact #2) and excluded. CRASH_CHECK / CRASH_FAILSAFE is a post-impact consequence detector, NOT a preventive guard, and is scored under Tier-2 (T2c).",
+      "input_fields": ["ERR.subsystem_name", "ERR.ecode", "MODE.reason_name", "MSG.text(failsafe markers)"]
+    },
+    "T1c_configured_limit_compliance": {
+      "name": "Configured envelope/limit compliance (geofence, EKF failsafe action)",
+      "doc_source": "ArduPilot FENCE_* and FS_EKF_ACTION parameter docs.",
+      "violation": "A geofence breach (FENCE_BREACHED / FAILSAFE_FENCE) or an EKF-failsafe actuation (EKFCHECK / FAILSAFE_EKFINAV / EKF_FAILSAFE) occurs.",
+      "scope_note": "Uses the failsafe ACTUATION signal only. The raw EKF filter-fault bitmask XKF4.FS is DELIBERATELY EXCLUDED: it is a filter-internal health flag that correlates with aggressive/crash dynamics (a leakage trap), not the documented EKF-failsafe contract.",
+      "input_fields": ["ERR.subsystem_name", "ERR.ecode", "MODE.reason_name", "params.FENCE_ENABLE"]
+    },
+    "T1d_mode_transition_legitimacy": {
+      "name": "Mode transitions conform to spec",
+      "doc_source": "ArduCopter flight-mode docs + ModeReason enum (libraries/AP_Vehicle/ModeReason.h in ArduPilot 4.4.1).",
+      "violation": "A transition into a safety/autoland mode (RTL/LAND/SMART_RTL/BRAKE/...), or any transition carrying a preventive failsafe reason.",
+      "exclusions": "INITIALISED, GCS_COMMAND (harness), RC_COMMAND, MISSION_END are operational and excluded. CRASH_FAILSAFE excluded as a Tier-2 consequence detector.",
+      "input_fields": ["MODE.mode_name", "MODE.reason_name"]
+    }
+  },
+  "tier2_policies": {
+    "_doc": "RESULT layer (ISO 21448 / SOTIF safety goals). PGFUZZ-style physical-outcome predicates. NOT counted in Tier-1. MAY fire in the OverDraw region; reported separately. Tier-1 clean AND Tier-2 hit is exactly the SOTIF/OverDraw seam.",
+    "T2a_attitude_within_bound": {"name": "Attitude within physical safety bound", "doc_source": "PGFUZZ-style 'attitude within limits' policy (safety goal).", "violation": "Sustained achieved-attitude error > 60 deg for >= 0.5 s.", "input_fields": ["ATT.Roll", "ATT.Pitch", "command_profile.roll_deg", "command_profile.pitch_deg"]},
+    "T2b_no_uncommanded_altitude_loss": {"name": "No large uncommanded altitude loss", "doc_source": "PGFUZZ-style 'altitude maintained' policy (safety goal).", "violation": "RelHomeAlt drop > 15 m in the maneuver window.", "input_fields": ["POS.RelHomeAlt"]},
+    "T2c_no_ground_contact": {"name": "No ground contact / crash", "doc_source": "PGFUZZ-style 'drone should not crash' policy (safety goal).", "violation": "Ground-contact STATUSTEXT, low-floor descent, or crash-check actuation.", "input_fields": ["MSG.text(ground markers)", "POS.RelHomeAlt", "XKF1.VD", "ERR.subsystem_name(CRASH_CHECK)", "MODE.reason_name(CRASH_FAILSAFE)"]}
+  },
+  "decision_windows": {
+    "tier1_failsafe_mode": "Whole-run scan, excluding operational mode reasons (INITIALISED / GCS_COMMAND / RC_COMMAND / MISSION_END) and crash-check. CONSEQUENCE-INDEPENDENT: it does NOT gate on the crash/hard-A time (which would leak an oracle-A signal); it scans the entire run.",
+    "tier1_command_clamp": "Evaluated on the operator command profile (input); window-independent.",
+    "tier2_result": "Maneuver window [active_start, active_start + command_profile_duration + 18 s], where active_start is the first time the GUIDED rate command is active (|RollRt| or |PitchRt| >= 5 deg/s). Derived from INPUT timing only."
+  },
+  "anti_leakage_audit": {
+    "method": "Static check: union of all Tier-1 policy input_fields must be DISJOINT from the oracle-A consequence field set ORACLE_A_CONSEQUENCE_FIELDS (ground markers, achieved attitude Roll/Pitch, RelHomeAlt loss, XKF1.VD floor descent, crash-check, raw XKF4.FS bitmask). Any Tier-1 policy depending on a consequence signal is reclassified to Tier-2 or removed and recorded.",
+    "pass_criterion": "Tier-1 input set intersect consequence set == empty (the divergence error baseline command_profile.roll/pitch_deg appears in both Tier-2 T2a and as the T1a command source, but achieved attitude Roll/Pitch -- the consequence -- never appears in any Tier-1 policy)."
+  },
+  "status": "preregistered",
+  "written_at_utc": "2026-06-16T00:00:00+00:00"
+}

@@ -1,0 +1,22 @@
+{
+  "runs": [
+    {
+      "run_id": "pcclampv1_pcclamp_default_r0300_w00_t00_a4500_m100_s00",
+      "error": null,
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/pcclampv1_pcclamp_default_r0300_w00_t00_a4500_m100_s00.BIN",
+      "command_max_angle_deg": 58.5,
+      "angle_max_deg": 45.0,
+      "command_exceeded_angle_max": true,
+      "label": "bug_side"
+    },
+    {
+      "run_id": "pcclampv1_pcclamp_default_r0300_w00_t00_a4500_m100_s01",
+      "error": null,
+      "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/pcclampv1_pcclamp_default_r0300_w00_t00_a4500_m100_s01.BIN",
+      "command_max_angle_deg": 58.5,
+      "angle_max_deg": 45.0,
+      "command_exceeded_angle_max": true,
+      "label": "bug_side"
+    }
+  ]
+}

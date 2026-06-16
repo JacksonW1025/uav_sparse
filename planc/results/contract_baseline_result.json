@@ -1,0 +1,1967 @@
+{
+  "anti_leakage_audit": {
+    "code_level_forbidden_token_hits": {},
+    "code_level_ok": true,
+    "code_level_opens_oracle_sidecar": false,
+    "field_set_disjoint": true,
+    "field_set_intersection": [],
+    "notes": "Tier-1 reads ERR.subsystem_name / MODE.reason_name / MSG.text only for flight-controller failsafe VALUES that exclude crash-check and ground-contact (those are Tier-2 consequence detectors). The operator command profile is an INPUT, not a consequence. The achieved attitude (ATT.Roll/Pitch), altitude (POS.RelHomeAlt), descent (XKF1.VD), ground markers and the raw EKF bitmask (XKF4.FS) appear in NO Tier-1 policy -- confirmed at field, value and code level.",
+    "oracle_A_consequence_fields": [
+      "ATT.Pitch",
+      "ATT.Roll",
+      "ERR.subsystem_name(CRASH_CHECK)",
+      "MODE.reason_name(CRASH_FAILSAFE)",
+      "MSG.text(ground markers)",
+      "POS.RelHomeAlt",
+      "XKF1.VD",
+      "XKF4.FS"
+    ],
+    "passes": true,
+    "tier1_input_fields": [
+      "ERR.ecode",
+      "ERR.subsystem_name",
+      "MODE.mode_name",
+      "MODE.reason_name",
+      "MSG.text(failsafe markers)",
+      "command_profile.pitch_deg",
+      "command_profile.roll_deg",
+      "params.ANGLE_MAX",
+      "params.FENCE_ENABLE"
+    ],
+    "value_level_checks": {
+      "CRASH_CHECK not a Tier-1 preventive subsystem": true,
+      "CRASH_FAILSAFE not a Tier-1 preventive reason": true,
+      "no ground/crash marker in Tier-1 failsafe text": true
+    },
+    "value_level_ok": true
+  },
+  "bin_cross_validation": {
+    "checks": [
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "oracleAv1_grid_default_r0120_w00_t00_a4500_m100_s00"
+      },
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound",
+          "T2b_no_uncommanded_altitude_loss",
+          "T2c_no_ground_contact"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "oracleAv1_grid_default_r0180_w00_t00_a4500_m100_s05"
+      },
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "oracleAv1_grid_default_r0300_w00_t00_a4500_m100_s00"
+      },
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound",
+          "T2b_no_uncommanded_altitude_loss",
+          "T2c_no_ground_contact"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "oracleAv1_grid_default_r0360_w00_t00_a4500_m100_s05"
+      },
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound",
+          "T2b_no_uncommanded_altitude_loss",
+          "T2c_no_ground_contact"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "oracleAv1_grid_default_r0480_w00_t00_a4500_m100_s00"
+      },
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound",
+          "T2b_no_uncommanded_altitude_loss",
+          "T2c_no_ground_contact"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "oracleAv1_grid_default_r0540_w00_t00_a4500_m100_s00"
+      },
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound",
+          "T2b_no_uncommanded_altitude_loss",
+          "T2c_no_ground_contact"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "epmovev1_epgrid_E0P30_r0120_w00_t00_a3000_m100_s00"
+      },
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound",
+          "T2b_no_uncommanded_altitude_loss",
+          "T2c_no_ground_contact"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "epmovev1_epgrid_E0P45_r0420_w00_t00_a4500_m100_s00"
+      },
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound",
+          "T2b_no_uncommanded_altitude_loss",
+          "T2c_no_ground_contact"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "epmovev1_epgrid_EhighP30_r0120_w15_t08_a3000_m100_s00"
+      },
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound",
+          "T2b_no_uncommanded_altitude_loss"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "epmovev1_epgrid_EhighP45_r0420_w15_t08_a4500_m100_s00"
+      },
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound",
+          "T2b_no_uncommanded_altitude_loss",
+          "T2c_no_ground_contact"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "epmovev1_epgrid_ElowP30_r0120_w04_t02_a3000_m100_s00"
+      },
+      {
+        "bin_tier1_fm": [],
+        "bin_tier2": [
+          "T2a_attitude_within_bound"
+        ],
+        "csv_tier1_fm": [],
+        "match": true,
+        "run_id": "epmovev1_epgrid_ElowP45_r0420_w04_t02_a4500_m100_s00"
+      }
+    ],
+    "mismatches": 0,
+    "n_checked": 12,
+    "passes": true
+  },
+  "claim": "C2",
+  "experiment": "contract_testing_baseline_v1",
+  "oracle_A_cross_reference": {
+    "ep_movement_v1": {
+      "n": 542,
+      "oracle_A_label_counts": {
+        "clean_unsafe": 441,
+        "recovered": 73,
+        "safe": 28
+      },
+      "tier2_fires_on_clean_unsafe": 441,
+      "tier2_vs_oracleA_agreement": 469
+    },
+    "oracleA_v1": {
+      "n": 65,
+      "oracle_A_label_counts": {
+        "clean_unsafe": 49,
+        "recovered": 10,
+        "safe": 6
+      },
+      "tier2_fires_on_clean_unsafe": 49,
+      "tier2_vs_oracleA_agreement": 55
+    }
+  },
+  "overdraw": {
+    "ep_movement_v1": {
+      "aggregate": {
+        "n_runs": 542,
+        "per_policy": {
+          "T1a_angle_max_command_clamp": {
+            "applicable": 542,
+            "hits": 0,
+            "tier": 1
+          },
+          "T1b_no_preventive_failsafe": {
+            "applicable": 542,
+            "hits": 0,
+            "tier": 1
+          },
+          "T1c_configured_limit_compliance": {
+            "applicable": 542,
+            "hits": 0,
+            "tier": 1
+          },
+          "T1d_mode_transition_legitimacy": {
+            "applicable": 542,
+            "hits": 0,
+            "tier": 1
+          },
+          "T2a_attitude_within_bound": {
+            "applicable": 542,
+            "hits": 507,
+            "tier": 2
+          },
+          "T2b_no_uncommanded_altitude_loss": {
+            "applicable": 542,
+            "hits": 440,
+            "tier": 2
+          },
+          "T2c_no_ground_contact": {
+            "applicable": 542,
+            "hits": 399,
+            "tier": 2
+          }
+        },
+        "tier1_any_hits": 0,
+        "tier2_any_hits": 514
+      },
+      "example_runs": [
+        {
+          "angle_max_deg": 30.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "angle_max_deg": 30.0,
+              "applicable": true,
+              "detail": "max commanded lean 29.00 deg vs ANGLE_MAX 30.0 deg",
+              "hit": false,
+              "max_command_angle_deg": 29.0
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "0 preventive failsafe event(s)",
+              "events": [],
+              "hit": false
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": false,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "0 illegitimate/failsafe mode transition(s)",
+              "events": [],
+              "hit": false
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 146.7 deg",
+              "hit": true,
+              "max_attitude_error_deg": 146.6500003409478
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 43.03369811177254,
+              "applicable": true,
+              "detail": "altitude loss 43.0 m",
+              "hit": true
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "17 ground msgs, 1 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 12.51327 m/s",
+                "SIM Hit ground at 4.375300 m/s",
+                "SIM Hit ground at 3.740443 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "epmovev1_epgrid_E0P30_r0120_w00_t00_a3000_m100_s00",
+          "source": "csv",
+          "tier1_any": false,
+          "tier1_hit_policies": [],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2a_attitude_within_bound",
+            "T2b_no_uncommanded_altitude_loss",
+            "T2c_no_ground_contact"
+          ]
+        },
+        {
+          "angle_max_deg": 30.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "angle_max_deg": 30.0,
+              "applicable": true,
+              "detail": "max commanded lean 29.00 deg vs ANGLE_MAX 30.0 deg",
+              "hit": false,
+              "max_command_angle_deg": 29.0
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "0 preventive failsafe event(s)",
+              "events": [],
+              "hit": false
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": false,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "0 illegitimate/failsafe mode transition(s)",
+              "events": [],
+              "hit": false
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 206.8 deg",
+              "hit": true,
+              "max_attitude_error_deg": 206.79006987764186
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 43.05719232559204,
+              "applicable": true,
+              "detail": "altitude loss 43.1 m",
+              "hit": true
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "19 ground msgs, 1 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 15.01295 m/s",
+                "SIM Hit ground at 3.466417 m/s",
+                "SIM Hit ground at 4.409345 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "epmovev1_epgrid_E0P30_r0120_w00_t00_a3000_m100_s01",
+          "source": "csv",
+          "tier1_any": false,
+          "tier1_hit_policies": [],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2a_attitude_within_bound",
+            "T2b_no_uncommanded_altitude_loss",
+            "T2c_no_ground_contact"
+          ]
+        },
+        {
+          "angle_max_deg": 30.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "angle_max_deg": 30.0,
+              "applicable": true,
+              "detail": "max commanded lean 29.00 deg vs ANGLE_MAX 30.0 deg",
+              "hit": false,
+              "max_command_angle_deg": 29.0
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "0 preventive failsafe event(s)",
+              "events": [],
+              "hit": false
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": false,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "0 illegitimate/failsafe mode transition(s)",
+              "events": [],
+              "hit": false
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 208.9 deg",
+              "hit": true,
+              "max_attitude_error_deg": 208.8869993561112
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 43.33000868558884,
+              "applicable": true,
+              "detail": "altitude loss 43.3 m",
+              "hit": true
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "20 ground msgs, 1 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 14.01214 m/s",
+                "SIM Hit ground at 3.654922 m/s",
+                "SIM Hit ground at 3.990051 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "epmovev1_epgrid_E0P30_r0120_w00_t00_a3000_m100_s02",
+          "source": "csv",
+          "tier1_any": false,
+          "tier1_hit_policies": [],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2a_attitude_within_bound",
+            "T2b_no_uncommanded_altitude_loss",
+            "T2c_no_ground_contact"
+          ]
+        }
+      ],
+      "tier1_offenders": []
+    },
+    "oracleA_v1": {
+      "aggregate": {
+        "n_runs": 65,
+        "per_policy": {
+          "T1a_angle_max_command_clamp": {
+            "applicable": 65,
+            "hits": 0,
+            "tier": 1
+          },
+          "T1b_no_preventive_failsafe": {
+            "applicable": 65,
+            "hits": 0,
+            "tier": 1
+          },
+          "T1c_configured_limit_compliance": {
+            "applicable": 65,
+            "hits": 0,
+            "tier": 1
+          },
+          "T1d_mode_transition_legitimacy": {
+            "applicable": 65,
+            "hits": 0,
+            "tier": 1
+          },
+          "T2a_attitude_within_bound": {
+            "applicable": 65,
+            "hits": 59,
+            "tier": 2
+          },
+          "T2b_no_uncommanded_altitude_loss": {
+            "applicable": 65,
+            "hits": 49,
+            "tier": 2
+          },
+          "T2c_no_ground_contact": {
+            "applicable": 65,
+            "hits": 44,
+            "tier": 2
+          }
+        },
+        "tier1_any_hits": 0,
+        "tier2_any_hits": 59
+      },
+      "example_runs": [
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "angle_max_deg": 45.0,
+              "applicable": true,
+              "detail": "max commanded lean 44.00 deg vs ANGLE_MAX 45.0 deg",
+              "hit": false,
+              "max_command_angle_deg": 44.0
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "0 preventive failsafe event(s)",
+              "events": [],
+              "hit": false
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": false,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "0 illegitimate/failsafe mode transition(s)",
+              "events": [],
+              "hit": false
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 79.6 deg",
+              "hit": true,
+              "max_attitude_error_deg": 79.55005091136019
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 22.873191833496094,
+              "applicable": true,
+              "detail": "altitude loss 22.9 m",
+              "hit": true
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "0 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [],
+              "hit": false
+            }
+          },
+          "run_id": "oracleAv1_grid_default_r0120_w00_t00_a4500_m100_s00",
+          "source": "csv",
+          "tier1_any": false,
+          "tier1_hit_policies": [],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2a_attitude_within_bound",
+            "T2b_no_uncommanded_altitude_loss"
+          ]
+        },
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "angle_max_deg": 45.0,
+              "applicable": true,
+              "detail": "max commanded lean 44.00 deg vs ANGLE_MAX 45.0 deg",
+              "hit": false,
+              "max_command_angle_deg": 44.0
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "0 preventive failsafe event(s)",
+              "events": [],
+              "hit": false
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": false,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "0 illegitimate/failsafe mode transition(s)",
+              "events": [],
+              "hit": false
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 79.8 deg",
+              "hit": true,
+              "max_attitude_error_deg": 79.75004012538174
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 9.948970794677734,
+              "applicable": true,
+              "detail": "altitude loss 9.9 m",
+              "hit": false
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "0 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [],
+              "hit": false
+            }
+          },
+          "run_id": "oracleAv1_grid_default_r0120_w00_t00_a4500_m100_s01",
+          "source": "csv",
+          "tier1_any": false,
+          "tier1_hit_policies": [],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2a_attitude_within_bound"
+          ]
+        },
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "angle_max_deg": 45.0,
+              "applicable": true,
+              "detail": "max commanded lean 44.00 deg vs ANGLE_MAX 45.0 deg",
+              "hit": false,
+              "max_command_angle_deg": 44.0
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "0 preventive failsafe event(s)",
+              "events": [],
+              "hit": false
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": false,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "0 illegitimate/failsafe mode transition(s)",
+              "events": [],
+              "hit": false
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 58.9 deg",
+              "hit": false,
+              "max_attitude_error_deg": 58.89057394863798
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 1.9277801513671875,
+              "applicable": true,
+              "detail": "altitude loss 1.9 m",
+              "hit": false
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "0 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [],
+              "hit": false
+            }
+          },
+          "run_id": "oracleAv1_grid_default_r0120_w00_t00_a4500_m100_s02",
+          "source": "csv",
+          "tier1_any": false,
+          "tier1_hit_policies": [],
+          "tier2_any": false,
+          "tier2_hit_policies": []
+        }
+      ],
+      "tier1_offenders": []
+    }
+  },
+  "policy_meta": {
+    "T1a_angle_max_command_clamp": {
+      "doc_source": "ArduPilot ANGLE_MAX parameter (ArduCopter/Parameters.cpp; 'maximum lean angle in all flight modes', legal range 1000-8000 cd). Contract: pilot/navigation lean-angle COMMANDS are clamped to ANGLE_MAX.",
+      "input_fields": [
+        "command_profile.roll_deg",
+        "command_profile.pitch_deg",
+        "params.ANGLE_MAX"
+      ],
+      "name": "Commanded lean angle within ANGLE_MAX",
+      "scope_note": "ANGLE_MAX governs lean-angle COMMANDS, not body-rate setpoints; rate-commanded demanded attitude (ATT.DesRoll/DesPitch) excursions are out of contract scope and are recorded under Tier-2 (T2a), not here.",
+      "tier": 1,
+      "violation": "Operator-commanded lean amplitude exceeds ANGLE_MAX+tol."
+    },
+    "T1b_no_preventive_failsafe": {
+      "doc_source": "ArduPilot failsafe docs (radio/battery/GCS/EKF/GPS/fence/terrain/leak/deadreckon). Contract: a preventive failsafe actuates only when its documented condition holds; given the fixed P (batteries/RC/GCS/fence disabled) none should fire.",
+      "input_fields": [
+        "ERR.subsystem_name",
+        "ERR.ecode",
+        "MODE.reason_name",
+        "MSG.text(failsafe markers)"
+      ],
+      "name": "No spurious preventive failsafe trigger",
+      "tier": 1,
+      "violation": "A preventive failsafe ERR subsystem, failsafe MODE reason, or failsafe STATUSTEXT occurs (GCS_COMMAND harness excluded; crash-check excluded as a Tier-2 consequence detector)."
+    },
+    "T1c_configured_limit_compliance": {
+      "doc_source": "ArduPilot FENCE_* and FS_EKF_ACTION parameter docs. Contract: a configured-and-enabled limit is honoured; a DISABLED limit never actuates (no false positive); the EKF failsafe action does not actuate spuriously.",
+      "input_fields": [
+        "ERR.subsystem_name",
+        "ERR.ecode",
+        "MODE.reason_name",
+        "params.FENCE_ENABLE"
+      ],
+      "name": "Configured envelope/limit compliance (geofence, EKF action)",
+      "scope_note": "Uses the failsafe ACTUATION signal only. The raw EKF filter-fault bitmask XKF4.FS is deliberately EXCLUDED -- it is a filter-internal health flag that correlates with aggressive/crash dynamics (a leakage trap), not the documented EKF-failsafe contract.",
+      "tier": 1,
+      "violation": "A geofence breach event (FENCE_BREACHED / FAILSAFE_FENCE), or an EKF-failsafe actuation (EKFCHECK / FAILSAFE_EKFINAV / EKF_FAILSAFE), occurs."
+    },
+    "T1d_mode_transition_legitimacy": {
+      "doc_source": "ArduCopter flight-mode docs + ModeReason enum (libraries/AP_Vehicle/ModeReason.h in ArduPilot 4.4.1). Contract: every mode transition has a documented operational reason (power-on, GCS/RC command) or a valid failsafe reason; no spurious safety-mode transition.",
+      "input_fields": [
+        "MODE.mode_name",
+        "MODE.reason_name"
+      ],
+      "name": "Mode transitions conform to spec",
+      "tier": 1,
+      "violation": "A transition into a safety/autoland mode (RTL/LAND/BRAKE/...) or any transition with a preventive failsafe reason (GCS_COMMAND harness cleanup excluded)."
+    },
+    "T2a_attitude_within_bound": {
+      "consequence": true,
+      "doc_source": "PGFUZZ-style physical-state policy ('attitude must stay within limits'). SAFETY GOAL, not a contract.",
+      "input_fields": [
+        "ATT.Roll",
+        "ATT.Pitch",
+        "command_profile.roll_deg",
+        "command_profile.pitch_deg"
+      ],
+      "name": "Attitude stays within physical safety bound",
+      "tier": 2,
+      "violation": "Sustained achieved-attitude error > 60 deg for >= 0.5 s (includes rate-commanded excursions beyond the ANGLE_MAX envelope)."
+    },
+    "T2b_no_uncommanded_altitude_loss": {
+      "consequence": true,
+      "doc_source": "PGFUZZ-style 'altitude should be maintained' policy. SAFETY GOAL, not a contract.",
+      "input_fields": [
+        "POS.RelHomeAlt"
+      ],
+      "name": "No large uncommanded altitude loss",
+      "tier": 2,
+      "violation": "RelHomeAlt drops > 15 m within the maneuver window."
+    },
+    "T2c_no_ground_contact": {
+      "consequence": true,
+      "doc_source": "PGFUZZ-style 'the drone should not crash' policy. SAFETY GOAL, not a contract.",
+      "input_fields": [
+        "MSG.text(ground markers)",
+        "POS.RelHomeAlt",
+        "XKF1.VD",
+        "ERR.subsystem_name(CRASH_CHECK)",
+        "MODE.reason_name(CRASH_FAILSAFE)"
+      ],
+      "name": "No ground contact / crash",
+      "tier": 2,
+      "violation": "Ground-contact STATUSTEXT ('SIM Hit ground'), low-floor descent (RelHomeAlt<1m & down-speed>2 m/s), or a crash-check actuation."
+    }
+  },
+  "positive_controls": {
+    "PC_CLAMP": {
+      "aggregate": {
+        "n_runs": 2,
+        "per_policy": {
+          "T1a_angle_max_command_clamp": {
+            "applicable": 2,
+            "hits": 2,
+            "tier": 1
+          },
+          "T1b_no_preventive_failsafe": {
+            "applicable": 2,
+            "hits": 0,
+            "tier": 1
+          },
+          "T1c_configured_limit_compliance": {
+            "applicable": 2,
+            "hits": 0,
+            "tier": 1
+          },
+          "T1d_mode_transition_legitimacy": {
+            "applicable": 2,
+            "hits": 0,
+            "tier": 1
+          },
+          "T2a_attitude_within_bound": {
+            "applicable": 2,
+            "hits": 1,
+            "tier": 2
+          },
+          "T2b_no_uncommanded_altitude_loss": {
+            "applicable": 2,
+            "hits": 2,
+            "tier": 2
+          },
+          "T2c_no_ground_contact": {
+            "applicable": 2,
+            "hits": 1,
+            "tier": 2
+          }
+        },
+        "tier1_any_hits": 2,
+        "tier2_any_hits": 2
+      },
+      "expected_tier1": [
+        "T1a_angle_max_command_clamp"
+      ],
+      "nontrivial": true,
+      "results": [
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "angle_max_deg": 45.0,
+              "applicable": true,
+              "detail": "max commanded lean 58.50 deg vs ANGLE_MAX 45.0 deg",
+              "hit": true,
+              "max_command_angle_deg": 58.5
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "0 preventive failsafe event(s)",
+              "events": [],
+              "hit": false
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": false,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "0 illegitimate/failsafe mode transition(s)",
+              "events": [],
+              "hit": false
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 224.0 deg",
+              "hit": true,
+              "max_attitude_error_deg": 224.01032230680798
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 43.048704743385315,
+              "applicable": true,
+              "detail": "altitude loss 43.0 m",
+              "hit": true
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "14 ground msgs, 1 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 5.085356 m/s",
+                "SIM Hit ground at 6.553833 m/s",
+                "SIM Hit ground at 4.737112 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "pcclampv1_pcclamp_default_r0300_w00_t00_a4500_m100_s00",
+          "source": "bin",
+          "tier1_any": true,
+          "tier1_hit_policies": [
+            "T1a_angle_max_command_clamp"
+          ],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2a_attitude_within_bound",
+            "T2b_no_uncommanded_altitude_loss",
+            "T2c_no_ground_contact"
+          ]
+        },
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "angle_max_deg": 45.0,
+              "applicable": true,
+              "detail": "max commanded lean 58.50 deg vs ANGLE_MAX 45.0 deg",
+              "hit": true,
+              "max_command_angle_deg": 58.5
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "0 preventive failsafe event(s)",
+              "events": [],
+              "hit": false
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": false,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "0 illegitimate/failsafe mode transition(s)",
+              "events": [],
+              "hit": false
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 187.7 deg",
+              "hit": false,
+              "max_attitude_error_deg": 187.66042630240398
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 15.473970413208008,
+              "applicable": true,
+              "detail": "altitude loss 15.5 m",
+              "hit": true
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "0 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [],
+              "hit": false
+            }
+          },
+          "run_id": "pcclampv1_pcclamp_default_r0300_w00_t00_a4500_m100_s01",
+          "source": "bin",
+          "tier1_any": true,
+          "tier1_hit_policies": [
+            "T1a_angle_max_command_clamp"
+          ],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2b_no_uncommanded_altitude_loss"
+          ]
+        }
+      ]
+    },
+    "PC_FENCE": {
+      "aggregate": {
+        "n_runs": 5,
+        "per_policy": {
+          "T1a_angle_max_command_clamp": {
+            "applicable": 0,
+            "hits": 0,
+            "tier": 1
+          },
+          "T1b_no_preventive_failsafe": {
+            "applicable": 5,
+            "hits": 5,
+            "tier": 1
+          },
+          "T1c_configured_limit_compliance": {
+            "applicable": 5,
+            "hits": 5,
+            "tier": 1
+          },
+          "T1d_mode_transition_legitimacy": {
+            "applicable": 5,
+            "hits": 5,
+            "tier": 1
+          },
+          "T2a_attitude_within_bound": {
+            "applicable": 5,
+            "hits": 0,
+            "tier": 2
+          },
+          "T2b_no_uncommanded_altitude_loss": {
+            "applicable": 5,
+            "hits": 0,
+            "tier": 2
+          },
+          "T2c_no_ground_contact": {
+            "applicable": 5,
+            "hits": 5,
+            "tier": 2
+          }
+        },
+        "tier1_any_hits": 5,
+        "tier2_any_hits": 5
+      },
+      "expected_tier1": [
+        "T1b_no_preventive_failsafe",
+        "T1c_configured_limit_compliance",
+        "T1d_mode_transition_legitimacy"
+      ],
+      "nontrivial": true,
+      "results": [
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "applicable": false,
+              "detail": "no command profile / ANGLE_MAX",
+              "hit": false
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "3 preventive failsafe event(s)",
+              "events": [
+                {
+                  "ecode": 2,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_FENCE",
+                  "t": 73.144897
+                },
+                {
+                  "kind": "MODE",
+                  "mode": "RTL",
+                  "reason": "FENCE_BREACHED",
+                  "t": 73.144897
+                },
+                {
+                  "kind": "MSG",
+                  "t": 73.144897,
+                  "text": "Fence Breached"
+                }
+              ],
+              "hit": true
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "2 configured-limit event(s)",
+              "events": [
+                {
+                  "ecode": 2,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_FENCE",
+                  "t": 73.144897
+                },
+                {
+                  "kind": "MODE",
+                  "reason": "FENCE_BREACHED",
+                  "t": 73.144897
+                }
+              ],
+              "fence_enabled": true,
+              "hit": true
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "1 illegitimate/failsafe mode transition(s)",
+              "events": [
+                {
+                  "mode": "RTL",
+                  "reason": "FENCE_BREACHED",
+                  "t": 73.144897
+                }
+              ],
+              "hit": true
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 30.0 deg",
+              "hit": false,
+              "max_attitude_error_deg": 30.03080584999344
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 0.0,
+              "applicable": true,
+              "detail": "altitude loss 0.0 m",
+              "hit": false
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "1 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 0.476873 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "A_witness_r1",
+          "source": "bin",
+          "tier1_any": true,
+          "tier1_hit_policies": [
+            "T1b_no_preventive_failsafe",
+            "T1c_configured_limit_compliance",
+            "T1d_mode_transition_legitimacy"
+          ],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2c_no_ground_contact"
+          ]
+        },
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "applicable": false,
+              "detail": "no command profile / ANGLE_MAX",
+              "hit": false
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "3 preventive failsafe event(s)",
+              "events": [
+                {
+                  "ecode": 2,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_FENCE",
+                  "t": 72.146963
+                },
+                {
+                  "kind": "MODE",
+                  "mode": "RTL",
+                  "reason": "FENCE_BREACHED",
+                  "t": 72.146963
+                },
+                {
+                  "kind": "MSG",
+                  "t": 72.146963,
+                  "text": "Fence Breached"
+                }
+              ],
+              "hit": true
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "2 configured-limit event(s)",
+              "events": [
+                {
+                  "ecode": 2,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_FENCE",
+                  "t": 72.146963
+                },
+                {
+                  "kind": "MODE",
+                  "reason": "FENCE_BREACHED",
+                  "t": 72.146963
+                }
+              ],
+              "fence_enabled": true,
+              "hit": true
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "1 illegitimate/failsafe mode transition(s)",
+              "events": [
+                {
+                  "mode": "RTL",
+                  "reason": "FENCE_BREACHED",
+                  "t": 72.146963
+                }
+              ],
+              "hit": true
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 30.0 deg",
+              "hit": false,
+              "max_attitude_error_deg": 30.010806387033323
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 0.0,
+              "applicable": true,
+              "detail": "altitude loss 0.0 m",
+              "hit": false
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "1 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 0.476646 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "A_witness_r2",
+          "source": "bin",
+          "tier1_any": true,
+          "tier1_hit_policies": [
+            "T1b_no_preventive_failsafe",
+            "T1c_configured_limit_compliance",
+            "T1d_mode_transition_legitimacy"
+          ],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2c_no_ground_contact"
+          ]
+        },
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "applicable": false,
+              "detail": "no command profile / ANGLE_MAX",
+              "hit": false
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "3 preventive failsafe event(s)",
+              "events": [
+                {
+                  "ecode": 2,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_FENCE",
+                  "t": 72.811697
+                },
+                {
+                  "kind": "MODE",
+                  "mode": "RTL",
+                  "reason": "FENCE_BREACHED",
+                  "t": 72.811697
+                },
+                {
+                  "kind": "MSG",
+                  "t": 72.811697,
+                  "text": "Fence Breached"
+                }
+              ],
+              "hit": true
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "2 configured-limit event(s)",
+              "events": [
+                {
+                  "ecode": 2,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_FENCE",
+                  "t": 72.811697
+                },
+                {
+                  "kind": "MODE",
+                  "reason": "FENCE_BREACHED",
+                  "t": 72.811697
+                }
+              ],
+              "fence_enabled": true,
+              "hit": true
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "1 illegitimate/failsafe mode transition(s)",
+              "events": [
+                {
+                  "mode": "RTL",
+                  "reason": "FENCE_BREACHED",
+                  "t": 72.811697
+                }
+              ],
+              "hit": true
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 30.0 deg",
+              "hit": false,
+              "max_attitude_error_deg": 30.030734256757693
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 0.0,
+              "applicable": true,
+              "detail": "altitude loss 0.0 m",
+              "hit": false
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "1 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 0.476872 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "A_witness_r3",
+          "source": "bin",
+          "tier1_any": true,
+          "tier1_hit_policies": [
+            "T1b_no_preventive_failsafe",
+            "T1c_configured_limit_compliance",
+            "T1d_mode_transition_legitimacy"
+          ],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2c_no_ground_contact"
+          ]
+        },
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "applicable": false,
+              "detail": "no command profile / ANGLE_MAX",
+              "hit": false
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "3 preventive failsafe event(s)",
+              "events": [
+                {
+                  "ecode": 2,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_FENCE",
+                  "t": 73.809631
+                },
+                {
+                  "kind": "MODE",
+                  "mode": "RTL",
+                  "reason": "FENCE_BREACHED",
+                  "t": 73.809631
+                },
+                {
+                  "kind": "MSG",
+                  "t": 73.809631,
+                  "text": "Fence Breached"
+                }
+              ],
+              "hit": true
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "2 configured-limit event(s)",
+              "events": [
+                {
+                  "ecode": 2,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_FENCE",
+                  "t": 73.809631
+                },
+                {
+                  "kind": "MODE",
+                  "reason": "FENCE_BREACHED",
+                  "t": 73.809631
+                }
+              ],
+              "fence_enabled": true,
+              "hit": true
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "1 illegitimate/failsafe mode transition(s)",
+              "events": [
+                {
+                  "mode": "RTL",
+                  "reason": "FENCE_BREACHED",
+                  "t": 73.809631
+                }
+              ],
+              "hit": true
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 30.0 deg",
+              "hit": false,
+              "max_attitude_error_deg": 30.002406570140337
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 0.0,
+              "applicable": true,
+              "detail": "altitude loss 0.0 m",
+              "hit": false
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "1 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 0.478514 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "B_nominal_r1",
+          "source": "bin",
+          "tier1_any": true,
+          "tier1_hit_policies": [
+            "T1b_no_preventive_failsafe",
+            "T1c_configured_limit_compliance",
+            "T1d_mode_transition_legitimacy"
+          ],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2c_no_ground_contact"
+          ]
+        },
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "applicable": false,
+              "detail": "no command profile / ANGLE_MAX",
+              "hit": false
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "3 preventive failsafe event(s)",
+              "events": [
+                {
+                  "ecode": 2,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_FENCE",
+                  "t": 75.129936
+                },
+                {
+                  "kind": "MODE",
+                  "mode": "RTL",
+                  "reason": "FENCE_BREACHED",
+                  "t": 75.129936
+                },
+                {
+                  "kind": "MSG",
+                  "t": 75.129936,
+                  "text": "Fence Breached"
+                }
+              ],
+              "hit": true
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "2 configured-limit event(s)",
+              "events": [
+                {
+                  "ecode": 2,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_FENCE",
+                  "t": 75.129936
+                },
+                {
+                  "kind": "MODE",
+                  "reason": "FENCE_BREACHED",
+                  "t": 75.129936
+                }
+              ],
+              "fence_enabled": true,
+              "hit": true
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "1 illegitimate/failsafe mode transition(s)",
+              "events": [
+                {
+                  "mode": "RTL",
+                  "reason": "FENCE_BREACHED",
+                  "t": 75.129936
+                }
+              ],
+              "hit": true
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 59.9 deg",
+              "hit": false,
+              "max_attitude_error_deg": 59.93004088101392
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 0.0,
+              "applicable": true,
+              "detail": "altitude loss 0.0 m",
+              "hit": false
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "1 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 0.476788 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "grad_m02_v06_w00_r1",
+          "source": "bin",
+          "tier1_any": true,
+          "tier1_hit_policies": [
+            "T1b_no_preventive_failsafe",
+            "T1c_configured_limit_compliance",
+            "T1d_mode_transition_legitimacy"
+          ],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2c_no_ground_contact"
+          ]
+        }
+      ]
+    },
+    "PC_GCS": {
+      "aggregate": {
+        "n_runs": 4,
+        "per_policy": {
+          "T1a_angle_max_command_clamp": {
+            "applicable": 0,
+            "hits": 0,
+            "tier": 1
+          },
+          "T1b_no_preventive_failsafe": {
+            "applicable": 4,
+            "hits": 4,
+            "tier": 1
+          },
+          "T1c_configured_limit_compliance": {
+            "applicable": 4,
+            "hits": 0,
+            "tier": 1
+          },
+          "T1d_mode_transition_legitimacy": {
+            "applicable": 4,
+            "hits": 4,
+            "tier": 1
+          },
+          "T2a_attitude_within_bound": {
+            "applicable": 4,
+            "hits": 0,
+            "tier": 2
+          },
+          "T2b_no_uncommanded_altitude_loss": {
+            "applicable": 4,
+            "hits": 0,
+            "tier": 2
+          },
+          "T2c_no_ground_contact": {
+            "applicable": 4,
+            "hits": 4,
+            "tier": 2
+          }
+        },
+        "tier1_any_hits": 4,
+        "tier2_any_hits": 4
+      },
+      "expected_tier1": [
+        "T1b_no_preventive_failsafe",
+        "T1d_mode_transition_legitimacy"
+      ],
+      "nontrivial": true,
+      "results": [
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "applicable": false,
+              "detail": "no command profile / ANGLE_MAX",
+              "hit": false
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "9 preventive failsafe event(s)",
+              "events": [
+                {
+                  "ecode": 1,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_GCS",
+                  "t": 77.467334
+                },
+                {
+                  "kind": "MODE",
+                  "mode": "RTL",
+                  "reason": "GCS_FAILSAFE",
+                  "t": 77.467334
+                },
+                {
+                  "kind": "MSG",
+                  "t": 77.467334,
+                  "text": "GCS Failsafe"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 151.994178,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 181.994673,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 212.994768,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 243.994863,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 274.994958,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 288.604512,
+                  "text": "GCS Failsafe Cleared"
+                }
+              ],
+              "hit": true
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": true,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "1 illegitimate/failsafe mode transition(s)",
+              "events": [
+                {
+                  "mode": "RTL",
+                  "reason": "GCS_FAILSAFE",
+                  "t": 77.467334
+                }
+              ],
+              "hit": true
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 30.0 deg",
+              "hit": false,
+              "max_attitude_error_deg": 30.040134819937144
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 0.0,
+              "applicable": true,
+              "detail": "altitude loss 0.0 m",
+              "hit": false
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "1 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 0.476038 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "linkloss_conservative_v05_w00_r1",
+          "source": "bin",
+          "tier1_any": true,
+          "tier1_hit_policies": [
+            "T1b_no_preventive_failsafe",
+            "T1d_mode_transition_legitimacy"
+          ],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2c_no_ground_contact"
+          ]
+        },
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "applicable": false,
+              "detail": "no command profile / ANGLE_MAX",
+              "hit": false
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "9 preventive failsafe event(s)",
+              "events": [
+                {
+                  "ecode": 1,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_GCS",
+                  "t": 77.464835
+                },
+                {
+                  "kind": "MODE",
+                  "mode": "RTL",
+                  "reason": "GCS_FAILSAFE",
+                  "t": 77.464835
+                },
+                {
+                  "kind": "MSG",
+                  "t": 77.464835,
+                  "text": "GCS Failsafe"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 151.991679,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 181.992174,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 212.992269,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 243.992364,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 274.992459,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 288.602013,
+                  "text": "GCS Failsafe Cleared"
+                }
+              ],
+              "hit": true
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": true,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "1 illegitimate/failsafe mode transition(s)",
+              "events": [
+                {
+                  "mode": "RTL",
+                  "reason": "GCS_FAILSAFE",
+                  "t": 77.464835
+                }
+              ],
+              "hit": true
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 30.0 deg",
+              "hit": false,
+              "max_attitude_error_deg": 30.01149946270596
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 0.0,
+              "applicable": true,
+              "detail": "altitude loss 0.0 m",
+              "hit": false
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "1 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 0.477758 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "linkloss_conservative_v05_w03_r1",
+          "source": "bin",
+          "tier1_any": true,
+          "tier1_hit_policies": [
+            "T1b_no_preventive_failsafe",
+            "T1d_mode_transition_legitimacy"
+          ],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2c_no_ground_contact"
+          ]
+        },
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "applicable": false,
+              "detail": "no command profile / ANGLE_MAX",
+              "hit": false
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "9 preventive failsafe event(s)",
+              "events": [
+                {
+                  "ecode": 1,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_GCS",
+                  "t": 77.467334
+                },
+                {
+                  "kind": "MODE",
+                  "mode": "RTL",
+                  "reason": "GCS_FAILSAFE",
+                  "t": 77.467334
+                },
+                {
+                  "kind": "MSG",
+                  "t": 77.467334,
+                  "text": "GCS Failsafe"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 151.994178,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 181.994673,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 212.994768,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 243.994863,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 274.994958,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 288.604512,
+                  "text": "GCS Failsafe Cleared"
+                }
+              ],
+              "hit": true
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": true,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "1 illegitimate/failsafe mode transition(s)",
+              "events": [
+                {
+                  "mode": "RTL",
+                  "reason": "GCS_FAILSAFE",
+                  "t": 77.467334
+                }
+              ],
+              "hit": true
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 30.0 deg",
+              "hit": false,
+              "max_attitude_error_deg": 30.020166555167545
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 0.0,
+              "applicable": true,
+              "detail": "altitude loss 0.0 m",
+              "hit": false
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "1 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 0.478150 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "linkloss_conservative_v05_w06_r1",
+          "source": "bin",
+          "tier1_any": true,
+          "tier1_hit_policies": [
+            "T1b_no_preventive_failsafe",
+            "T1d_mode_transition_legitimacy"
+          ],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2c_no_ground_contact"
+          ]
+        },
+        {
+          "angle_max_deg": 45.0,
+          "policies": {
+            "T1a_angle_max_command_clamp": {
+              "applicable": false,
+              "detail": "no command profile / ANGLE_MAX",
+              "hit": false
+            },
+            "T1b_no_preventive_failsafe": {
+              "applicable": true,
+              "detail": "9 preventive failsafe event(s)",
+              "events": [
+                {
+                  "ecode": 1,
+                  "kind": "ERR",
+                  "subsystem": "FAILSAFE_GCS",
+                  "t": 77.799701
+                },
+                {
+                  "kind": "MODE",
+                  "mode": "RTL",
+                  "reason": "GCS_FAILSAFE",
+                  "t": 77.799701
+                },
+                {
+                  "kind": "MSG",
+                  "t": 77.799701,
+                  "text": "GCS Failsafe"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 151.994178,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 181.994673,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 212.994768,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 243.994863,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 274.994958,
+                  "text": "PreArm: GCS failsafe on"
+                },
+                {
+                  "kind": "MSG",
+                  "t": 288.936879,
+                  "text": "GCS Failsafe Cleared"
+                }
+              ],
+              "hit": true
+            },
+            "T1c_configured_limit_compliance": {
+              "applicable": true,
+              "detail": "0 configured-limit event(s)",
+              "events": [],
+              "fence_enabled": true,
+              "hit": false
+            },
+            "T1d_mode_transition_legitimacy": {
+              "applicable": true,
+              "detail": "1 illegitimate/failsafe mode transition(s)",
+              "events": [
+                {
+                  "mode": "RTL",
+                  "reason": "GCS_FAILSAFE",
+                  "t": 77.799701
+                }
+              ],
+              "hit": true
+            },
+            "T2a_attitude_within_bound": {
+              "applicable": true,
+              "detail": "max attitude error 30.0 deg",
+              "hit": false,
+              "max_attitude_error_deg": 30.010601460150713
+            },
+            "T2b_no_uncommanded_altitude_loss": {
+              "altitude_loss_m": 0.0,
+              "applicable": true,
+              "detail": "altitude loss 0.0 m",
+              "hit": false
+            },
+            "T2c_no_ground_contact": {
+              "applicable": true,
+              "detail": "1 ground msgs, 0 floor markers, 0 crash-check",
+              "ground_messages": [
+                "SIM Hit ground at 0.475877 m/s"
+              ],
+              "hit": true
+            }
+          },
+          "run_id": "linkloss_conservative_v05_w09_r1",
+          "source": "bin",
+          "tier1_any": true,
+          "tier1_hit_policies": [
+            "T1b_no_preventive_failsafe",
+            "T1d_mode_transition_legitimacy"
+          ],
+          "tier2_any": true,
+          "tier2_hit_policies": [
+            "T2c_no_ground_contact"
+          ]
+        }
+      ]
+    }
+  },
+  "verdict": {
+    "condition_1_overdraw_tier1_zero": true,
+    "condition_2_controls": [
+      "PC_FENCE",
+      "PC_GCS",
+      "PC_CLAMP"
+    ],
+    "condition_2_nontrivial_control": true,
+    "condition_3_anti_leakage_passes": true,
+    "overdraw_total_tier1_hits": 0,
+    "verdict": "CONFIRMED"
+  }
+}
