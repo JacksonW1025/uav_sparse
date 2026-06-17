@@ -1,0 +1,164 @@
+{
+  "VERDICT": {
+    "B": "<RE-ANCHORED|FAILED>",
+    "C": "<C-ATTITUDE|C-ALTITUDE|C-ABSENT>"
+  },
+  "status": "preregistered",
+  "experiment": "control_authority_tierBC_v2",
+  "date": "2026-06-17",
+  "one_line": "Re-anchor the contract-clean unsafe demonstration on the supported GUIDED SET_ATTITUDE_TARGET quaternion interface, then test whether ATT.DesRoll <= ANGLE_MAX plus legal wind/turbulence can still cause an unrecovered hard consequence with interface-aware Tier-1 B = 0.",
+  "sources": {
+    "predecessor_oracleA": "planc/results/oracleA_v1_result.json",
+    "angle_max_scope": "planc/results/angle_max_scope_report.md",
+    "contract_baseline": "planc/src/contract_baseline_v1.py"
+  },
+  "fixed_P": {
+    "ANGLE_MAX_cd": 4500,
+    "ANGLE_MAX_deg": 45.0,
+    "model": "m100",
+    "truncation_protections_disabled": [
+      "AVOID_ENABLE=0",
+      "FENCE_ENABLE=0",
+      "FENCE_TYPE=0",
+      "battery/RC/GCS failsafes disabled"
+    ],
+    "crash_detection": "FS_CRASH_CHECK remains enabled but CRASH_CHECK/CRASH_FAILSAFE are consequence detectors, not preventive Tier-1 B."
+  },
+  "interfaces": {
+    "partB_primary": {
+      "mode": "GUIDED_NOGPS after GUIDED takeoff",
+      "message": "SET_ATTITUDE_TARGET",
+      "type_mask": "0x07: ignore body roll/pitch/yaw rates",
+      "attitude": "unit quaternion, non-zero",
+      "routing": "GCS_Mavlink.cpp SET_ATTITUDE_TARGET -> ModeGuided::set_angle -> angle_control_run -> AC_AttitudeControl::input_quaternion",
+      "contract_scope": "ANGLE_MAX is not a Tier-1 clamp on this supported attitude-target path; demanded attitude beyond ANGLE_MAX is Tier-2/result evidence."
+    },
+    "partB_corroboration": "ACRO with ACRO_TRAINER=0 rate doublet, best-effort.",
+    "partC": "Same GUIDED quaternion interface, commanded roll targets in {35,40,44} deg."
+  },
+  "groups": {
+    "B_reanchor": {
+      "guid_options": 8,
+      "vertical_semantics": "direct throttle using learned MOT_THST_HOVER",
+      "takeoff_alt_m": 60.0,
+      "targets_deg": [
+        60.0,
+        90.0,
+        120.0,
+        150.0
+      ],
+      "seeds": [
+        0,
+        1,
+        2
+      ]
+    },
+    "C_attitude_main": {
+      "guid_options": 0,
+      "vertical_semantics": "SET_ATTITUDE_TARGET thrust=0.5 means zero climb-rate; z-controller holds altitude",
+      "takeoff_alt_m": 90.0,
+      "targets_deg": [
+        35.0,
+        40.0,
+        44.0
+      ],
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "status": "primary"
+    },
+    "C_altitude_secondary": {
+      "guid_options": 8,
+      "vertical_semantics": "direct throttle, no altitude hold",
+      "takeoff_alt_m": 60.0,
+      "targets_deg": [
+        35.0,
+        40.0,
+        44.0
+      ],
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "status": "suspect_secondary"
+    }
+  },
+  "wind_and_turbulence": {
+    "pressure_levels": [
+      {
+        "name": "calm",
+        "wind_m_s": 0.0,
+        "turbulence_m_s": 0.0
+      },
+      {
+        "name": "low",
+        "wind_m_s": 8.0,
+        "turbulence_m_s": 4.0
+      },
+      {
+        "name": "high",
+        "wind_m_s": 15.0,
+        "turbulence_m_s": 8.0
+      }
+    ],
+    "upper_bound_rule": "The high point is the preregistered legal experiment upper bound. SITL exposes SIM_WIND_SPD and SIM_WIND_TURB as unconstrained float params, so legality here means accepted by SITL and validated by the S1 0 deg hover probe as not catastrophic by itself."
+  },
+  "hardened_oracle_A_v2": {
+    "basis": "actual ATT.Roll/Pitch versus demanded ATT.DesRoll/DesPitch, plus altitude and ground/contact telemetry",
+    "crash_or_contact": "SITL ground/contact message, or RelHomeAlt < 1.0 m with downward speed > 2.0 m/s",
+    "attitude_diverged": "actual-vs-demanded attitude error > 60 deg for >= 0.5 s and unrecovered at window end, or worsening with tail slope >= 5 deg/s and final error >= 45 deg",
+    "attitude_priority": "For Part C, attitude divergence is scored independently and as C-attitude only if it occurs before ground/contact.",
+    "altitude_loss": "RelHomeAlt drop > 15 m inside the oracle window",
+    "outcomes": [
+      "attitude_diverged",
+      "altitude_loss",
+      "crashed",
+      "recovered",
+      "safe"
+    ]
+  },
+  "validity_rules": {
+    "partB": [
+      "Run is B-evidence only if the supported interface is GUIDED quaternion type_mask=0x07.",
+      "ATT.DesRoll must exceed ANGLE_MAX by more than the configured tolerance.",
+      "The run must not terminate or hit hard-A before ATT.DesRoll first crosses ANGLE_MAX."
+    ],
+    "partC": [
+      "Run is valid for C only if ATT.DesRoll <= ANGLE_MAX for the full oracle window.",
+      "If ATT.DesRoll slews or overshoots above ANGLE_MAX, the run is invalid for C and reclassified as a bypass/over-limit case, not as C evidence."
+    ]
+  },
+  "interface_aware_B": {
+    "Tier1_contract": [
+      "T1b no undocumented preventive failsafe",
+      "T1c configured-limit compliance",
+      "T1d mode-transition legitimacy, excluding GCS_COMMAND harness actions"
+    ],
+    "not_Tier1_on_this_interface": "T1a ANGLE_MAX command clamp is not applicable on quaternion/rate/acro interfaces by design; it is Tier-2/result evidence.",
+    "crash_detectors_excluded": "CRASH_FAILSAFE and CRASH_CHECK are post-impact detectors and are excluded from preventive B."
+  },
+  "decision_block": {
+    "B_RE_ANCHORED": "All true: supported GUIDED quaternion interface; ATT.DesRoll peak > ANGLE_MAX and crosses before hard-A; hardened oracle A true; interface-aware Tier-1 B = 0 in at least 2 runs of a cell.",
+    "B_FAILED": "Supported interface does not reproduce a real hard consequence or Tier-1 is not clean.",
+    "C_ATTITUDE": "At least one valid C_attitude_main cell has ATT.DesRoll <= ANGLE_MAX throughout, altitude hold on, legal wind/turbulence, actual-vs-demanded attitude divergence before ground/contact, and B = 0 in at least 2 runs.",
+    "C_ALTITUDE": "No C-attitude cell, but at least one valid Part C cell has ATT.DesRoll <= ANGLE_MAX throughout, attitude does not diverge first, and altitude loss or ground/contact occurs with B = 0 in at least 2 runs. This is a weaker secondary result.",
+    "C_ABSENT": "Under ATT.DesRoll <= ANGLE_MAX and the legal wind/turbulence upper bound, no unrecovered hard consequence with B = 0 is found."
+  },
+  "harness_hygiene": [
+    "Disarm by MAV_CMD_COMPONENT_ARM_DISARM only after the oracle observation window.",
+    "MODE.Rsn=GCS_COMMAND is harness and excluded from B.",
+    "The contract checker reads raw telemetry, command profiles, and param snapshots; it never opens *.oracle.json sidecars.",
+    "Tier-1 input fields are audited disjoint from oracle-A consequence fields."
+  ],
+  "artifacts": {
+    "config": "planc/config/tierBC_v2_config.yaml",
+    "runner": "planc/src/run_tierBC_v2.py",
+    "reporter": "planc/src/run_tierBC_report_v2.py",
+    "result_json": "planc/results/tierBC_v2_result.json",
+    "report": "planc/results/tierBC_v2_report.md",
+    "tag": "planc/ctrlauth-tierBC-v2-20260617"
+  }
+}

@@ -381,9 +381,10 @@ POLICY_META = {
         "violation": "Operator-commanded lean amplitude exceeds ANGLE_MAX+tol.",
         "input_fields": ["command_profile.roll_deg", "command_profile.pitch_deg",
                          "params.ANGLE_MAX"],
-        "scope_note": "ANGLE_MAX governs lean-angle COMMANDS, not body-rate "
-                      "setpoints; rate-commanded demanded attitude (ATT.DesRoll/"
-                      "DesPitch) excursions are out of contract scope and are "
+        "scope_note": "ANGLE_MAX governs lean-angle COMMANDS, not SET_ATTITUDE_TARGET "
+                      "quaternion targets, body-rate setpoints, or ACRO trainer-off "
+                      "rate control; demanded attitude (ATT.DesRoll/DesPitch) "
+                      "excursions on those interfaces are out of Tier-1 scope and "
                       "recorded under Tier-2 (T2a), not here.",
     },
     "T1b_no_preventive_failsafe": {
@@ -623,8 +624,31 @@ EVALUATORS = {
 }
 
 
-def check_run(run: RunData) -> dict[str, Any]:
+# Interfaces on which T1a (ANGLE_MAX lean-angle command clamp) is, BY DESIGN,
+# not a contract: SET_ATTITUDE_TARGET quaternion-attitude / body-rate, and ACRO.
+# Source: angle_max_scope_v1 (BY-DESIGN 0.87) -- ANGLE_MAX governs the lean-angle
+# command path only; input_quaternion (AC_AttitudeControl.cpp:231-266) and the
+# rate path are deliberately unbounded by ANGLE_MAX. On these interfaces the
+# substance of T1a (attitude beyond the ANGLE_MAX envelope) is scored under
+# Tier-2 (T2a), never Tier-1 -- this is what stops the checker from circularly
+# branding an intended overdraw as a "contract violation".
+ATTITUDE_TARGET_INTERFACES = {"quaternion", "guided_quaternion", "rate", "guided_rate", "acro", "acro_rate"}
+T1A_POLICY = "T1a_angle_max_command_clamp"
+
+
+def check_run(run: RunData, interface: str = "lean_angle_command") -> dict[str, Any]:
     policies = {pid: EVALUATORS[pid](run) for pid in POLICY_META}
+    # interface-aware scoping of T1a (see ATTITUDE_TARGET_INTERFACES)
+    t1a_in_scope = interface not in ATTITUDE_TARGET_INTERFACES
+    if not t1a_in_scope and T1A_POLICY in policies:
+        policies[T1A_POLICY] = dict(policies[T1A_POLICY])
+        policies[T1A_POLICY]["applicable"] = False
+        policies[T1A_POLICY]["hit"] = False
+        policies[T1A_POLICY]["interface_scope_note"] = (
+            f"T1a not applicable on interface '{interface}': ANGLE_MAX is a "
+            "lean-angle-command contract and by design does not govern the "
+            "attitude-target interface (angle_max_scope_v1); scored under Tier-2 T2a."
+        )
     tier1 = {pid: r for pid, r in policies.items() if POLICY_META[pid]["tier"] == 1}
     tier2 = {pid: r for pid, r in policies.items() if POLICY_META[pid]["tier"] == 2}
     tier1_hits = [pid for pid, r in tier1.items() if r.get("hit")]
@@ -632,6 +656,8 @@ def check_run(run: RunData) -> dict[str, Any]:
     return {
         "run_id": run.run_id,
         "source": run.source,
+        "interface": interface,
+        "t1a_in_scope": t1a_in_scope,
         "angle_max_deg": run.angle_max_deg,
         "tier1_any": bool(tier1_hits),
         "tier2_any": bool(tier2_hits),

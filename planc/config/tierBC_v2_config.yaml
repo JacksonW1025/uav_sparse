@@ -1,0 +1,319 @@
+# Control-authority Tier B re-anchor + Tier C verification, v2.
+#
+# Part B re-anchors the contract-clean unsafe zone on a *supported* interface:
+#   GUIDED + SET_ATTITUDE_TARGET, type_mask=0x07 (ignore all three body rates),
+#   driven by a unit attitude quaternion. Per ArduCopter 4.4.1 routing
+#   (GCS_Mavlink.cpp:1144-1192 -> ModeGuided::set_angle -> angle_control_run
+#   mode_guided.cpp:964-967): a NON-ZERO quaternion routes to
+#   AC_AttitudeControl::input_quaternion (AC_AttitudeControl.cpp:231-266), which
+#   applies only ang_vel_limit -- NO ANGLE_MAX clamp. This is the documented
+#   "supported" path (dev/docs: type_mask should be 0b00000111), unlike the
+#   body-rate fields the predecessor oracleA_v1 used (doc-discouraged).
+#
+# Part C verifies whether a command attitude held strictly <= ANGLE_MAX plus
+# legal wind/turbulence produces a real unsafe consequence with interface-aware
+# B = 0.
+#
+# Thrust semantics are group-specific. Part B and C-altitude use GUID_OPTIONS=8:
+# the SET_ATTITUDE_TARGET thrust field is direct throttle. The C-attitude main
+# group uses GUID_OPTIONS=0: thrust=0.5 means zero climb-rate and the z-position
+# controller is active, giving the vehicle a fair altitude-hold budget while it
+# tries to maintain <=45 deg demanded attitude under wind/turbulence.
+
+experiment:
+  name: control_authority_tierBC_v2
+  version: tierBC_v2
+  artifact_stem: tierBC_v2
+  run_prefix: tierBCv2
+  date: "2026-06-17"
+  source_oracleA_tag: planc/ctrlauth-oracleA-v1-20260615
+  source_anglemax_scope: planc/results/angle_max_scope_report.md
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 90.0
+  takeoff_alt_m: 60.0
+  stream_hz: 50
+  speedup: 8
+  pre_maneuver_hold_s: 2.0
+  post_maneuver_hold_s: 1.0
+  observation_after_profile_s: 18.0
+  cleanup_disarm_timeout_s: 8.0
+  use_mode: GUIDED_NOGPS
+  yaw_deg: 90.0
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+param_metadata:
+  angle_max_source: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/Parameters.cpp
+  angle_max_legal_range_cd: [1000, 8000]
+  guided_attitude_routing: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/mode_guided.cpp:964-967
+  input_quaternion_source: /mnt/nvme/UAVFuzzing/ardupilot-home/libraries/AC_AttitudeControl/AC_AttitudeControl.cpp:231-266
+  guided_options_source: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/mode.h:1069 (SetAttitudeTarget_ThrustAsThrust=1<<3)
+  acro_trainer_off: /mnt/nvme/UAVFuzzing/ardupilot-home/ArduCopter/mode.h:341 (Trainer::OFF=0)
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  SYSID_MYGCS: 255
+  FS_GCS_ENABLE: 0
+  FS_OPTIONS: 0
+  FS_THR_ENABLE: 0
+  SIM_RC_FAIL: 0
+  FENCE_ENABLE: 0
+  FENCE_TYPE: 0
+  AVOID_ENABLE: 0
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  WPNAV_SPEED_UP: 300
+  WPNAV_SPEED_DN: 300
+  WPNAV_ACCEL_Z: 1000
+  PILOT_SPEED_UP: 300
+  PILOT_SPEED_DN: 300
+  PILOT_ACCEL_Z: 1000
+  BATT_LOW_VOLT: 0
+  BATT_CRT_VOLT: 0
+  BATT_LOW_MAH: 0
+  BATT_CRT_MAH: 0
+  BATT_FS_LOW_ACT: 0
+  BATT_FS_CRT_ACT: 0
+  FS_CRASH_CHECK: 1
+  FS_EKF_ACTION: 1
+  ANGLE_MAX: 4500
+  # Default for Part B and C-altitude. C-attitude and its fidelity probes
+  # override this to 0 so SET_ATTITUDE_TARGET thrust is climb-rate/alt-hold.
+  GUID_OPTIONS: 8
+
+pressure:
+  default_model: m100
+  default_wind_m_s: 0.0
+  default_turbulence_m_s: 0.0
+  seeds_3: [0, 1, 2]
+  seeds_5: [0, 1, 2, 3, 4]
+
+models:
+  m100:
+    mass_multiplier: 1.0
+    mass_kg: 3.0
+    json: planc/config/minalt_models/mass_3_00.json
+  m125:
+    mass_multiplier: 1.25
+    mass_kg: 3.75
+    json: planc/config/minalt_models/mass_3_75.json
+  m140:
+    mass_multiplier: 1.4
+    mass_kg: 4.2
+    json: planc/config/minalt_models/mass_4_20.json
+  m170:
+    mass_multiplier: 1.7
+    mass_kg: 5.1
+    json: planc/config/minalt_models/mass_5_10.json
+
+# command block kept for compatibility with reused stage0_v2 helpers; the
+# tierBC profiles set explicit target angles (Part B > ANGLE_MAX, Part C
+# strictly < ANGLE_MAX) rather than amplitude_fraction.
+command:
+  axis: roll
+  attitude_target_mode: quaternion   # NEW: type_mask=0x07, unit quaternion, body rates ignored
+  amplitude_fraction_of_angle_max: 0.98
+  max_nominal_amplitude_deg: 160.0
+  hold_s: 8.0
+  thrust: 0.5
+  thrust_source: hover               # use learned MOT_THST_HOVER so 0 deg is neutral
+
+oracle:
+  divergence_error_deg: 60.0
+  divergence_duration_s: 0.5
+  divergence_tail_s: 1.0
+  divergence_trend_s: 2.0
+  divergence_worsening_slope_deg_s: 5.0
+  divergence_worsening_min_final_deg: 45.0
+  altitude_loss_thresh_m: 15.0
+  h_floor_m: 1.0
+  floor_descent_rate_m_s: 2.0
+  command_angle_guard_deg: 1.0
+  command_angle_limit_tolerance_deg: 0.1
+  attitude_active_threshold_deg: 2.0
+  rate_active_threshold_deg_s: 5.0
+  robust_min_clean_unsafe_per_cell: 2
+  # Interface-aware preventive sets: CRASH_FAILSAFE / CRASH_CHECK / "crash check"
+  # are DELIBERATELY EXCLUDED here (they are post-impact consequence detectors,
+  # not preventive guards -- per contract_baseline_v1 discipline). The crash
+  # itself is scored as hardened-oracle-A consequence, never as preventive B.
+  preventive_mode_reasons:
+    - RADIO_FAILSAFE
+    - BATTERY_FAILSAFE
+    - GCS_FAILSAFE
+    - EKF_FAILSAFE
+    - GPS_GLITCH
+    - FENCE_BREACHED
+    - TERRAIN_FAILSAFE
+    - AVOIDANCE
+    - TERMINATE
+    - FAILSAFE
+    - LEAK_FAILSAFE
+    - DEADRECKON_FAILSAFE
+  harness_cleanup_mode_reason: GCS_COMMAND
+  preventive_failsafe_subsystems:
+    - FAILSAFE_RADIO
+    - FAILSAFE_BATT
+    - FAILSAFE_GPS
+    - FAILSAFE_GCS
+    - FAILSAFE_FENCE
+    - EKFCHECK
+    - FAILSAFE_EKFINAV
+    - FAILSAFE_ADSB
+    - FAILSAFE_TERRAIN
+    - THRUST_LOSS_CHECK
+    - FAILSAFE_SENSORS
+    - FAILSAFE_LEAK
+    - FAILSAFE_VIBE
+    - INTERNAL_ERROR
+    - FAILSAFE_DEADRECKON
+  preventive_text_markers:
+    - "failsafe"
+    - "ekf failsafe"
+    - "thrust loss"
+    - "deadreckon"
+
+# ---- S1 interface-fidelity probes -------------------------------------------
+fidelity:
+  partB_quaternion:
+    name: fidB_quat_roll90
+    interface: guided_quaternion
+    group: B
+    guid_options: 8
+    takeoff_alt_m: 60.0
+    target_deg: 90.0
+    slew_rate_deg_s: 90.0
+    hold_s: 6.0
+    axis: roll
+    angle_max_cd: 4500
+    wind_m_s: 0.0
+    turbulence_m_s: 0.0
+    seed: 0
+    model: m100
+  partC_quaternion:
+    name: fidC_quat_roll44
+    interface: guided_quaternion
+    group: C_attitude
+    guid_options: 0
+    takeoff_alt_m: 90.0
+    target_deg: 44.0
+    slew_rate_deg_s: 45.0
+    hold_s: 25.0
+    axis: roll
+    angle_max_cd: 4500
+    wind_m_s: 0.0
+    turbulence_m_s: 0.0
+    seed: 0
+    model: m100
+  wind_upper_bound:           # 0 deg level hover under the highest planned wind
+    name: fidwind_level_w15t8
+    interface: guided_quaternion
+    group: C_attitude
+    guid_options: 0
+    takeoff_alt_m: 90.0
+    target_deg: 0.0
+    slew_rate_deg_s: 45.0
+    hold_s: 25.0
+    axis: roll
+    angle_max_cd: 4500
+    wind_m_s: 15.0
+    turbulence_m_s: 8.0
+    seed: 0
+    model: m100
+  acro_trainer0:              # ACRO_TRAINER=0 body-rate doublet (RC override) corroboration
+    name: fidacro_roll
+    interface: acro_rate
+    acro_trainer: 0
+    acro_rp_rate_deg_s: 360.0
+    roll_stick_frac: 1.0
+    hold_s: 1.2
+    cycles: 2
+    angle_max_cd: 4500
+    wind_m_s: 0.0
+    turbulence_m_s: 0.0
+    seed: 0
+    model: m100
+
+# ---- S2 Part B re-anchor grid (supported quaternion interface) --------------
+partB:
+  interface: guided_quaternion
+  group: B
+  guid_options: 8
+  takeoff_alt_m: 60.0
+  axis: roll
+  slew_rate_deg_s: 90.0
+  hold_s: 6.0
+  target_deg: [60.0, 90.0, 120.0, 150.0]
+  seeds: [0, 1, 2]
+  wind_m_s: 0.0
+  turbulence_m_s: 0.0
+  angle_max_cd: 4500
+  model: m100
+
+# ---- S3 Part C verification grid (command DesRoll must stay <= ANGLE_MAX) ---
+partC_attitude:
+  interface: guided_quaternion
+  group: C_attitude
+  altitude_hold: true
+  guid_options: 0
+  takeoff_alt_m: 90.0
+  axis: roll
+  slew_rate_deg_s: 45.0
+  hold_s: 25.0
+  target_deg: [35.0, 40.0, 44.0]
+  seeds: [0, 1, 2]
+  angle_max_cd: 4500
+  model: m100
+  # Legal wind/turbulence pressure levels. The high point is the pre-registered
+  # experiment upper bound and must pass the 0 deg hover S1 probe before use.
+  # SITL exposes these as unconstrained float params, so "legal" here means
+  # accepted by SITL and validated as non-catastrophic at 0 deg.
+  pressure_levels:
+    - {name: calm, wind_m_s: 0.0, turbulence_m_s: 0.0}
+    - {name: low, wind_m_s: 8.0, turbulence_m_s: 4.0}
+    - {name: high, wind_m_s: 15.0, turbulence_m_s: 8.0}
+
+partC_altitude:
+  interface: guided_quaternion
+  group: C_altitude
+  altitude_hold: false
+  suspect: true
+  guid_options: 8
+  takeoff_alt_m: 60.0
+  axis: roll
+  slew_rate_deg_s: 45.0
+  hold_s: 25.0
+  target_deg: [35.0, 40.0, 44.0]
+  seeds: [0, 1, 2]
+  angle_max_cd: 4500
+  model: m100
+  pressure_levels:
+    - {name: calm, wind_m_s: 0.0, turbulence_m_s: 0.0}
+    - {name: low, wind_m_s: 8.0, turbulence_m_s: 4.0}
+    - {name: high, wind_m_s: 15.0, turbulence_m_s: 8.0}
+
+decision:
+  partB_re_anchored: "Supported quaternion interface: commanded attitude target peak > ANGLE_MAX (no clamp), hardened oracle A true, and interface-aware Tier-1 (B) = 0 in >= robust_min_clean_unsafe_per_cell runs of a cell."
+  partB_failed: "Supported interface reproduces no hard consequence, or interface-aware Tier-1 is not clean."
+  partC_attitude: "A run with ATT.DesRoll <= ANGLE_MAX throughout + legal wind/turbulence shows actual-vs-demanded attitude divergence/loss-of-control (not altitude loss) with B=0."
+  partC_altitude: "Same DesRoll validity, but the consequence is altitude loss / ground contact (attitude held, harmed via descent) with B=0."
+  partC_absent: "No ATT.DesRoll<=ANGLE_MAX run + any legal wind/turbulence produces an unrecovered hard consequence with B=0."
