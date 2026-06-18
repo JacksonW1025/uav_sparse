@@ -18,6 +18,7 @@ Static audit verdict: `MPC_TILTMAX_AIR x offboard attitude SET_ATTITUDE_TARGET` 
 | 55 | clean_unsafe | 55.00 | 55.14 | 58.08 | True | False | unclamped_offboard_attitude_with_hard_consequence_and_no_tier1_violation |
 | 55 | clean_unsafe | 55.00 | 55.12 | 57.98 | True | False | unclamped_offboard_attitude_with_hard_consequence_and_no_tier1_violation |
 | 60 | contract_violated | 60.00 | 60.10 | 60.25 | True | True | failure_detector_status_true_before_hard_consequence |
+| 60 | clean_unsafe | 60.00 | 60.14 | 60.39 | True | False | unclamped_offboard_attitude_with_hard_consequence_and_no_tier1_violation |
 | 65 | contract_violated | 65.00 | 65.17 | 61.46 | True | True | failure_detector_status_true_before_hard_consequence |
 | 70 | contract_violated | 70.00 | 70.15 | 62.05 | True | True | failure_detector_status_true_before_hard_consequence |
 | 90 | contract_violated | 90.00 | 90.34 | 67.15 | True | True | failure_detector_status_true_before_hard_consequence |
@@ -26,14 +27,15 @@ Static audit verdict: `MPC_TILTMAX_AIR x offboard attitude SET_ATTITUDE_TARGET` 
 
 ## Artifacts
 
-- outcome_vs_roll: `/mnt/nvme/px4_work/uav_sparse/planc/analysis/px4_ctrlauth_v1_outcome_vs_roll.png`
 - tilt_vs_command: `/mnt/nvme/px4_work/uav_sparse/planc/analysis/px4_ctrlauth_v1_tilt_vs_command.png`
+- outcome_vs_roll: `/mnt/nvme/px4_work/uav_sparse/planc/analysis/px4_ctrlauth_v1_outcome_vs_roll.png`
 - px4_ctrlauth_v1_r000_s00: ulog `planc/logs/px4_ctrlauth_v1_r000_s00.ulg`, oracle `planc/logs/px4_ctrlauth_v1_r000_s00_parsed.oracle.json`
 - px4_ctrlauth_v1_r050_s00: ulog `planc/logs/px4_ctrlauth_v1_r050_s00.ulg`, oracle `planc/logs/px4_ctrlauth_v1_r050_s00_parsed.oracle.json`
 - px4_ctrlauth_v1_r052_s01: ulog `planc/logs/px4_ctrlauth_v1_r052_s01.ulg`, oracle `planc/logs/px4_ctrlauth_v1_r052_s01_parsed.oracle.json`
 - px4_ctrlauth_v1_r055_s00: ulog `planc/logs/px4_ctrlauth_v1_r055_s00.ulg`, oracle `planc/logs/px4_ctrlauth_v1_r055_s00_parsed.oracle.json`
 - px4_ctrlauth_v1_r055_s02: ulog `planc/logs/px4_ctrlauth_v1_r055_s02.ulg`, oracle `planc/logs/px4_ctrlauth_v1_r055_s02_parsed.oracle.json`
 - px4_ctrlauth_v1_r060_s01: ulog `planc/logs/px4_ctrlauth_v1_r060_s01.ulg`, oracle `planc/logs/px4_ctrlauth_v1_r060_s01_parsed.oracle.json`
+- px4_ctrlauth_v1_r060_s05: ulog `planc/logs/px4_ctrlauth_v1_r060_s05.ulg`, oracle `planc/logs/px4_ctrlauth_v1_r060_s05_parsed.oracle.json`
 - px4_ctrlauth_v1_r065_s02: ulog `planc/logs/px4_ctrlauth_v1_r065_s02.ulg`, oracle `planc/logs/px4_ctrlauth_v1_r065_s02_parsed.oracle.json`
 - px4_ctrlauth_v1_r070_s03: ulog `planc/logs/px4_ctrlauth_v1_r070_s03.ulg`, oracle `planc/logs/px4_ctrlauth_v1_r070_s03_parsed.oracle.json`
 - px4_ctrlauth_v1_r090_s02: ulog `planc/logs/px4_ctrlauth_v1_r090_s02.ulg`, oracle `planc/logs/px4_ctrlauth_v1_r090_s02_parsed.oracle.json`
@@ -44,7 +46,7 @@ Static audit verdict: `MPC_TILTMAX_AIR x offboard attitude SET_ATTITUDE_TARGET` 
 
 At least one legal offboard attitude command exceeded `MPC_TILTMAX_AIR`, was accepted without setpoint clipping, produced a hard consequence, and stayed Tier-1 clean before the hard consequence in the ulog oracle window.
 
-Clean witnesses in this campaign: `50, 52, 55, 55` deg.
+Clean witnesses in this campaign: `50, 52, 55, 55, 60` deg.
 
 Higher roll commands also confirmed the setpoint was not clipped, but are not counted as clean witnesses when `failure_detector_status` asserted before the preregistered hard consequence.
 
