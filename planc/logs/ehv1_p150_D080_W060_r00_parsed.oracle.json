@@ -1,0 +1,436 @@
+{
+  "bad_events": [],
+  "battery_errors": [
+    {
+      "ecode": 1,
+      "raw": {
+        "ECode": 1,
+        "Subsys": 6,
+        "TimeUS": 112777371,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 6,
+      "subsys_name": "FAILSAFE_BATT",
+      "time_s": 110.494951
+    },
+    {
+      "ecode": 1,
+      "raw": {
+        "ECode": 1,
+        "Subsys": 6,
+        "TimeUS": 123377296,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 6,
+      "subsys_name": "FAILSAFE_BATT",
+      "time_s": 121.094876
+    }
+  ],
+  "battery_messages": [
+    {
+      "raw": {
+        "Message": "Battery 1 is low 12.59V used 500 mAh",
+        "TimeUS": 112777371,
+        "mavpackettype": "MSG"
+      },
+      "text": "Battery 1 is low 12.59V used 500 mAh",
+      "time_s": 110.494951
+    },
+    {
+      "raw": {
+        "Message": "Battery Failsafe",
+        "TimeUS": 112777371,
+        "mavpackettype": "MSG"
+      },
+      "text": "Battery Failsafe",
+      "time_s": 110.494951
+    },
+    {
+      "raw": {
+        "Message": "Battery 1 is critical 12.59V used 590 mAh",
+        "TimeUS": 123377296,
+        "mavpackettype": "MSG"
+      },
+      "text": "Battery 1 is critical 12.59V used 590 mAh",
+      "time_s": 121.094876
+    },
+    {
+      "raw": {
+        "Message": "Battery Failsafe",
+        "TimeUS": 123377296,
+        "mavpackettype": "MSG"
+      },
+      "text": "Battery Failsafe",
+      "time_s": 121.094876
+    }
+  ],
+  "battery_samples": 1557,
+  "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/ehv1_p150_D080_W060_r00.BIN",
+  "consequence_type": "controlled_land_away",
+  "consumed_mah": 838.2449340820312,
+  "contract_clean": true,
+  "contract_violations": [],
+  "critical_action_ok": true,
+  "critical_battery_at_action": {
+    "curr": 30.49364471435547,
+    "currtot_mAh": 590.0232543945312,
+    "enrgtot_Wh": 7.427163124084473,
+    "raw": {
+      "Curr": 30.49364471435547,
+      "CurrTot": 590.0232543945312,
+      "EnrgTot": 7.427163124084473,
+      "Instance": 0,
+      "RemPct": 9,
+      "Res": 0.0031994569581001997,
+      "Temp": 0.0,
+      "TimeUS": 123377296,
+      "Volt": 12.587977409362793,
+      "VoltR": 12.685540199279785,
+      "mavpackettype": "BAT"
+    },
+    "rem_pct": 9,
+    "remaining_mAh": 59.97674560546875,
+    "time_s": 121.094876,
+    "volt": 12.587977409362793,
+    "volt_resting": 12.685540199279785
+  },
+  "critical_mode": {
+    "mode": "LAND",
+    "raw": {
+      "Mode": 9,
+      "ModeNum": 9,
+      "Rsn": 4,
+      "TimeUS": 123377296,
+      "mavpackettype": "MODE"
+    },
+    "reason": 4,
+    "reason_name": "BATTERY_FAILSAFE",
+    "time_s": 121.094876
+  },
+  "critical_remaining_mAh": 59.97674560546875,
+  "critical_time_s": 121.094876,
+  "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/ehv1_p150_D080_W060_r00_parsed.csv",
+  "d_reached": true,
+  "d_reached_time_s": 67.994458,
+  "dirty_messages": [],
+  "disarm_event_after_low": {
+    "id": 11,
+    "name": "DISARMED",
+    "raw": {
+      "Id": 11,
+      "TimeUS": 157656912,
+      "mavpackettype": "EV"
+    },
+    "time_s": 155.374492
+  },
+  "distance_at_low_failsafe_m": 82.7702047276562,
+  "err_records": [
+    {
+      "ecode": 0,
+      "raw": {
+        "ECode": 0,
+        "Subsys": 3,
+        "TimeUS": 2377382,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 3,
+      "subsys_name": "COMPASS",
+      "time_s": 0.09496199999999977
+    },
+    {
+      "ecode": 1,
+      "raw": {
+        "ECode": 1,
+        "Subsys": 6,
+        "TimeUS": 112777371,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 6,
+      "subsys_name": "FAILSAFE_BATT",
+      "time_s": 110.494951
+    },
+    {
+      "ecode": 1,
+      "raw": {
+        "ECode": 1,
+        "Subsys": 6,
+        "TimeUS": 123377296,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 6,
+      "subsys_name": "FAILSAFE_BATT",
+      "time_s": 121.094876
+    }
+  ],
+  "event_records": [
+    {
+      "id": 62,
+      "name": "EKF_YAW_RESET",
+      "raw": {
+        "Id": 62,
+        "TimeUS": 5719378,
+        "mavpackettype": "EV"
+      },
+      "time_s": 3.4369579999999997
+    },
+    {
+      "id": 25,
+      "name": "SET_HOME",
+      "raw": {
+        "Id": 25,
+        "TimeUS": 18581731,
+        "mavpackettype": "EV"
+      },
+      "time_s": 16.299311000000003
+    },
+    {
+      "id": 10,
+      "name": "ARMED",
+      "raw": {
+        "Id": 10,
+        "TimeUS": 47049506,
+        "mavpackettype": "EV"
+      },
+      "time_s": 44.767086
+    },
+    {
+      "id": 15,
+      "name": "AUTO_ARMED",
+      "raw": {
+        "Id": 15,
+        "TimeUS": 48039110,
+        "mavpackettype": "EV"
+      },
+      "time_s": 45.75669
+    },
+    {
+      "id": 57,
+      "name": "MOTORS_INTERLOCK_ENABLED",
+      "raw": {
+        "Id": 57,
+        "TimeUS": 49052038,
+        "mavpackettype": "EV"
+      },
+      "time_s": 46.769618
+    },
+    {
+      "id": 28,
+      "name": "NOT_LANDED",
+      "raw": {
+        "Id": 28,
+        "TimeUS": 50279880,
+        "mavpackettype": "EV"
+      },
+      "time_s": 47.99746
+    },
+    {
+      "id": 62,
+      "name": "EKF_YAW_RESET",
+      "raw": {
+        "Id": 62,
+        "TimeUS": 52627274,
+        "mavpackettype": "EV"
+      },
+      "time_s": 50.344854
+    },
+    {
+      "id": 17,
+      "name": "LAND_COMPLETE_MAYBE",
+      "raw": {
+        "Id": 17,
+        "TimeUS": 156346603,
+        "mavpackettype": "EV"
+      },
+      "time_s": 154.06418299999999
+    },
+    {
+      "id": 18,
+      "name": "LAND_COMPLETE",
+      "raw": {
+        "Id": 18,
+        "TimeUS": 157149615,
+        "mavpackettype": "EV"
+      },
+      "time_s": 154.867195
+    },
+    {
+      "id": 11,
+      "name": "DISARMED",
+      "raw": {
+        "Id": 11,
+        "TimeUS": 157656912,
+        "mavpackettype": "EV"
+      },
+      "time_s": 155.374492
+    },
+    {
+      "id": 56,
+      "name": "MOTORS_INTERLOCK_DISABLED",
+      "raw": {
+        "Id": 56,
+        "TimeUS": 157659411,
+        "mavpackettype": "EV"
+      },
+      "time_s": 155.376991
+    }
+  ],
+  "final_alt": 16.10999870300293,
+  "final_distance_m": 21.22516870937878,
+  "hard_touchdown": false,
+  "hard_touchdown_threshold_m_s": 3.0,
+  "home_radius_m": 15.0,
+  "home_return_time_s": null,
+  "landing_complete_event": {
+    "id": 18,
+    "name": "LAND_COMPLETE",
+    "raw": {
+      "Id": 18,
+      "TimeUS": 157149615,
+      "mavpackettype": "EV"
+    },
+    "time_s": 154.867195
+  },
+  "low_action_ok": true,
+  "low_battery_at_action": {
+    "curr": 28.16715431213379,
+    "currtot_mAh": 500.2935791015625,
+    "enrgtot_Wh": 6.297650337219238,
+    "raw": {
+      "Curr": 28.16715431213379,
+      "CurrTot": 500.2935791015625,
+      "EnrgTot": 6.297650337219238,
+      "Instance": 0,
+      "RemPct": 23,
+      "Res": 0.0031994569581001997,
+      "Temp": 0.0,
+      "TimeUS": 112777371,
+      "Volt": 12.587977409362793,
+      "VoltR": 12.678096771240234,
+      "mavpackettype": "BAT"
+    },
+    "rem_pct": 23,
+    "remaining_mAh": 149.7064208984375,
+    "time_s": 110.494951,
+    "volt": 12.587977409362793,
+    "volt_resting": 12.678096771240234
+  },
+  "low_mode": {
+    "mode": "RTL",
+    "raw": {
+      "Mode": 6,
+      "ModeNum": 6,
+      "Rsn": 4,
+      "TimeUS": 112777371,
+      "mavpackettype": "MODE"
+    },
+    "reason": 4,
+    "reason_name": "BATTERY_FAILSAFE",
+    "time_s": 110.494951
+  },
+  "low_remaining_mAh": 149.7064208984375,
+  "low_time_s": 110.494951,
+  "max_descent_rate_near_touchdown_m_s": 0.4871573746204376,
+  "max_distance_m": 83.41554394480961,
+  "messages_count": 38,
+  "modes": [
+    {
+      "mode": "STABILIZE",
+      "raw": {
+        "Mode": 0,
+        "ModeNum": 0,
+        "Rsn": 26,
+        "TimeUS": 2282420,
+        "mavpackettype": "MODE"
+      },
+      "reason": 26,
+      "reason_name": "26",
+      "time_s": 0.0
+    },
+    {
+      "mode": "GUIDED",
+      "raw": {
+        "Mode": 4,
+        "ModeNum": 4,
+        "Rsn": 2,
+        "TimeUS": 8977241,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "reason_name": "GCS_COMMAND",
+      "time_s": 6.694820999999999
+    },
+    {
+      "mode": "GUIDED",
+      "raw": {
+        "Mode": 4,
+        "ModeNum": 4,
+        "Rsn": 2,
+        "TimeUS": 47049506,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "reason_name": "GCS_COMMAND",
+      "time_s": 44.767086
+    },
+    {
+      "mode": "RTL",
+      "raw": {
+        "Mode": 6,
+        "ModeNum": 6,
+        "Rsn": 4,
+        "TimeUS": 112777371,
+        "mavpackettype": "MODE"
+      },
+      "reason": 4,
+      "reason_name": "BATTERY_FAILSAFE",
+      "time_s": 110.494951
+    },
+    {
+      "mode": "LAND",
+      "raw": {
+        "Mode": 9,
+        "ModeNum": 9,
+        "Rsn": 4,
+        "TimeUS": 123377296,
+        "mavpackettype": "MODE"
+      },
+      "reason": 4,
+      "reason_name": "BATTERY_FAILSAFE",
+      "time_s": 121.094876
+    }
+  ],
+  "other_errors": [],
+  "parm_rows_count": 1397,
+  "position_source": "POS",
+  "return_speed_audit": {
+    "mean_ground_speed_m_s": 4.811981116900242,
+    "mean_inbound_component_m_s": 4.810485821050364,
+    "median_ground_speed_m_s": 6.18785526284635,
+    "median_inbound_component_m_s": 6.187855243682861,
+    "p10_ground_speed_m_s": 0.05001511932573128,
+    "p90_ground_speed_m_s": 6.505838049261987,
+    "samples": 106,
+    "window_end_s": 155.694364,
+    "window_start_s": 110.494951
+  },
+  "returned_home_after_low": false,
+  "safe_binary": false,
+  "samples": 1495,
+  "severity_final_distance_m": 21.22516870937878,
+  "speed_audit": {
+    "commanded_speed_m_s": 8.0,
+    "median_error_m_s": 0.04389238357543945,
+    "median_forward_speed_m_s": 8.04389238357544,
+    "p95_error_m_s": 0.14955835342407298,
+    "p95_forward_speed_m_s": 8.149558353424073,
+    "samples": 74,
+    "within_tolerance": true
+  },
+  "touchdown_alt": 16.1299991607666,
+  "touchdown_distance_m": 21.22516870937878,
+  "touchdown_time_s": 154.867195,
+  "touchdown_vertical_speed_m_s_down": 0.010726762004196644,
+  "unsafe_binary": true,
+  "voltage_drop_rate_v_s": 0.0,
+  "voltage_drop_v": 0.0
+}

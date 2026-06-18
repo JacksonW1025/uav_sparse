@@ -1,0 +1,102 @@
+{
+  "created_at_utc": "2026-06-18T06:35:41.993004+00:00",
+  "experiment": "energy_headwind_v1",
+  "oracle": {
+    "clean_unsafe": "got_home=False and Tier-1 contract violations are empty; battery RTL/LAND correct actions are not counted as violations",
+    "consequence_type": {
+      "ambiguous": "terminal evidence incomplete",
+      "controlled_land_away": "critical battery LAND executes and LAND_COMPLETE occurs away from home without hard touchdown",
+      "got_home": "returned within home radius",
+      "uncontrolled": "hard touchdown, missing controlled LAND completion, or other hard terminal evidence"
+    },
+    "got_home": "touchdown/final distance to home <= 15 m after battery RTL",
+    "shortfall_m": "max(0, touchdown/final distance to home - 15 m)"
+  },
+  "pass_fail": {
+    "FAIL": "premises satisfied but one or more PASS checks fail",
+    "INCONCLUSIVE": "premise failure: battery RTL missing, D not achieved on main layer, or wind not coupled to return groundspeed",
+    "PASS": [
+      "premises satisfied: battery RTL triggers/executes, commanded D is achieved on main layer, and return groundspeed declines monotonically with wind",
+      "nontrivial robust clean_unsafe region on main BATT_LOW_MAH=220 layer",
+      "battery RTL/LAND actions are correct and PGFUZZ-invisible on clean_unsafe points",
+      "clean_unsafe count is non-increasing as BATT_LOW_MAH increases over fixed D x wind grid",
+      "wide D x wind boundary is consistently characterizable"
+    ],
+    "explicit_non_gates": [
+      "no minimum sigma gate",
+      "no severity regression MAE <= 1.5 sigma gate",
+      "classification/boundary replay is descriptive, not a PASS gate"
+    ]
+  },
+  "scenario": {
+    "batt_low_layers_mAh": [
+      150.0,
+      220.0,
+      300.0,
+      400.0
+    ],
+    "distances_m": [
+      40.0,
+      60.0,
+      80.0,
+      100.0,
+      120.0,
+      140.0,
+      160.0
+    ],
+    "fixed_params": {
+      "AVOID_ENABLE": 0,
+      "BATT_FS_CRT_ACT": 1,
+      "BATT_FS_LOW_ACT": 2,
+      "FENCE_ENABLE": 0,
+      "RTL_ALT": 2000,
+      "SIM_WIND_DIR": 270,
+      "SIM_WIND_TURB": 0,
+      "WPNAV_SPEED": 800
+    },
+    "home_radius_m": 15.0,
+    "main_batt_low_mAh": 220.0,
+    "sigma_points": [
+      {
+        "D_m": 80.0,
+        "repetitions": 5,
+        "wind_m_s": 12.0
+      },
+      {
+        "D_m": 100.0,
+        "repetitions": 5,
+        "wind_m_s": 9.0
+      },
+      {
+        "D_m": 120.0,
+        "repetitions": 5,
+        "wind_m_s": 9.0
+      }
+    ],
+    "winds_m_s": [
+      0.0,
+      3.0,
+      6.0,
+      7.5,
+      9.0,
+      12.0
+    ]
+  },
+  "source_feasibility": {
+    "key_calibration": {
+      "D100_return_median_groundspeed_wind_0_6_12_m_s": [
+        7.88,
+        6.48,
+        3.05
+      ],
+      "same_D_flips": [
+        "D80: 9->12",
+        "D100: 6->9",
+        "D120: 6->9"
+      ],
+      "shortfall_sigma_D100_W9_m": 0.071
+    },
+    "result": "planc/results/energy_headwind_feasibility_result.json",
+    "verdict": "GO"
+  }
+}

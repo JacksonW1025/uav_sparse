@@ -611,12 +611,14 @@ def parse_energy_dataflash(
             if core is None or int(core) == 0:
                 vn = float(_field(data, "VN") or 0.0)
                 ve = float(_field(data, "VE") or 0.0)
+                vd = float(_field(data, "VD") or 0.0)
                 bearing = math.radians(float(target_bearing_deg))
                 forward = vn * math.cos(bearing) + ve * math.sin(bearing)
                 xkf_velocity_rows.append({
                     "time_s": rel_t,
                     "vn_m_s": vn,
                     "ve_m_s": ve,
+                    "vd_m_s_down": vd,
                     "ground_speed_m_s": math.hypot(vn, ve),
                     "forward_speed_m_s": forward,
                 })
@@ -762,6 +764,87 @@ def parse_energy_dataflash(
             "within_tolerance": bool(median is not None and abs(float(median) - float(cruise_speed_m_s)) <= speed_tolerance_m_s),
         }
 
+    landing_events = [
+        e for e in event_records
+        if e.get("name") in {"LAND_COMPLETE", "LAND_COMPLETE_MAYBE"}
+        and (low_time is None or float(e["time_s"]) >= float(low_time))
+    ]
+    landing_complete = next((e for e in landing_events if e.get("name") == "LAND_COMPLETE"), None)
+    if landing_complete is None and landing_events:
+        landing_complete = landing_events[0]
+    disarm_event = next(
+        (
+            e for e in event_records
+            if e.get("name") == "DISARMED"
+            and (low_time is None or float(e["time_s"]) >= float(low_time))
+        ),
+        None,
+    )
+    touchdown_time = None
+    if landing_complete is not None:
+        touchdown_time = float(landing_complete["time_s"])
+    elif disarm_event is not None:
+        touchdown_time = float(disarm_event["time_s"])
+    elif final_row is not None:
+        touchdown_time = float(final_row["time_s"])
+    touchdown_pos = _nearest(rows, touchdown_time)
+    touchdown_distance = None if touchdown_pos is None else float(touchdown_pos["distance_m"])
+    touchdown_alt = None if touchdown_pos is None or touchdown_pos.get("alt") in (None, "") else float(touchdown_pos["alt"])
+    touchdown_vel = _nearest(xkf_velocity_rows, touchdown_time)
+    touchdown_vertical_speed_down = None if touchdown_vel is None else float(touchdown_vel.get("vd_m_s_down") or 0.0)
+    near_touchdown_vels = []
+    if touchdown_time is not None:
+        near_touchdown_vels = [
+            float(v.get("vd_m_s_down") or 0.0)
+            for v in xkf_velocity_rows
+            if abs(float(v["time_s"]) - float(touchdown_time)) <= 2.0
+        ]
+    max_descent_rate_near_touchdown = max(near_touchdown_vels) if near_touchdown_vels else None
+    hard_touchdown_threshold_m_s = 3.0
+    hard_touchdown = bool(
+        max_descent_rate_near_touchdown is not None
+        and float(max_descent_rate_near_touchdown) >= hard_touchdown_threshold_m_s
+    )
+
+    return_speed_audit = None
+    if low_time is not None:
+        return_end_s = home_return_time
+        if return_end_s is None and rows:
+            return_end_s = float(rows[-1]["time_s"])
+        return_rows = []
+        for vel in xkf_velocity_rows:
+            t = float(vel["time_s"])
+            if t < float(low_time):
+                continue
+            if return_end_s is not None and t > float(return_end_s):
+                continue
+            pos = _nearest(rows, t)
+            if pos is None:
+                continue
+            if float(pos["distance_m"]) < float(home_radius_m):
+                continue
+            if str(pos.get("mode") or "") not in {"RTL", "SMART_RTL"}:
+                continue
+            return_rows.append({
+                **vel,
+                "distance_m": float(pos["distance_m"]),
+                "mode": pos.get("mode"),
+                "inbound_component_m_s": -float(vel["forward_speed_m_s"]),
+            })
+        ground_speeds = [float(r["ground_speed_m_s"]) for r in return_rows]
+        inbound_speeds = [float(r["inbound_component_m_s"]) for r in return_rows]
+        return_speed_audit = {
+            "samples": len(return_rows),
+            "window_start_s": float(low_time),
+            "window_end_s": return_end_s,
+            "median_ground_speed_m_s": float(statistics.median(ground_speeds)) if ground_speeds else None,
+            "mean_ground_speed_m_s": float(statistics.fmean(ground_speeds)) if ground_speeds else None,
+            "p10_ground_speed_m_s": float(np.percentile(np.array(ground_speeds, dtype=float), 10)) if ground_speeds else None,
+            "p90_ground_speed_m_s": float(np.percentile(np.array(ground_speeds, dtype=float), 90)) if ground_speeds else None,
+            "median_inbound_component_m_s": float(statistics.median(inbound_speeds)) if inbound_speeds else None,
+            "mean_inbound_component_m_s": float(statistics.fmean(inbound_speeds)) if inbound_speeds else None,
+        }
+
     consumed_mah = None
     voltage_drop = None
     voltage_drop_rate = None
@@ -793,6 +876,17 @@ def parse_energy_dataflash(
         violations.append("bad_EV_events")
     if dirty_messages:
         violations.append("dirty_STATUSTEXT")
+
+    consequence_type = "ambiguous"
+    if final_distance is not None and float(final_distance) <= float(home_radius_m) and returned_home_after_low:
+        consequence_type = "got_home"
+    elif unsafe_binary:
+        if critical_mode is not None and critical_action_ok and landing_complete is not None and not hard_touchdown:
+            consequence_type = "controlled_land_away"
+        elif hard_touchdown:
+            consequence_type = "uncontrolled"
+        else:
+            consequence_type = "ambiguous"
 
     contract_clean = not violations
     result = {
@@ -832,10 +926,21 @@ def parse_energy_dataflash(
         "home_return_time_s": home_return_time,
         "safe_binary": safe_binary,
         "unsafe_binary": unsafe_binary,
+        "landing_complete_event": landing_complete,
+        "disarm_event_after_low": disarm_event,
+        "touchdown_time_s": touchdown_time,
+        "touchdown_distance_m": touchdown_distance,
+        "touchdown_alt": touchdown_alt,
+        "touchdown_vertical_speed_m_s_down": touchdown_vertical_speed_down,
+        "max_descent_rate_near_touchdown_m_s": max_descent_rate_near_touchdown,
+        "hard_touchdown_threshold_m_s": hard_touchdown_threshold_m_s,
+        "hard_touchdown": hard_touchdown,
+        "consequence_type": consequence_type,
         "severity_final_distance_m": final_distance,
         "contract_clean": contract_clean,
         "contract_violations": violations,
         "speed_audit": speed_audit,
+        "return_speed_audit": return_speed_audit,
         "consumed_mah": consumed_mah,
         "voltage_drop_v": voltage_drop,
         "voltage_drop_rate_v_s": voltage_drop_rate,
