@@ -1,0 +1,125 @@
+{
+  "experiment": {
+    "id": "px4_ctrlauth_v1",
+    "title": "PX4 cross-stack interface-composition test: MPC_TILTMAX_AIR x offboard attitude setpoint",
+    "date": "2026-06-18",
+    "phase": "Phase A static preregistration completed before Phase B dynamic runs",
+    "claim_under_test": "A tilt/lean safety mechanism may govern position-control-generated attitude while not composing with direct attitude command interfaces.",
+    "predecessor": "ArduCopter ANGLE_MAX x GUIDED quaternion/body-rate interface-composition gap",
+    "anti_bias_note": "COVERED/C-ABSENT is a valid important result. Do not relabel clamping, commander rejection, failsafe, or offboard loss as clean_unsafe."
+  },
+  "pinned_px4_target": {
+    "vehicle": "PX4 multicopter SITL",
+    "release_tag": "v1.15.0",
+    "git_sha": "30e763b6780061d70a14894e3e8b06e6a656f9b8",
+    "local_source_tree": "/mnt/nvme/px4_work/PX4-Autopilot",
+    "source_tree_state": "detached HEAD, clean at time of Phase A audit",
+    "planned_sitl": {
+      "primary": "make px4_sitl gz_x500",
+      "fallback": "make px4_sitl jmavsim if Gazebo/GZ is unavailable",
+      "log_format": "PX4 ulog parsed with pyulog"
+    }
+  },
+  "candidate_cell": {
+    "limit": "MPC_TILTMAX_AIR",
+    "interface": "offboard_attitude_SET_ATTITUDE_TARGET_quaternion",
+    "normal_limit_value_deg": 45.0,
+    "commanded_roll_sweep_deg": [60, 90, 120, 150],
+    "static_phase_a_prediction": "UNCOVERED: MPC_TILTMAX_AIR is applied inside multicopter position control when trajectory setpoints are converted to attitude; offboard attitude setpoints are published directly from MAVLink to vehicle_attitude_setpoint and consumed by mc_att_control without a tilt clamp.",
+    "do_not_use": "Do not set MPC_TILTMAX_AIR >= 90 deg to manufacture extreme attitudes; the extreme comes from the commanded offboard attitude setpoint."
+  },
+  "phase_a_static_evidence": [
+    {
+      "file": "src/modules/mc_pos_control/multicopter_position_control_limits_params.c",
+      "lines": "83-96",
+      "finding": "MPC_TILTMAX_AIR default is 45 deg and is documented as the absolute maximum for velocity/acceleration controlled modes."
+    },
+    {
+      "file": "src/modules/mc_pos_control/MulticopterPositionControl.cpp",
+      "lines": "475-539",
+      "finding": "MPC_TILTMAX_AIR/MPC_TILTMAX_LND are converted to radians and passed to PositionControl::setTiltLimit before PositionControl publishes vehicle_attitude_setpoint."
+    },
+    {
+      "file": "src/modules/mc_pos_control/PositionControl/PositionControl.cpp",
+      "lines": "214-220",
+      "finding": "PositionControl applies ControlMath::limitTilt(body_z, world_z, _lim_tilt) before thrust-to-attitude conversion."
+    },
+    {
+      "file": "src/modules/mavlink/mavlink_receiver.cpp",
+      "lines": "1541-1607",
+      "finding": "SET_ATTITUDE_TARGET sets OffboardControlMode.attitude and directly publishes vehicle_attitude_setpoint q_d/thrust_body while in OFFBOARD; no MPC_TILTMAX_AIR reference or tilt clamp appears on this path."
+    },
+    {
+      "file": "src/modules/commander/ModeUtil/control_mode.cpp",
+      "lines": "122-161",
+      "finding": "OFFBOARD control-mode selection is hierarchical: attitude=true enables attitude/rates/allocation only, not position/velocity/acceleration control."
+    },
+    {
+      "file": "src/modules/mc_att_control/mc_att_control_main.cpp",
+      "lines": "289-318",
+      "finding": "mc_att_control copies vehicle_attitude_setpoint.q_d into AttitudeControl and computes rates from that quaternion setpoint."
+    },
+    {
+      "file": "src/modules/mc_att_control/AttitudeControl/AttitudeControl.cpp",
+      "lines": "55-107",
+      "finding": "AttitudeControl limits generated rate setpoints by MC_*RATE_MAX, but does not clamp the commanded attitude quaternion tilt."
+    }
+  ],
+  "static_coverage_decision": {
+    "MPC_TILTMAX_AIR_x_offboard_attitude": "uncovered_by_static_source_audit",
+    "MPC_TILTMAX_AIR_scope": "position/velocity/acceleration controlled paths that reach PositionControl thrust-to-attitude generation",
+    "offboard_attitude_scope": "direct attitude/rate control path, outside multicopter position control",
+    "phase_a_value_if_phase_b_blocked": "PARTIAL: static matrix supports the cross-stack interface-composition hypothesis, but dynamic consequence remains unconfirmed."
+  },
+  "phase_b_preregistered_protocol": {
+    "parameters": {
+      "MPC_TILTMAX_AIR": 45,
+      "COM_RC_IN_MODE": "set to allow operation without RC in SITL",
+      "COM_OF_LOSS_T": "default unless needed for logging; stream rate will be far above timeout threshold",
+      "vehicle": "default x500 or jmavsim quadrotor"
+    },
+    "offboard_stream": {
+      "rate_hz": 50,
+      "minimum_acceptable_rate_hz": 20,
+      "mode": "OffboardControlMode.attitude=true via SET_ATTITUDE_TARGET",
+      "message": "MAVLink SET_ATTITUDE_TARGET with attitude quaternion active, body rates ignored, thrust supplied",
+      "target_roll_deg": [60, 90, 120, 150],
+      "target_altitude_m": 50
+    },
+    "oracle_a_true_consequence": {
+      "tilt_measure": "vehicle_attitude quaternion converted to achieved lean angle",
+      "setpoint_measure": "vehicle_attitude_setpoint quaternion converted to commanded lean angle",
+      "tilt_unclamped_condition": "achieved lean exceeds MPC_TILTMAX_AIR by > 5 deg and setpoint is not clipped to 45 deg",
+      "hard_consequence": ">15 m non-commanded altitude loss, ground contact/crash, or unrecovered divergence"
+    },
+    "oracle_b_tier1_cleanliness": {
+      "offboard_not_dropped": "vehicle_status.nav_state remains OFFBOARD during the hazardous window and OffboardControlMode stream remains recent",
+      "no_preventive_failsafe": "no commander/navigator invalid-setpoint/failsafe rejection before consequence",
+      "input_accepted": "vehicle_attitude_setpoint follows commanded roll; if clamped/rejected, classify COVERED/C-ABSENT instead of clean_unsafe"
+    },
+    "labels": [
+      "clean_safe",
+      "clean_unsafe",
+      "covered",
+      "contract_violated",
+      "offboard_dropped",
+      "inconclusive"
+    ]
+  },
+  "verdict_rules": {
+    "REPLICATES": "Phase A says uncovered AND Phase B shows contract-clean unsafe: legal offboard attitude setpoint makes achieved tilt exceed MPC_TILTMAX_AIR without clamp, produces hard consequence, offboard remains active, and no PX4 preventive contract/failsafe violation occurs; result is robust in a local region.",
+    "COVERED_OR_C_ABSENT": "Static or dynamic evidence shows MPC_TILTMAX_AIR or another PX4 admission/failsafe mechanism clamps/rejects/offboards the attitude path before unsafe consequence, or the physical gap is unreachable.",
+    "PARTIAL": "Phase A static matrix completed and candidate uncovered, but Phase B was not run or did not reach a dynamic verdict for infrastructure reasons.",
+    "INCONCLUSIVE": "SITL/harness/logging/offboard streaming is not stable enough to decide the candidate cell."
+  },
+  "planned_outputs": {
+    "coverage_matrix": "planc/results/px4_coverage_matrix.md",
+    "report": "planc/results/px4_ctrlauth_v1_report.md",
+    "result_json": "planc/results/px4_ctrlauth_v1_result.json",
+    "logs": "planc/logs/px4_ctrlauth_v1_*.ulg and parsed summaries",
+    "plots": [
+      "planc/analysis/px4_ctrlauth_v1_tilt_vs_command.png",
+      "planc/analysis/px4_ctrlauth_v1_outcome_vs_roll.png"
+    ]
+  }
+}
