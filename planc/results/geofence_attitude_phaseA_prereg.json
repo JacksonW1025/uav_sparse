@@ -1,0 +1,201 @@
+{
+  "scenario_id": "geofence_attitude",
+  "phase": "A_static",
+  "version": "v1",
+  "date": "2026-06-18",
+  "status": "preregistered_static_before_any_dynamic",
+  "scope_statement": "本格只讨论操作者通过合法姿态/quaternion 或 body-rate 输入使机体飞出水平围栏的可达性, 不是环境自发越界。静态阶段只裁覆盖拓扑和动态预测, 不终判 clean-unsafe, 不主张任何标度律或面积律。",
+  "source_target": {
+    "firmware": "ArduCopter",
+    "release_tag": "Copter-4.4.1",
+    "git_sha": "e010f97906087a3a1975e1c4fcc1f88a249599ce",
+    "local_source_tree_used_for_static_audit": "/tmp/ardupilot-Copter-4.4.1",
+    "source_note": "当前 uav_sparse 仓库只含 planc 产物和脚本, 不含完整 ArduPilot 源码树; 静态证据来自官方 ArduPilot Copter-4.4.1 tag 的只读浅克隆。"
+  },
+  "one_line_answer": "水平围栏有两层: check_destination_within_fence 是有位置目标时的准入拒绝器, SET_ATTITUDE_TARGET 的 quaternion/body-rate 路径没有目标点且不经过该准入; AC_Fence::check 是基于实际位置的反应式总闸, 接口无关但在边界线上以调度周期触发后再切模式拉回。",
+  "static_verdict": {
+    "clamp_component": "UNCOVERED",
+    "clamp_component_definition": "位置目标围栏检查只对含 destination 的 guided/auto-guided 目标生效; SET_ATTITUDE_TARGET quaternion/body-rate 进入姿态控制器前没有水平围栏钳位或准入截断。",
+    "reactive_fallback": "PRESENT_INTERFACE_INDEPENDENT_REACTIVE_CHECK_WITH_OBSERVABLE_WINDOW",
+    "reactive_fallback_summary": "AC_Fence::check 使用 AHRS 实际位置估计检测 circle/polygon breach, 由 Copter::three_hz_loop 约 3 Hz 调用; breach 判定在 FENCE_RADIUS 或 polygon 边界线上, FENCE_MARGIN 不提前触发 breach; FENCE_ACTION 默认 RTL-or-Land, 可选 Land/SmartRTL/Brake 等, 动作经模式切换和位置控制逐步消水平动量。",
+    "topology": "clamp_scope_gap_plus_reactive_fallback",
+    "dynamic_prediction": "动态会是 clean-unsafe 硬见证(窄到中等窗口)",
+    "prediction_is_not_final_verdict": true
+  },
+  "decision_rules_pinned": {
+    "clamp_component_UNCOVERED": "位置目标围栏检查结构上只对位置目标命令生效, 姿态/rate 命令路径上无围栏钳位/准入截断。",
+    "clamp_component_COVERED": "姿态/rate 路径上确有命令进控制器前的围栏钳位或等价准入截断。",
+    "clamp_component_PARTIAL": "只有部分姿态/rate 子路径被围栏准入覆盖。",
+    "reactive_C_ABSENT_prediction": "若 AC_Fence::check 接口无关且能在硬后果前拉回, 动态预测应改为 C-ABSENT/覆盖(反应式)。",
+    "clean_unsafe_prediction": "若钳位器 UNCOVERED 且反应式兜底存在从越界到 FENCE_ACTION 有效拉回之间的可观窗口, 动态预测为 clean-unsafe 硬见证。"
+  },
+  "phase_a_static_evidence": [
+    {
+      "topic": "SET_ATTITUDE_TARGET is a supported Copter MAVLink capability",
+      "file": "ArduCopter/GCS_Mavlink.cpp",
+      "lines": "1451-1459",
+      "finding": "capabilities() advertises MAV_PROTOCOL_CAPABILITY_SET_ATTITUDE_TARGET."
+    },
+    {
+      "topic": "SET_ATTITUDE_TARGET routing",
+      "file": "ArduCopter/GCS_Mavlink.cpp",
+      "lines": "1122-1192",
+      "finding": "消息只要求处于 guided mode, thrust 未忽略, quaternion 为单位长度; 解出 quaternion/body rates 后调用 copter.mode_guided.set_angle(...), 没有 fence/destination 检查。"
+    },
+    {
+      "topic": "Guided position destination admission",
+      "file": "ArduCopter/mode_guided.cpp",
+      "lines": "329-339",
+      "finding": "Vector3f destination setter 构造 Location 并调用 copter.fence.check_destination_within_fence(dest_loc), 不通过则记录 DEST_OUTSIDE_FENCE 并 return false。"
+    },
+    {
+      "topic": "Guided Location destination admission",
+      "file": "ArduCopter/mode_guided.cpp",
+      "lines": "421-430",
+      "finding": "Location destination setter 同样调用 check_destination_within_fence(dest_loc)。"
+    },
+    {
+      "topic": "Guided position+velocity destination admission",
+      "file": "ArduCopter/mode_guided.cpp",
+      "lines": "563-574",
+      "finding": "set_destination_posvelaccel 在含 position destination 时调用 check_destination_within_fence; 纯 velocity/accel setter 不含 destination, 不走该检查。"
+    },
+    {
+      "topic": "Guided angle setter",
+      "file": "ArduCopter/mode_guided.cpp",
+      "lines": "626-653",
+      "finding": "set_angle 只切到 Angle submode, 保存 attitude_quat、ang_vel、thrust/climb_rate 和更新时间, 然后记录 attitude target; 这一段没有 fence 或位置目标。"
+    },
+    {
+      "topic": "Guided angle controller dispatch",
+      "file": "ArduCopter/mode_guided.cpp",
+      "lines": "911-977",
+      "finding": "angle_control_run 超时后直接调用 input_rate_bf_roll_pitch_yaw 或 input_quaternion; 只对 climb_rate 做竖直 avoidance 调整, 没有 XY fence velocity limiter 或 destination admission。"
+    },
+    {
+      "topic": "Quaternion attitude controller",
+      "file": "libraries/AC_AttitudeControl/AC_AttitudeControl.cpp",
+      "lines": "231-266",
+      "finding": "input_quaternion 限制角速度并运行 quaternion attitude controller; 未引用 AC_Fence 或水平围栏。"
+    },
+    {
+      "topic": "Body-rate attitude controller",
+      "file": "libraries/AC_AttitudeControl/AC_AttitudeControl.cpp",
+      "lines": "421-455",
+      "finding": "input_rate_bf_roll_pitch_yaw 将 public centidegree/s rate 转成 radians/s 并运行 quaternion attitude controller; 未引用 AC_Fence 或水平围栏。"
+    },
+    {
+      "topic": "Velocity path stop-at-fence contrast",
+      "file": "ArduCopter/mode_guided.cpp",
+      "lines": "785-814",
+      "finding": "guided velocity/accel run path 调用 copter.avoid.adjust_velocity(...), 说明 FENCE_MARGIN/avoidance 类提前减速是 velocity/position path 的机制, 不是 attitude/rate path 的入口钳位。"
+    },
+    {
+      "topic": "Destination fence checker semantics",
+      "file": "libraries/AC_Fence/AC_Fence.cpp",
+      "lines": "590-628",
+      "finding": "check_destination_within_fence 对给定 Location 检查 ALT_MAX, ALT_MIN, circle radius 和 polygon breached(loc), 用于拒绝 outside-fence waypoint。"
+    },
+    {
+      "topic": "Reactive circle fence check",
+      "file": "libraries/AC_Fence/AC_Fence.cpp",
+      "lines": "498-538",
+      "finding": "check_fence_circle 从 AP::ahrs().get_relative_position_NE_home() 得到实际 home-relative 位置, _home_distance >= _circle_radius 时记录 breach; FENCE_MARGIN 不参与此阈值。"
+    },
+    {
+      "topic": "Reactive polygon fence check",
+      "file": "libraries/AC_Fence/AC_PolyFence_loader.cpp",
+      "lines": "207-268",
+      "finding": "poly fence breached() 从 AP::ahrs().get_location(loc) 得到实际位置, 再用 inclusion/exclusion polygon/circle 判越界。"
+    },
+    {
+      "topic": "Reactive check dispatcher",
+      "file": "libraries/AC_Fence/AC_Fence.cpp",
+      "lines": "542-588",
+      "finding": "AC_Fence::check 清掉未启用 fence 的 breach, disabled 时返回 0, manual recovery 10 秒内返回 0, 然后依次检查 alt max/min, circle, polygon 并返回 newly breached bitmask。"
+    },
+    {
+      "topic": "Scheduler call point",
+      "file": "ArduCopter/Copter.cpp",
+      "lines": "180-193,591-605",
+      "finding": "scheduler 以 3 Hz 调用 three_hz_loop, three_hz_loop 中调用 fence_check。ArduCopter/fence.cpp:8 的 'called at 1hz' 注释与调度表不一致, 静态判频率按 scheduler。"
+    },
+    {
+      "topic": "Fence action execution",
+      "file": "ArduCopter/fence.cpp",
+      "lines": "23-82",
+      "finding": "new_breaches 后, 若 FENCE_ACTION 不是 Report Only, 依据 action 切 RTL/Land/SmartRTL/Brake; 超过 100 m outside fence 时强制 Land。"
+    },
+    {
+      "topic": "Fence action defaults and options",
+      "file": "libraries/AC_Fence/AC_Fence.cpp",
+      "lines": "44-93",
+      "finding": "FENCE_ENABLE 默认 0, FENCE_TYPE 对 Copter 默认包含 ALT_MAX/CIRCLE/POLYGON, FENCE_ACTION 默认 AC_FENCE_ACTION_RTL_AND_LAND, FENCE_MARGIN 默认 2 m。"
+    },
+    {
+      "topic": "Brake momentum response",
+      "file": "ArduCopter/mode_brake.cpp",
+      "lines": "10-69",
+      "finding": "Brake 初始化位置控制速度/加速度限制, run 中以零 XY velocity target 通过 pos_control->update_xy_controller 和 attitude_control 拉停, 不是瞬时裁掉原命令动量。"
+    },
+    {
+      "topic": "RTL momentum response",
+      "file": "ArduCopter/mode_rtl.cpp",
+      "lines": "127-185",
+      "finding": "RTL 设置 climb/return waypoint, run 中调用 wp_nav->update_wpnav 和 position controller 生成 thrust vector, 逐步回航拉回水平运动。"
+    }
+  ],
+  "reactive_fallback_characterization": {
+    "input": "circle 使用 AHRS home-relative NE 实际位置估计; polygon 使用 AHRS current Location; 与命令接口无关。",
+    "call_point_and_frequency": "Copter::three_hz_loop 约 3 Hz 调用 Copter::fence_check, fence_check 再调用 AC_Fence::check。fence.cpp 内有 1 Hz 注释, 但调度表显示实际任务为 3 Hz。",
+    "margin_semantics": "FENCE_MARGIN 默认 2 m, 用于 safe altitude getter、pre-arm margin 合法性和 AC_Avoid stop-at-fence 速度调整; AC_Fence::check 的 circle breach 阈值是 _home_distance >= _circle_radius, polygon breach 是当前位置已 outside/in exclusion, 因此不是提前 fire。",
+    "action_semantics": "FENCE_ACTION=1 默认 RTL-or-Land; 2 Always Land; 3 SmartRTL/RTL/Land; 4 Brake/Land; 5 SmartRTL/Land; 0 Report Only 只报告不接管。",
+    "observable_window": "存在。总闸按调度周期看到实际越界后才切模式, 然后 RTL/Brake/Land 通过位置控制器逐步改变 thrust vector 消水平速度; 姿态/rate 接口能先积累水平速度, 所以从越界到有效拉回之间有时间和距离窗口。",
+    "can_legally_not_fire_or_late_fire": [
+      "若 FENCE_ENABLE=0, FENCE_TYPE=0 或 FENCE_ACTION=0, 动作会缺失或仅报告; 这些是合法参数但不用于制造本格缺口。",
+      "若 horizontal fence 需要的位置估计不可用, pre-arm 会因 Fence requires position 失败; 飞行中 circle check 保留旧 home_distance, polygon get_location 失败时返回 false, 这是估计可用性的边界条件。",
+      "breach 后 set_mode 会调用 manual_recovery_start, 使后续 check 在约 10 秒内返回 0; 这不取消第一次 action, 但限制重复触发。",
+      "纯 velocity/position guided 路径可能受 AC_Avoid stop-at-fence 提前减速, 但 SET_ATTITUDE_TARGET angle path 没有该 XY adjust_velocity 调用。"
+    ]
+  },
+  "dynamic_prediction": {
+    "predicted_state": "动态会是 clean-unsafe 硬见证(窄到中等窗口)",
+    "basis": [
+      "clamp_component=UNCOVERED: attitude/rate command path has no destination for check_destination_within_fence and no pre-controller horizontal fence admission.",
+      "reactive fallback exists but fires on actual boundary breach at about 3 Hz, not at FENCE_MARGIN.",
+      "FENCE_ACTION mode change and position-control braking/RTL are delayed relative to boundary crossing and horizontal momentum."
+    ],
+    "expected_band_shape": "若 Oracle-A 的危险空间从 fence boundary 立刻开始, 干净带可能较窄但应存在; 若危险空间在边界外留有缓冲, 带宽取决于 attitude-induced speed, 3 Hz detection latency, mode transition and braking response, so static prediction is narrow-to-medium rather than no-window.",
+    "key_uncertainties": [
+      "动态中 SET_ATTITUDE_TARGET 能稳定产生的水平速度和姿态保持时间。",
+      "FENCE_ACTION 选择 RTL 与 Brake 对拉回距离的差别。",
+      "SITL estimator/GPS update timing relative to three_hz_loop。",
+      "Oracle-A 几何: 硬后果是否定义为越过 fence boundary, 还是边界外障碍/危险带。",
+      "AC_Avoid stop-at-fence 是否仅作用于 velocity/position path, 动态 harness 需确认 attitude/rate path 未意外切到 guided velaccel。"
+    ]
+  },
+  "minimum_dynamic_E_if_run": {
+    "environment_role": "E 必须从风场升级为带边界/障碍的几何环境。",
+    "geometry": "水平 circular fence 或 polygon inclusion boundary, 机体从 boundary 内侧起飞并用 SET_ATTITUDE_TARGET quaternion/body-rate 朝外产生水平速度; boundary 外定义危险空间或障碍带。",
+    "minimum_params": {
+      "FENCE_ENABLE": 1,
+      "FENCE_TYPE": "include AC_FENCE_TYPE_CIRCLE(2) or AC_FENCE_TYPE_POLYGON(4)",
+      "FENCE_RADIUS_or_polygon": "足够小以便可重复到达, 但起点和 takeoff 留在 fence 内",
+      "FENCE_ACTION": "1 RTL-or-Land default action after enabling, plus optional 4 Brake comparison",
+      "FENCE_MARGIN": "default 2 m unless preregistering margin sweep; do not use disabling params to create gap",
+      "AVOID_ENABLE": "leave legal/default or explicitly record; static evidence says attitude/rate path lacks XY adjust_velocity"
+    },
+    "telemetry_needed": [
+      "mode/nav_state and FENCE_STATUS or FAILSAFE_FENCE log markers",
+      "actual position relative to fence boundary",
+      "SET_ATTITUDE_TARGET command timing and attitude target",
+      "attitude, velocity, acceleration and throttle/thrust",
+      "time/distance from boundary crossing to FENCE_ACTION and to horizontal speed reduction"
+    ]
+  },
+  "added_value_vs_tilt_cell": {
+    "mechanism_changed": "从倾角/姿态限制换成水平 geofence destination admission and reactive breach failsafe。",
+    "consequence_changed": "从超过倾角承诺导致姿态/高度后果, 换成突破边界或进入危险空间。",
+    "research_value": "把接口不组合从单一姿态限制机制推进到同一 ArduCopter 栈内跨机制对照: 位置目标准入不跨姿态/rate 接口, 反应式总闸可形成另一类 C-ABSENT 或窄带 hard witness。"
+  }
+}
