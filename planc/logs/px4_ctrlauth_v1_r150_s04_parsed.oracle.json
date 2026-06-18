@@ -1,0 +1,100 @@
+{
+  "achieved_exceeds_mpc_tiltmax_air": true,
+  "altitude_loss_m": 74.34531784057617,
+  "cleanup": {
+    "disarmed": true,
+    "land_requested": true
+  },
+  "cleanup_land_after_baseline": false,
+  "command_profile": "/mnt/nvme/px4_work/uav_sparse/planc/logs/px4_ctrlauth_v1_r150_s04_command_profile.json",
+  "end_window_us": 1781783182293000,
+  "failsafe": false,
+  "failure_detector_pre_consequence": true,
+  "first_consequence_us": 1781783172649000,
+  "first_failure_detector_flags": [
+    "fd_roll"
+  ],
+  "first_failure_detector_us": 1781783171333000,
+  "first_offboard_us": 1781783167493000,
+  "first_target_setpoint_us": 1781783170761000,
+  "ground_contact": true,
+  "hard_consequence": true,
+  "label": "contract_violated",
+  "landed": false,
+  "last_attitude_setpoint_us": 1781783182257000,
+  "live_events": [
+    {
+      "t_s": 2.776052569039166,
+      "text": "Preflight Fail: Attitude failure (roll)"
+    },
+    {
+      "t_s": 2.8603015010012314,
+      "text": "Failsafe activated\t"
+    }
+  ],
+  "max_achieved_tilt_deg": 150.22998046875,
+  "max_setpoint_tilt_deg": 150.00001525878906,
+  "min_alt_m": -24.681991577148438,
+  "nav_states_in_window": [
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    14,
+    18,
+    18,
+    18,
+    18,
+    18,
+    18
+  ],
+  "offboard_dropped": false,
+  "oracle_path": "planc/logs/px4_ctrlauth_v1_r150_s04_parsed.oracle.json",
+  "param_readbacks": {
+    "COM_RC_IN_MODE": 1,
+    "MIS_TAKEOFF_ALT": 50.0,
+    "MPC_TILTMAX_AIR": 45.0
+  },
+  "params_requested": {
+    "COM_RC_IN_MODE": 1,
+    "MIS_TAKEOFF_ALT": 50.0,
+    "MPC_TILTMAX_AIR": 45.0
+  },
+  "parsed_csv": "/mnt/nvme/px4_work/uav_sparse/planc/logs/px4_ctrlauth_v1_r150_s04_parsed.csv",
+  "reason": "failure_detector_status_true_before_hard_consequence",
+  "run_id": "px4_ctrlauth_v1_r150_s04",
+  "setpoint_exceeds_mpc_tiltmax_air": true,
+  "simulator": "jmavsim",
+  "start_alt_m": 49.663326263427734,
+  "stream_hz": 50.0,
+  "takeoff_alt_m": 50.0,
+  "takeoff_reached_alt_m": 49.00674057006836,
+  "target_roll_deg": 150.0,
+  "thrust": 0.5,
+  "ulog": "planc/logs/px4_ctrlauth_v1_r150_s04.ulg"
+}
