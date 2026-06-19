@@ -1,0 +1,127 @@
+{
+  "E_geometry": {
+    "danger_space": "boundary_outside_danger_band",
+    "discipline": "danger band begins at the fence boundary; obstacle/danger distance is not tuned to the reaction window",
+    "fence": "horizontal circular fence centered on home",
+    "near_edge_m": 0.0,
+    "oracle_A": "boundary-outside danger-band depth >= 5.0 m before FENCE_ACTION arrests radial motion"
+  },
+  "M_axis": {
+    "operator_input": "GUIDED + SET_ATTITUDE_TARGET unit quaternion, type_mask=0x07, climb-rate field neutral at 0.5",
+    "reported_axis": "DataFlash XKF1 primary-core radial horizontal speed at fence crossing",
+    "tilt_sweep_deg": [
+      12.0,
+      18.0,
+      24.0,
+      30.0,
+      36.0
+    ]
+  },
+  "controls": {
+    "gigo_control": "same attitude command but short stream should not cross and should not produce Oracle-A",
+    "interface_control": "same outward intent via GUIDED position target outside fence should log DEST_OUTSIDE_FENCE and not cross"
+  },
+  "decision_block": {
+    "C_ABSENT": "clamp component remains UNCOVERED, but reactive AC_Fence::check plus FENCE_ACTION arrests every reachable speed before the preregistered Oracle-A depth threshold",
+    "FAIL": "premises satisfied but neither PASS nor C-ABSENT criteria hold",
+    "INCONCLUSIVE": "premise failure: SITL path, input reachability, offboard stream, estimator/fence phase, or achieved speed is not faithful enough",
+    "PASS": "premises satisfied; robust clean unsafe attitude-interface region; contract_violated=0 and clean_unsafe disjoint from contract_violated; position-target control rejected while attitude stream has zero destination rejects; classification accuracy >=0.90; non-C-ABSENT window depth is nontrivial; severity operator-driven gates pass"
+  },
+  "environment": {
+    "defaults_file": "/home/car/ardupilot/Tools/autotest/default_params/copter.parm",
+    "lockstep": true,
+    "sitl_model": "quad",
+    "speedup": 8,
+    "vehicle_binary": "/home/car/ardupilot/build/sitl/bin/arducopter"
+  },
+  "firmware_anchor": {
+    "actual_describe": "Copter-4.4.1",
+    "actual_sha": "e010f97906087a3a1975e1c4fcc1f88a249599ce",
+    "actual_status": "## HEAD (no branch)",
+    "binary": "/home/car/ardupilot/build/sitl/bin/arducopter",
+    "expected_sha": "e010f97906087a3a1975e1c4fcc1f88a249599ce",
+    "expected_tag": "Copter-4.4.1",
+    "source_tree": "/home/car/ardupilot"
+  },
+  "fixed_P": {
+    "baseline_params": {
+      "ANGLE_MAX": 4500,
+      "AVOID_ENABLE": 1,
+      "BATT_CRT_MAH": 0,
+      "BATT_CRT_VOLT": 0,
+      "BATT_FS_CRT_ACT": 0,
+      "BATT_FS_LOW_ACT": 0,
+      "BATT_LOW_MAH": 0,
+      "BATT_LOW_VOLT": 0,
+      "FENCE_ACTION": 1,
+      "FENCE_ENABLE": 1,
+      "FENCE_MARGIN": 2,
+      "FENCE_RADIUS": 100,
+      "FENCE_TYPE": 2,
+      "FS_GCS_ENABLE": 0,
+      "FS_OPTIONS": 0,
+      "FS_THR_ENABLE": 0,
+      "GUID_OPTIONS": 0,
+      "LOG_BACKEND_TYPE": 1,
+      "LOG_DISARMED": 1,
+      "SIM_RC_FAIL": 0,
+      "SIM_SPEEDUP": 8,
+      "SIM_WIND_DIR": 270,
+      "SIM_WIND_SPD": 0,
+      "SIM_WIND_TURB": 0,
+      "SYSID_MYGCS": 255
+    },
+    "fence_action_layer": "FENCE_ACTION=4 Brake comparison",
+    "fence_action_main": "FENCE_ACTION=1 RTL-or-Land",
+    "fence_margin_m": 2,
+    "fence_radius_m": 100.0,
+    "manual_recovery_not_used": true,
+    "start_inside_fence": true
+  },
+  "noise_and_labeling": {
+    "classification_target": 0.9,
+    "d_margin_rule": "3*sigma of fixed medium condition max depth before arrest",
+    "noise_repetitions": 8
+  },
+  "phase": "B_dynamic",
+  "premises": {
+    "P0.1_guided_attitude_produces_horizontal_flight": "pending",
+    "P0.2_destination_admission_on_attitude_path_uncovered": "pending",
+    "P0.3_input_applied_and_crosses_fence": "pending",
+    "P0.4_guided_stream_accepted_no_drop": "pending",
+    "P0.5_fence_legally_enabled": "pending",
+    "P0.6_window_and_fence_check_frequency_measured": "pending"
+  },
+  "scenario_id": "geofence_attitude",
+  "severity_operator_driven_gate": {
+    "analysis_population": "new v2 confirmation scan runs with FENCE_ACTION=1, kind=attitude, role=scan, non-error",
+    "depth_dynamic_range_over_sigma_min": 10.0,
+    "dynamic_range_rule": "max(max_depth_before_arrest_m)-min(max_depth_before_arrest_m) over the analysis population",
+    "rationale": "repeatability sigma measures run-to-run noise at a fixed input; it is not an a-priori upper bound for a held-out regression model's absolute error. The load-bearing claim for this subtype is that consequence severity is a real, monotone, operator-driven effect whose input-driven range dominates repeatability noise.",
+    "spearman_rho_cross_speed_depth_min": 0.9
+  },
+  "severity_regression_reporting_only": {
+    "features": [
+      "cross_speed",
+      "FENCE_ACTION"
+    ],
+    "fit_population": "new v2 confirmation scan+brake attitude runs, non-error, with cross_speed and depth",
+    "mae_relative_reference": "MAE <= 15% of realized depth range, reported as fit characterization only",
+    "not_a_pass_fail_axis": true,
+    "relative_reference_max": 0.15
+  },
+  "status": "preregistered_before_v2_confirmation_run",
+  "v1_to_v2_revision": {
+    "anti_hindsight_commitment": "the v2 thresholds are specified before the confirmation run and are justified by the sigma-versus-regression-error distinction, not by tuning to any v1 observed regression error",
+    "diagnosis": "the v1 binary gate conflated fixed-input repeatability sigma with a regression fit error limit",
+    "main_verdict_source": "new v2 confirmation run; v1 re-evaluation may be reported only as consistency evidence",
+    "original_v1_binary_severity_gate": "severity regression MAE <= 1.5*sigma",
+    "v1_left_intact": true,
+    "v2_changes_only": [
+      "replace the severity binary gate with Spearman monotonicity and dynamic-range-over-sigma operator-driven criteria",
+      "include FENCE_ACTION in the reporting-only severity regression feature set"
+    ]
+  },
+  "version": "v2",
+  "written_at_utc": "2026-06-19T10:30:39.970167+00:00"
+}

@@ -1,0 +1,168 @@
+experiment:
+  name: geofence_attitude_phaseB_v2
+  scenario_id: geofence_attitude
+  phase: B_dynamic
+  version: v2
+  artifact_stem: geofence_attitude_phaseB_v2
+  run_prefix: geofattBv2
+  date: "2026-06-19"
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 90.0
+  target_bearing_deg: 90.0
+  yaw_deg: 90.0
+  takeoff_alt_m: 30.0
+  speedup: 8
+  stream_hz: 40
+  telemetry_rate_hz: 20
+  min_required_setpoint_hz: 20
+  pre_stream_hold_s: 2.0
+  max_attitude_stream_s: 24.0
+  post_action_observation_s: 10.0
+  cleanup_land_timeout_s: 35.0
+  position_contrast_hold_s: 6.0
+  gigo_stream_s: 3.0
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  synthetic_clock: true
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+firmware_anchor:
+  expected_tag: Copter-4.4.1
+  expected_sha: e010f97906087a3a1975e1c4fcc1f88a249599ce
+  source_tree: /home/car/ardupilot
+  source_guided_attitude: /home/car/ardupilot/ArduCopter/GCS_Mavlink.cpp:1122-1192
+  source_guided_destination: /home/car/ardupilot/ArduCopter/mode_guided.cpp:329-339,421-430,563-574
+  source_fence_check: /home/car/ardupilot/libraries/AC_Fence/AC_Fence.cpp:543-588
+  source_fence_action: /home/car/ardupilot/ArduCopter/fence.cpp:9-82
+  source_scheduler: /home/car/ardupilot/ArduCopter/Copter.cpp:591-605
+
+param_metadata:
+  fence_type_circle: 2
+  fence_action_report_only: 0
+  fence_action_rtl_and_land: 1
+  fence_action_brake: 4
+  fence_margin_default_m: 2
+  guided_options_climb_rate_semantics: 0
+  set_attitude_target_type_mask: 7
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  SYSID_MYGCS: 255
+  SIM_SPEEDUP: 8
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  SIM_RC_FAIL: 0
+  FS_GCS_ENABLE: 0
+  FS_THR_ENABLE: 0
+  FS_OPTIONS: 0
+  BATT_LOW_VOLT: 0
+  BATT_CRT_VOLT: 0
+  BATT_LOW_MAH: 0
+  BATT_CRT_MAH: 0
+  BATT_FS_LOW_ACT: 0
+  BATT_FS_CRT_ACT: 0
+  FENCE_ENABLE: 1
+  FENCE_TYPE: 2
+  FENCE_RADIUS: 100
+  FENCE_ACTION: 1
+  FENCE_MARGIN: 2
+  AVOID_ENABLE: 1
+  ANGLE_MAX: 4500
+  GUID_OPTIONS: 0
+
+command:
+  interface: GUIDED_SET_ATTITUDE_TARGET_QUATERNION
+  axis: pitch
+  outward_pitch_sign: -1
+  tilt_slew_deg_s: 40.0
+  thrust_field: 0.5
+  thrust_semantics: climb_rate_zero_when_GUID_OPTIONS_0
+  type_mask: 7
+  max_tilt_deg: 36.0
+
+geometry:
+  fence_radius_m: 100.0
+  danger_space: boundary_outside_danger_band
+  danger_near_edge_m: 0.0
+  oracle_depth_threshold_m: 5.0
+  position_target_outside_distance_m: 150.0
+  gigo_note: same attitude command, short stream, no boundary crossing
+
+oracle:
+  unsafe_depth_threshold_m: 5.0
+  arrest_radial_speed_m_s: 0.5
+  arrest_sustain_s: 0.5
+  premise_min_outward_speed_m_s: 3.0
+  premise_min_cross_speed_m_s: 4.0
+  speed_audit_inside_window_m: [50.0, 95.0]
+  action_latency_s: 3.0
+  expected_action_modes_for_rtl:
+    - RTL
+    - LAND
+  expected_action_modes_for_brake:
+    - BRAKE
+    - LAND
+  preventive_failsafe_subsystems:
+    - FAILSAFE_RADIO
+    - FAILSAFE_BATT
+    - FAILSAFE_GPS
+    - FAILSAFE_GCS
+    - EKFCHECK
+    - FAILSAFE_EKFINAV
+    - FAILSAFE_ADSB
+    - FAILSAFE_TERRAIN
+    - FAILSAFE_VIBE
+    - FAILSAFE_DEADRECKON
+  preventive_mode_reasons:
+    - RADIO_FAILSAFE
+    - BATTERY_FAILSAFE
+    - GCS_FAILSAFE
+    - EKF_FAILSAFE
+    - GPS_GLITCH
+    - TERRAIN_FAILSAFE
+    - AVOIDANCE
+    - TERMINATE
+    - FAILSAFE
+    - DEADRECKON_FAILSAFE
+
+sweep:
+  premise_tilt_deg: 20.0
+  noise_tilt_deg: 24.0
+  noise_repetitions: 8
+  scan_tilts_deg: [12.0, 18.0, 24.0, 30.0, 36.0]
+  scan_repetitions: 5
+  gigo_tilt_deg: 36.0
+  gigo_repetitions: 3
+  position_contrast_repetitions: 2
+  brake_tilts_deg: [18.0, 30.0, 36.0]
+  brake_repetitions: 3
+  seeds: [0, 1, 2, 3, 4]
+
+prediction:
+  holdout_modulo: 3
+  target_classification_accuracy: 0.90
+  regression_degree: 1
+  severity_spearman_min: 0.90
+  severity_range_over_sigma_min: 10.0
+  regression_relative_reference_max: 0.15
+  regression_features:
+    - cross_speed
+    - FENCE_ACTION
