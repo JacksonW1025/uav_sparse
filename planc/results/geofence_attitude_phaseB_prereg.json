@@ -1,0 +1,175 @@
+{
+  "E_geometry": {
+    "danger_space": "boundary_outside_danger_band",
+    "discipline": "danger band begins at the fence boundary; obstacle/danger distance is not tuned to the reaction window",
+    "fence": "horizontal circular fence centered on home",
+    "near_edge_m": 0.0,
+    "oracle_A": "boundary-outside danger-band depth >= 5.0 m before FENCE_ACTION arrests radial motion"
+  },
+  "M_axis": {
+    "operator_input": "GUIDED + SET_ATTITUDE_TARGET unit quaternion, type_mask=0x07, climb-rate field neutral at 0.5",
+    "reported_axis": "DataFlash XKF1 primary-core radial horizontal speed at fence crossing",
+    "tilt_sweep_deg": [
+      12.0,
+      18.0,
+      24.0,
+      30.0,
+      36.0
+    ]
+  },
+  "controls": {
+    "gigo_control": "same attitude command but short stream should not cross and should not produce Oracle-A",
+    "interface_control": "same outward intent via GUIDED position target outside fence should log DEST_OUTSIDE_FENCE and not cross"
+  },
+  "decision_block": {
+    "C_ABSENT": "clamp component remains UNCOVERED, but reactive AC_Fence::check plus FENCE_ACTION arrests every reachable speed before the preregistered Oracle-A depth threshold",
+    "FAIL": "premises satisfied but neither PASS nor C-ABSENT criteria hold",
+    "INCONCLUSIVE": "premise failure: SITL path, input reachability, offboard stream, estimator/fence phase, or achieved speed is not faithful enough",
+    "PASS": "premises satisfied; robust clean unsafe attitude-interface region; no position-target admission on attitude stream; position-target control rejected; prediction gates pass; reachability recorded"
+  },
+  "environment": {
+    "defaults_file": "/home/car/ardupilot/Tools/autotest/default_params/copter.parm",
+    "lockstep": true,
+    "sitl_model": "quad",
+    "speedup": 8,
+    "vehicle_binary": "/home/car/ardupilot/build/sitl/bin/arducopter"
+  },
+  "firmware_anchor": {
+    "actual_describe": "Copter-4.4.1",
+    "actual_sha": "e010f97906087a3a1975e1c4fcc1f88a249599ce",
+    "actual_status": "## HEAD (no branch)",
+    "binary": "/home/car/ardupilot/build/sitl/bin/arducopter",
+    "expected_sha": "e010f97906087a3a1975e1c4fcc1f88a249599ce",
+    "expected_tag": "Copter-4.4.1",
+    "source_tree": "/home/car/ardupilot"
+  },
+  "fixed_P": {
+    "baseline_params": {
+      "ANGLE_MAX": 4500,
+      "AVOID_ENABLE": 1,
+      "BATT_CRT_MAH": 0,
+      "BATT_CRT_VOLT": 0,
+      "BATT_FS_CRT_ACT": 0,
+      "BATT_FS_LOW_ACT": 0,
+      "BATT_LOW_MAH": 0,
+      "BATT_LOW_VOLT": 0,
+      "FENCE_ACTION": 1,
+      "FENCE_ENABLE": 1,
+      "FENCE_MARGIN": 2,
+      "FENCE_RADIUS": 100,
+      "FENCE_TYPE": 2,
+      "FS_GCS_ENABLE": 0,
+      "FS_OPTIONS": 0,
+      "FS_THR_ENABLE": 0,
+      "GUID_OPTIONS": 0,
+      "LOG_BACKEND_TYPE": 1,
+      "LOG_DISARMED": 1,
+      "SIM_RC_FAIL": 0,
+      "SIM_SPEEDUP": 8,
+      "SIM_WIND_DIR": 270,
+      "SIM_WIND_SPD": 0,
+      "SIM_WIND_TURB": 0,
+      "SYSID_MYGCS": 255
+    },
+    "fence_action_layer": "FENCE_ACTION=4 Brake comparison",
+    "fence_action_main": "FENCE_ACTION=1 RTL-or-Land",
+    "fence_margin_m": 2,
+    "fence_radius_m": 100.0,
+    "manual_recovery_not_used": true,
+    "start_inside_fence": true
+  },
+  "last_updated_at_utc": "2026-06-19T07:35:08.512239+00:00",
+  "noise_and_prediction": {
+    "classification_target": 0.9,
+    "d_margin_rule": "3*sigma of fixed medium condition max depth before arrest",
+    "mae_bound_rule": "1.5*sigma of fixed medium condition max depth before arrest",
+    "noise_repetitions": 8
+  },
+  "noise_realized": {
+    "d_margin_m": 0.4243095072810725,
+    "depths_m": [
+      15.781778157009228,
+      15.476173723276915,
+      15.805092131943525,
+      15.711748841954815,
+      15.688551025546573,
+      15.952352511577104,
+      15.601619981138128,
+      15.741518741217178
+    ],
+    "mae_bound_m": 0.21215475364053624,
+    "sigma_m": 0.14143650242702416
+  },
+  "phase": "B_dynamic",
+  "premises": {
+    "P0.1_guided_attitude_produces_horizontal_flight": {
+      "attitude_extrema": {
+        "max_abs_des_pitch_deg": 29.39,
+        "max_abs_des_roll_deg": 0.61,
+        "max_abs_pitch_deg": 29.39,
+        "max_abs_roll_deg": 0.61
+      },
+      "max_radial_speed_m_s": 7.271782967426352,
+      "ok": true,
+      "premise_run_id": "geofattB_premise_a1_t200_r00"
+    },
+    "P0.2_destination_admission_on_attitude_path_uncovered": {
+      "attitude_destination_rejects": 0,
+      "ok": true,
+      "position_control_reject_seen": true
+    },
+    "P0.3_input_applied_and_crosses_fence": {
+      "WPNAV_SPEED_not_on_attitude_path": true,
+      "achieved_cross_speed_m_s": 7.258154326730405,
+      "crossing": {
+        "crossed": true,
+        "distance_m": 100.0,
+        "ground_speed_m_s": 7.258200280372274,
+        "nearest_row": {
+          "distance_m": 100.10736681701084,
+          "east_m": 100.0964126586914,
+          "ground_speed_m_s": 7.258200280372274,
+          "north_m": 1.480899691581726,
+          "radial_speed_m_s": 7.258154326730405,
+          "target_bearing_speed_m_s": 7.2569780349731445,
+          "time_s": 88.594548,
+          "type": "XKF1",
+          "ve_m_s": 7.2569780349731445,
+          "vn_m_s": 0.13319575786590576
+        },
+        "radial_speed_m_s": 7.258154326730405,
+        "time_s": 88.57982110261263
+      },
+      "ok": true
+    },
+    "P0.4_guided_stream_accepted_no_drop": {
+      "mavlink_message": "SET_ATTITUDE_TARGET",
+      "min_estimated_stream_hz_sim": 31.654587350979416,
+      "min_required_stream_hz_sim": 20.0,
+      "ok": true,
+      "supported_interface_recorded": true,
+      "target_stream_hz_sim": 40.0
+    },
+    "P0.5_fence_legally_enabled": {
+      "fence_enable": 1,
+      "fence_type_circle": 2,
+      "manual_recovery_used": false,
+      "ok": true
+    },
+    "P0.6_window_and_fence_check_frequency_measured": {
+      "d_margin_m": 0.4243095072810725,
+      "ok": true,
+      "premise_window": {
+        "max_depth_before_arrest_m": 13.162066805629038,
+        "t_action_s": 88.77197699999999,
+        "t_arrest_s": 91.394261,
+        "t_cross_s": 88.57982110261263
+      }
+    },
+    "all_ok": true
+  },
+  "scenario_id": "geofence_attitude",
+  "status": "preregistered_before_full_dynamic_scan",
+  "version": "v1",
+  "written_at_utc": "2026-06-19T07:06:40.155558+00:00"
+}
