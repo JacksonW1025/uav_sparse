@@ -70,6 +70,8 @@ class SitlRunner:
             str(self.config["experiment"].get("speedup", 1)),
             "--wipe",
         ]
+        if self.config["sitl"].get("synthetic_clock", False):
+            cmd.append("--synthetic-clock")
         defaults = self.defaults_file
         if defaults:
             cmd.extend(["--defaults", defaults])

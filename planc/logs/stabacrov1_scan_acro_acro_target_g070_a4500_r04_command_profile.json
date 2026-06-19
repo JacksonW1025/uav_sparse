@@ -1,0 +1,45 @@
+{
+  "point": {
+    "angle_max_cd": 4500,
+    "mode": "ACRO",
+    "profile": "acro_target",
+    "rep": 4,
+    "role": "scan",
+    "target_deg": 70.0
+  },
+  "profile": [
+    {
+      "duration_s": 0.7777777777777778,
+      "label": "rate_to_target",
+      "pitch_pwm": 1500,
+      "roll_pwm": 1675,
+      "throttle_pwm": 1500,
+      "yaw_pwm": 1500
+    },
+    {
+      "duration_s": 5.5,
+      "label": "hold_neutral",
+      "pitch_pwm": 1500,
+      "roll_pwm": 1500,
+      "throttle_pwm": 1500,
+      "yaw_pwm": 1500
+    },
+    {
+      "duration_s": 0.7777777777777778,
+      "label": "recover_to_level",
+      "pitch_pwm": 1500,
+      "roll_pwm": 1325,
+      "throttle_pwm": 1500,
+      "yaw_pwm": 1500
+    },
+    {
+      "duration_s": 1.0,
+      "label": "post",
+      "pitch_pwm": 1500,
+      "roll_pwm": 1500,
+      "throttle_pwm": 1500,
+      "yaw_pwm": 1500
+    }
+  ],
+  "run_id": "stabacrov1_scan_acro_acro_target_g070_a4500_r04"
+}

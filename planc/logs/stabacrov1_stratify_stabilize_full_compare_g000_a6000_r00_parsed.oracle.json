@@ -1,0 +1,96 @@
+{
+  "active_window_s": {
+    "end": 43.994355999999996,
+    "pulse_end": 39.544356,
+    "start": 39.094356
+  },
+  "altitude": {
+    "altitude_loss_m": 0.0,
+    "min_alt_m": 109.87633514404297,
+    "start_alt_m": 109.87633514404297
+  },
+  "attitude": {
+    "achieved_peak_tilt_deg": 55.62000955325691,
+    "angle_max_deg": 60.0,
+    "demanded_peak_tilt_deg": 54.010000000000005,
+    "exceeds_angle_max": false,
+    "final_tilt_deg": 16.649310854173578,
+    "near_inverted": {
+      "intervals": [],
+      "max_duration_s": 0.0,
+      "ok": false
+    },
+    "target_error_deg": null,
+    "target_tilt_deg": 0.0
+  },
+  "contract": {
+    "acro_trainer_limited_events": [],
+    "clean_preventive": true,
+    "error_hits": [],
+    "mode_hits": [],
+    "preventive_count": 0,
+    "terminal_crash_check_errors": [],
+    "text_hits": []
+  },
+  "label": "clean_safe",
+  "mode_sequence": [
+    {
+      "mode_name": "STABILIZE",
+      "reason_name": "INITIALISED",
+      "time_s": 0.0
+    },
+    {
+      "mode_name": "STABILIZE",
+      "reason_name": "GCS_COMMAND",
+      "time_s": 23.759659
+    },
+    {
+      "mode_name": "LAND",
+      "reason_name": "GCS_COMMAND",
+      "time_s": 43.93242
+    }
+  ],
+  "oracle_A": {
+    "altitude_loss_gt_15m": false,
+    "ground_contact": false,
+    "ground_contact_events": [],
+    "hard": false,
+    "near_inverted": false
+  },
+  "oracle_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/stabacrov1_stratify_stabilize_full_compare_g000_a6000_r00_parsed.oracle.json",
+  "parsed_csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/stabacrov1_stratify_stabilize_full_compare_g000_a6000_r00_parsed.csv",
+  "rate_tracking": {
+    "actual_abs_mean_deg_s": 108.11312942504883,
+    "desired_abs_mean_deg_s": 108.44771757125855,
+    "ratio": 0.9969147516083972,
+    "samples": 5
+  },
+  "rc_input": {
+    "input_applied": true,
+    "roll_pwm_max": 2000.0,
+    "roll_pwm_mean": 1489.795918367347,
+    "roll_pwm_min": 1000.0
+  },
+  "samples": {
+    "att": 1537,
+    "ctun": 1537,
+    "err": 1,
+    "ev": 11,
+    "mode": 3,
+    "msg": 29,
+    "pos": 1475,
+    "rate": 1537,
+    "rcin": 1538,
+    "rcou": 1537
+  },
+  "throttle_stats": {
+    "ctun_tho_max": 0.6908906102180481,
+    "ctun_tho_mean": 0.42900103026506853,
+    "ctun_tho_min": 0.38999995589256287,
+    "ctun_tho_std": 0.0816611693680638,
+    "rcin_c3_max_pwm": 1500.0,
+    "rcin_c3_mean_pwm": 1500.0,
+    "rcin_c3_min_pwm": 1500.0,
+    "rcin_c3_std_pwm": 0.0
+  }
+}

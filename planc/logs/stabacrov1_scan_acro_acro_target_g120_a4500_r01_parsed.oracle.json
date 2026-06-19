@@ -1,0 +1,116 @@
+{
+  "active_window_s": {
+    "end": 48.26102266666666,
+    "pulse_end": 40.42768933333333,
+    "start": 39.094356
+  },
+  "altitude": {
+    "altitude_loss_m": 113.35502290725708,
+    "min_alt_m": -3.4679455757141113,
+    "start_alt_m": 109.88707733154297
+  },
+  "attitude": {
+    "achieved_peak_tilt_deg": 121.61996561365305,
+    "angle_max_deg": 45.0,
+    "demanded_peak_tilt_deg": 120.54,
+    "exceeds_angle_max": true,
+    "final_tilt_deg": 2.686113519896991,
+    "near_inverted": {
+      "intervals": [
+        {
+          "duration_s": 5.400339000000002,
+          "end_s": 45.894968,
+          "start_s": 40.494628999999996
+        }
+      ],
+      "max_duration_s": 5.400339000000002,
+      "ok": true
+    },
+    "target_error_deg": 1.6199656136530507,
+    "target_tilt_deg": 120.0
+  },
+  "contract": {
+    "acro_trainer_limited_events": [],
+    "clean_preventive": true,
+    "error_hits": [],
+    "mode_hits": [],
+    "preventive_count": 0,
+    "terminal_crash_check_errors": [],
+    "text_hits": []
+  },
+  "label": "clean_unsafe",
+  "mode_sequence": [
+    {
+      "mode_name": "STABILIZE",
+      "reason_name": "INITIALISED",
+      "time_s": 0.0
+    },
+    {
+      "mode_name": "STABILIZE",
+      "reason_name": "GCS_COMMAND",
+      "time_s": 23.764657
+    },
+    {
+      "mode_name": "ACRO",
+      "reason_name": "GCS_COMMAND",
+      "time_s": 38.791976999999996
+    },
+    {
+      "mode_name": "LAND",
+      "reason_name": "GCS_COMMAND",
+      "time_s": 46.974536
+    }
+  ],
+  "oracle_A": {
+    "altitude_loss_gt_15m": true,
+    "ground_contact": true,
+    "ground_contact_events": [
+      {
+        "message": "SIM Hit ground at 9.773413 m/s",
+        "time_s": 47.217772
+      },
+      {
+        "rel_home_alt_m": -0.06846240907907486,
+        "time_s": 46.994527999999995
+      }
+    ],
+    "hard": true,
+    "near_inverted": true
+  },
+  "oracle_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/stabacrov1_scan_acro_acro_target_g120_a4500_r01_parsed.oracle.json",
+  "parsed_csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/stabacrov1_scan_acro_acro_target_g120_a4500_r01_parsed.csv",
+  "rate_tracking": {
+    "actual_abs_mean_deg_s": 87.09363801138741,
+    "desired_abs_mean_deg_s": 88.42695208958217,
+    "ratio": 0.9849218587015866,
+    "samples": 14
+  },
+  "rc_input": {
+    "input_applied": true,
+    "roll_pwm_max": 1675.0,
+    "roll_pwm_mean": 1503.804347826087,
+    "roll_pwm_min": 1325.0
+  },
+  "samples": {
+    "att": 537,
+    "ctun": 537,
+    "err": 1,
+    "ev": 11,
+    "mode": 4,
+    "msg": 27,
+    "pos": 475,
+    "rate": 537,
+    "rcin": 538,
+    "rcou": 537
+  },
+  "throttle_stats": {
+    "ctun_tho_max": 0.5889834761619568,
+    "ctun_tho_mean": 0.3495304205495378,
+    "ctun_tho_min": 0.0,
+    "ctun_tho_std": 0.1246606015011434,
+    "rcin_c3_max_pwm": 1500.0,
+    "rcin_c3_mean_pwm": 1429.3478260869565,
+    "rcin_c3_min_pwm": 1000.0,
+    "rcin_c3_std_pwm": 175.12196282406737
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "scenario_id": "stabilize_acro",
+  "version": "v1",
+  "created_utc": "2026-06-19T00:00:00Z",
+  "status": "preregistered_before_sitl_runs",
+  "firmware_anchor": {
+    "expected_tag": "Copter-4.4.1",
+    "expected_sha": "e010f97906087a3a1975e1c4fcc1f88a249599ce",
+    "binary_source_tree": "/home/car/ardupilot",
+    "note": "Final report records the actual local tag/SHA read at run time."
+  },
+  "claim_boundary": {
+    "positive_claim": "deliberate, legal operator input via supported ACRO mode and ordinary RC channels can push achieved tilt beyond ANGLE_MAX and produce an external unsafe consequence at hover throttle.",
+    "negative_boundary": "This is not claimed as spontaneous loss of control or natural envelope-internal divergence.",
+    "hard_reachability": "No SET_ATTITUDE_TARGET, no GUIDED/GUIDED_NOGPS, no offboard attitude/rate setpoint. The maneuver path is RC_CHANNELS_OVERRIDE plus mode changes."
+  },
+  "fixed_configuration": {
+    "ANGLE_MAX_cd_main": 4500,
+    "ANGLE_MAX_strata_cd": [3000, 4500, 6000],
+    "ACRO_TRAINER": 0,
+    "ACRO_TRAINER_rationale": "Legal trainer-off ACRO configuration exposes the body-rate interface under test. ANGLE_MAX remains configured; it is not raised to let the run pass.",
+    "wind": "calm",
+    "takeoff_alt_m": 100.0,
+    "throttle": "RC3 pinned at 1500 us, ArduCopter manual-throttle hover mid-stick mapping"
+  },
+  "premises": {
+    "P0.1_acro_rc_body_rate": {
+      "required": true,
+      "planned_measure": "ACRO mode accepted; RC roll/pitch override produces RATE.RDes/RATE.R body-rate response near commanded rate."
+    },
+    "P0.2_angle_max_not_engaged_in_acro": {
+      "required": true,
+      "planned_measure": "ACRO achieved tilt exceeds 45 deg without ACRO_TRAINER_LIMITED/ANGLE_MAX clamp event or attitude admission rejection."
+    },
+    "P0.3_input_applied": {
+      "required": true,
+      "planned_measure": "Achieved peak tilt is within the target-error tolerance for scan points; RCIN shows requested roll and constant throttle."
+    },
+    "P0.4_zero_offboard_injection": {
+      "required": true,
+      "planned_measure": "Harness message counter shows SET_ATTITUDE_TARGET=0 and DataFlash modes exclude GUIDED/GUIDED_NOGPS."
+    },
+    "P0.5_admission_guard": {
+      "required": true,
+      "planned_measure": "ACRO mode switch accepted, RC input accepted, no mode/input rejection messages before the maneuver."
+    }
+  },
+  "noise_and_gigo": {
+    "noise_target_deg": 55,
+    "noise_repetitions_min": 8,
+    "sigma_source": "altitude-loss sample stddev at 55 deg target under the same ACRO profile",
+    "d_margin": "3*sigma",
+    "mae_bound": "1.5*sigma",
+    "gigo_controls": [
+      "C1: ACRO + zero tilt + hover throttle should have near-zero altitude loss.",
+      "C2: ACRO + about 55 deg tilt + the same hover throttle should have large altitude loss."
+    ]
+  },
+  "oracle_A_unsafe_if_any": {
+    "altitude_loss_m_gt": 15.0,
+    "near_inverted_tilt_deg_gt": 120.0,
+    "ground_contact": true
+  },
+  "labels": {
+    "clean_safe": "No oracle-A hard consequence and no preventive contract violation.",
+    "clean_unsafe": "ACRO achieved tilt exceeds ANGLE_MAX, oracle-A hard consequence occurs, and preventive contract violation count is zero.",
+    "contract_violated": "ANGLE_MAX/ACRO_TRAINER clamp, attitude/input rejection, preventive failsafe/mode intervention, or policy invariant violation occurs before the hard consequence.",
+    "ambiguous": "Altitude loss lies inside the preregistered d_margin band around the 15 m consequence threshold, or achieved tilt is too far from command to interpret."
+  },
+  "decision": {
+    "PASS": "premises satisfied AND robust clean_unsafe zone exists AND ANGLE_MAX/body-rate preventive trigger count is zero AND prediction gates a/b/c pass AND reachability is RC-only with no attitude/rate injection.",
+    "FAIL": "premises satisfied but any PASS element is not met.",
+    "INCONCLUSIVE": "a premise fails: SITL cannot faithfully represent ACRO body-rate RC input, RC input is not applied, achieved tilt stays far from command, or noise swamps the consequence."
+  },
+  "prediction_gates": {
+    "a_classification": "On confidence-labeled holdout points, clean_unsafe/clean_safe/contract_violated accuracy must be >= 90% and cover the 40-150 deg range with dense 45-60 deg boundary points.",
+    "b_stabilize_vs_acro": "With the same full-stick RC sequence, Stabilize achieved tilt is clamped near ANGLE_MAX and has no hard consequence; ACRO exceeds ANGLE_MAX and has a hard consequence.",
+    "c_angle_max_invariance": "For ANGLE_MAX 30/45/60 deg, Stabilize peak tilt changes monotonically with the parameter while ACRO peak tilt/consequence does not materially change."
+  },
+  "forbidden_claims": [
+    "spontaneous loss of control",
+    "environment-only instability",
+    "threshold scaling law",
+    "O(log) search law",
+    "area law"
+  ]
+}

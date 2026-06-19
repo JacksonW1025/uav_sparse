@@ -73,18 +73,23 @@ def probe_environment(config: dict[str, Any], repo_root: Path) -> dict[str, Any]
         env["ardupilot_status"] = _run(["git", "status", "--short", "--branch"], cwd=ardupilot_root)
     if vehicle_binary:
         env["vehicle_binary_help_head"] = _run([vehicle_binary, "--help"], timeout=5)
-    env["selected_start_command_template"] = [
+    start_command_template = [
         vehicle_binary or "<missing-arducopter>",
         "--model",
         sitl_cfg.get("model", "quad"),
         "--speedup",
         str(config["experiment"].get("speedup", 1)),
         "--wipe",
+    ]
+    if sitl_cfg.get("synthetic_clock", False):
+        start_command_template.append("--synthetic-clock")
+    start_command_template.extend([
         "--defaults",
         defaults or "<missing-defaults>",
         "--home",
         "<lat,lon,alt,yaw>",
-    ]
+    ])
+    env["selected_start_command_template"] = start_command_template
     return env
 
 

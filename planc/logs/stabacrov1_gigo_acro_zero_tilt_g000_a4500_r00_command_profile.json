@@ -1,0 +1,29 @@
+{
+  "point": {
+    "angle_max_cd": 4500,
+    "mode": "ACRO",
+    "profile": "zero_tilt",
+    "rep": 0,
+    "role": "gigo",
+    "target_deg": 0.0
+  },
+  "profile": [
+    {
+      "duration_s": 5.5,
+      "label": "zero_hover",
+      "pitch_pwm": 1500,
+      "roll_pwm": 1500,
+      "throttle_pwm": 1500,
+      "yaw_pwm": 1500
+    },
+    {
+      "duration_s": 1.0,
+      "label": "post",
+      "pitch_pwm": 1500,
+      "roll_pwm": 1500,
+      "throttle_pwm": 1500,
+      "yaw_pwm": 1500
+    }
+  ],
+  "run_id": "stabacrov1_gigo_acro_zero_tilt_g000_a4500_r00"
+}

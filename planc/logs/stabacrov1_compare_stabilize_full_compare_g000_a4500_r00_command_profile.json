@@ -1,0 +1,45 @@
+{
+  "point": {
+    "angle_max_cd": 4500,
+    "mode": "STABILIZE",
+    "profile": "full_compare",
+    "rep": 0,
+    "role": "compare",
+    "target_deg": 0.0
+  },
+  "profile": [
+    {
+      "duration_s": 0.45,
+      "label": "full_positive",
+      "pitch_pwm": 1500,
+      "roll_pwm": 2000,
+      "throttle_pwm": 1500,
+      "yaw_pwm": 1500
+    },
+    {
+      "duration_s": 3.0,
+      "label": "hold_neutral",
+      "pitch_pwm": 1500,
+      "roll_pwm": 1500,
+      "throttle_pwm": 1500,
+      "yaw_pwm": 1500
+    },
+    {
+      "duration_s": 0.45,
+      "label": "full_recover",
+      "pitch_pwm": 1500,
+      "roll_pwm": 1000,
+      "throttle_pwm": 1500,
+      "yaw_pwm": 1500
+    },
+    {
+      "duration_s": 1.0,
+      "label": "post",
+      "pitch_pwm": 1500,
+      "roll_pwm": 1500,
+      "throttle_pwm": 1500,
+      "yaw_pwm": 1500
+    }
+  ],
+  "run_id": "stabacrov1_compare_stabilize_full_compare_g000_a4500_r00"
+}

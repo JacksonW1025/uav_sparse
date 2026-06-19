@@ -1,0 +1,101 @@
+{
+  "active_window_s": {
+    "end": 47.705900111111106,
+    "pulse_end": 40.650344555555556,
+    "start": 40.094789
+  },
+  "altitude": {
+    "altitude_loss_m": 15.440467834472656,
+    "min_alt_m": 94.49911499023438,
+    "start_alt_m": 109.93958282470703
+  },
+  "attitude": {
+    "achieved_peak_tilt_deg": 52.80001059821488,
+    "angle_max_deg": 45.0,
+    "demanded_peak_tilt_deg": 51.78,
+    "exceeds_angle_max": true,
+    "final_tilt_deg": 1.6240926470101456,
+    "near_inverted": {
+      "intervals": [],
+      "max_duration_s": 0.0,
+      "ok": false
+    },
+    "target_error_deg": 2.8000105982148824,
+    "target_tilt_deg": 50.0
+  },
+  "contract": {
+    "acro_trainer_limited_events": [],
+    "clean_preventive": true,
+    "error_hits": [],
+    "mode_hits": [],
+    "preventive_count": 0,
+    "terminal_crash_check_errors": [],
+    "text_hits": []
+  },
+  "label": "clean_unsafe",
+  "mode_sequence": [
+    {
+      "mode_name": "STABILIZE",
+      "reason_name": "INITIALISED",
+      "time_s": 0.0
+    },
+    {
+      "mode_name": "STABILIZE",
+      "reason_name": "GCS_COMMAND",
+      "time_s": 24.75676
+    },
+    {
+      "mode_name": "ACRO",
+      "reason_name": "GCS_COMMAND",
+      "time_s": 39.779914999999995
+    },
+    {
+      "mode_name": "LAND",
+      "reason_name": "GCS_COMMAND",
+      "time_s": 47.694247999999995
+    }
+  ],
+  "oracle_A": {
+    "altitude_loss_gt_15m": true,
+    "ground_contact": false,
+    "ground_contact_events": [],
+    "hard": true,
+    "near_inverted": false
+  },
+  "oracle_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/stabacrov1_scan_acro_acro_target_g050_a4500_r04_parsed.oracle.json",
+  "parsed_csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/stabacrov1_scan_acro_acro_target_g050_a4500_r04_parsed.csv",
+  "rate_tracking": {
+    "actual_abs_mean_deg_s": 84.95883178710938,
+    "desired_abs_mean_deg_s": 91.79003270467122,
+    "ratio": 0.9255779661878887,
+    "samples": 6
+  },
+  "rc_input": {
+    "input_applied": true,
+    "roll_pwm_max": 1675.0,
+    "roll_pwm_mean": 1502.2727272727273,
+    "roll_pwm_min": 1325.0
+  },
+  "samples": {
+    "att": 1277,
+    "ctun": 1277,
+    "err": 1,
+    "ev": 11,
+    "mode": 4,
+    "msg": 29,
+    "pos": 1215,
+    "rate": 1277,
+    "rcin": 1278,
+    "rcou": 1277
+  },
+  "throttle_stats": {
+    "ctun_tho_max": 0.38999995589256287,
+    "ctun_tho_mean": 0.38999995589256287,
+    "ctun_tho_min": 0.38999995589256287,
+    "ctun_tho_std": 0.0,
+    "rcin_c3_max_pwm": 1500.0,
+    "rcin_c3_mean_pwm": 1500.0,
+    "rcin_c3_min_pwm": 1500.0,
+    "rcin_c3_std_pwm": 0.0
+  }
+}

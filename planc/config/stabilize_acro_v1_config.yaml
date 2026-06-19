@@ -1,0 +1,160 @@
+# stabilize_acro v1: ArduCopter ACRO RC body-rate non-composition probe.
+
+experiment:
+  name: stabilize_acro
+  version: v1
+  artifact_stem: stabilize_acro_v1
+  run_prefix: stabacrov1
+  date: "2026-06-19"
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 90.0
+  takeoff_alt_m: 100.0
+  stream_hz: 50
+  speedup: 4
+  pre_maneuver_hold_s: 1.0
+  post_maneuver_hold_s: 1.0
+  cleanup_land_timeout_s: 18.0
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  synthetic_clock: true
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+firmware_anchor:
+  expected_tag: Copter-4.4.1
+  expected_sha: e010f97906087a3a1975e1c4fcc1f88a249599ce
+  source_tree: /home/car/ardupilot
+
+param_metadata:
+  acro_source: /home/car/ardupilot/ArduCopter/mode_acro.cpp
+  angle_max_source: /home/car/ardupilot/ArduCopter/Parameters.cpp
+  acro_trainer_source: /home/car/ardupilot/ArduCopter/mode.h:341
+  acro_rate_source: /home/car/ardupilot/ArduCopter/config.h:420
+  default_params: /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  SYSID_MYGCS: 255
+  FS_GCS_ENABLE: 0
+  FS_OPTIONS: 0
+  FS_THR_ENABLE: 0
+  SIM_RC_FAIL: 0
+  FENCE_ENABLE: 0
+  FENCE_TYPE: 0
+  AVOID_ENABLE: 0
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  BATT_LOW_VOLT: 0
+  BATT_CRT_VOLT: 0
+  BATT_LOW_MAH: 0
+  BATT_CRT_MAH: 0
+  BATT_FS_LOW_ACT: 0
+  BATT_FS_CRT_ACT: 0
+  FS_CRASH_CHECK: 1
+  FS_EKF_ACTION: 1
+  ANGLE_MAX: 4500
+  ACRO_TRAINER: 0
+
+rc:
+  roll_neutral_pwm: 1500
+  pitch_neutral_pwm: 1500
+  throttle_hover_pwm: 1500
+  throttle_takeoff_pwm: 1700
+  yaw_neutral_pwm: 1500
+  active_threshold_pwm: 25
+
+acro_profile:
+  roll_stick_fraction: 0.35
+  nominal_rate_deg_s: 90.0
+  hold_at_tilt_s: 5.5
+  recovery: true
+  target_error_tolerance_deg: 12.0
+  targets_deg: [40, 45, 50, 55, 60, 70, 90, 120, 150]
+  default_repetitions: 5
+  noise_target_deg: 55
+  noise_repetitions: 8
+
+controls:
+  zero_tilt_repetitions: 3
+  full_stick_pulse_s: 0.45
+  full_stick_hold_s: 3.0
+  full_stick_repetitions: 2
+  stratify_angle_max_cd: [3000, 4500, 6000]
+  stratify_repetitions: 1
+
+oracle:
+  altitude_loss_thresh_m: 15.0
+  near_inverted_tilt_deg: 120.0
+  near_inverted_duration_s: 0.5
+  throttle_std_max_pwm: 3.0
+  rate_tracking_ratio_bounds: [0.55, 1.45]
+  robust_min_clean_unsafe_runs: 5
+  robust_min_clean_unsafe_targets: 3
+  robust_min_tilt_width_deg: 30.0
+  preventive_failsafe_subsystems:
+    - FAILSAFE_RADIO
+    - FAILSAFE_BATT
+    - FAILSAFE_GPS
+    - FAILSAFE_GCS
+    - FAILSAFE_FENCE
+    - EKFCHECK
+    - FAILSAFE_EKFINAV
+    - FAILSAFE_ADSB
+    - FAILSAFE_TERRAIN
+    - THRUST_LOSS_CHECK
+    - FAILSAFE_SENSORS
+    - FAILSAFE_LEAK
+    - FAILSAFE_VIBE
+    - INTERNAL_ERROR
+    - FAILSAFE_DEADRECKON
+  preventive_mode_reasons:
+    - RADIO_FAILSAFE
+    - BATTERY_FAILSAFE
+    - GCS_FAILSAFE
+    - EKF_FAILSAFE
+    - GPS_GLITCH
+    - FENCE_BREACHED
+    - TERRAIN_FAILSAFE
+    - AVOIDANCE
+    - TERMINATE
+    - FAILSAFE
+    - LEAK_FAILSAFE
+    - DEADRECKON_FAILSAFE
+  preventive_text_markers:
+    - failsafe
+    - ekf failsafe
+    - thrust loss
+    - deadreckon
+    - fence
+    - avoidance
+  terminal_text_markers:
+    - sim hit ground
+    - crash
+
+mavlink_allowlist:
+  - HEARTBEAT
+  - REQUEST_DATA_STREAM
+  - COMMAND_LONG:MAV_CMD_SET_MESSAGE_INTERVAL
+  - COMMAND_LONG:MAV_CMD_COMPONENT_ARM_DISARM
+  - SET_MODE
+  - PARAM_REQUEST_READ
+  - PARAM_SET
+  - RC_CHANNELS_OVERRIDE
+  - COMMAND_LONG:MAV_CMD_NAV_LAND
