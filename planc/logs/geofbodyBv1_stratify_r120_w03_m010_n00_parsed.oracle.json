@@ -1,0 +1,1054 @@
+{
+  "achieved_cross_ground_speed_m_s": 12.110815953281387,
+  "achieved_cross_speed_m_s": 12.11081590379434,
+  "action_latency_from_cross_s": 0.08216978664471242,
+  "action_mode": "RTL",
+  "action_started": true,
+  "action_time_s": 88.76697899999999,
+  "altitude": {
+    "crash_text": [],
+    "low_altitude_or_crash": false,
+    "min_rel_alt_m": 43.203365325927734
+  },
+  "arrest_latency_from_cross_s": 3.4050067866447193,
+  "arrest_time_s": 92.089816,
+  "attitude_extrema": {
+    "max_abs_pitch_deg": 0.45,
+    "max_abs_roll_deg": 37.29,
+    "max_aligned_roll_deg": 29.87
+  },
+  "bin_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/geofbodyBv1_stratify_r120_w03_m010_n00.BIN",
+  "bodyrate_tracking": {
+    "active_start_s": 78.889265,
+    "actual_peak_aligned_deg_s": 125.99122619628906,
+    "actual_to_command_ratio": 1.0499268849690755,
+    "commanded_peak_abs_deg_s": 120.0,
+    "desired_peak_aligned_deg_s": 126.68859100341797,
+    "desired_to_command_ratio": 1.0557382583618165,
+    "input_applied_ok": true,
+    "pulse_window_end_s": 79.43926499999999,
+    "ratio_bounds": [
+      0.6,
+      1.45
+    ]
+  },
+  "crossing": {
+    "crossed": true,
+    "distance_m": 100.0,
+    "ground_speed_m_s": 12.110815953281387,
+    "nearest_row": {
+      "distance_m": 100.05674249010283,
+      "east_m": 100.05647277832031,
+      "ground_speed_m_s": 12.110815953281387,
+      "north_m": -0.2323206663131714,
+      "radial_speed_m_s": 12.11081590379434,
+      "target_bearing_speed_m_s": 12.110780715942383,
+      "time_s": 88.68951,
+      "type": "XKF1",
+      "ve_m_s": 12.110780715942383,
+      "vn_m_s": -0.029214801266789436
+    },
+    "radial_speed_m_s": 12.11081590379434,
+    "time_s": 88.68480921335528
+  },
+  "csv_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/geofbodyBv1_stratify_r120_w03_m010_n00_parsed.csv",
+  "destination_admission_reject_count": 0,
+  "destination_admission_rejects": [],
+  "errors": [
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 3,
+        "TimeUS": 2377382,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 3,
+      "subsys_name": "COMPASS",
+      "time_s": 0.08996399999999971
+    },
+    {
+      "ecode": 2,
+      "ecode_name": "2",
+      "raw": {
+        "ECode": 2,
+        "Subsys": 9,
+        "TimeUS": 91054397,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 88.76697899999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 91386764,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 89.099346
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 91719131,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 89.431713
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 92052331,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 89.76491299999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 92384698,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 90.09728
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 92717065,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 90.429647
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 93049432,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 90.762014
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 93381799,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 91.094381
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 93714166,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 91.426748
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 94047366,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 91.759948
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 94379733,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 92.092315
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 94712100,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 92.424682
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 95044467,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 92.757049
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 95376834,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 93.089416
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 95709201,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 93.42178299999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 96042401,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 93.754983
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 96374768,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 94.08735
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 96707135,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 94.41971699999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 97039502,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 94.752084
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 97371869,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 95.084451
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 97704236,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 95.41681799999999
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 98036603,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 95.749185
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 98369803,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 96.082385
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 98702170,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 96.414752
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 99034537,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 96.747119
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 99366904,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 97.079486
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 99699271,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 97.411853
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 100031638,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 97.74422
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 100364838,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 98.07742
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 100697205,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 98.409787
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 101029572,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 98.742154
+    },
+    {
+      "ecode": 0,
+      "ecode_name": "0",
+      "raw": {
+        "ECode": 0,
+        "Subsys": 9,
+        "TimeUS": 101361939,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 99.074521
+    }
+  ],
+  "events": [
+    {
+      "id": 62,
+      "name": "EKF_YAW_RESET",
+      "raw": {
+        "Id": 62,
+        "TimeUS": 5719378,
+        "mavpackettype": "EV"
+      },
+      "time_s": 3.4319599999999997
+    },
+    {
+      "id": 25,
+      "name": "SET_HOME",
+      "raw": {
+        "Id": 25,
+        "TimeUS": 18581731,
+        "mavpackettype": "EV"
+      },
+      "time_s": 16.294313000000002
+    },
+    {
+      "id": 10,
+      "name": "ARMED",
+      "raw": {
+        "Id": 10,
+        "TimeUS": 58064265,
+        "mavpackettype": "EV"
+      },
+      "time_s": 55.776847
+    },
+    {
+      "id": 15,
+      "name": "AUTO_ARMED",
+      "raw": {
+        "Id": 15,
+        "TimeUS": 59067197,
+        "mavpackettype": "EV"
+      },
+      "time_s": 56.779779
+    },
+    {
+      "id": 57,
+      "name": "MOTORS_INTERLOCK_ENABLED",
+      "raw": {
+        "Id": 57,
+        "TimeUS": 60066797,
+        "mavpackettype": "EV"
+      },
+      "time_s": 57.779379
+    },
+    {
+      "id": 28,
+      "name": "NOT_LANDED",
+      "raw": {
+        "Id": 28,
+        "TimeUS": 61294639,
+        "mavpackettype": "EV"
+      },
+      "time_s": 59.007220999999994
+    },
+    {
+      "id": 62,
+      "name": "EKF_YAW_RESET",
+      "raw": {
+        "Id": 62,
+        "TimeUS": 63617043,
+        "mavpackettype": "EV"
+      },
+      "time_s": 61.329625
+    },
+    {
+      "id": 17,
+      "name": "LAND_COMPLETE_MAYBE",
+      "raw": {
+        "Id": 17,
+        "TimeUS": 147466823,
+        "mavpackettype": "EV"
+      },
+      "time_s": 145.179405
+    },
+    {
+      "id": 18,
+      "name": "LAND_COMPLETE",
+      "raw": {
+        "Id": 18,
+        "TimeUS": 148269835,
+        "mavpackettype": "EV"
+      },
+      "time_s": 145.982417
+    },
+    {
+      "id": 11,
+      "name": "DISARMED",
+      "raw": {
+        "Id": 11,
+        "TimeUS": 148777132,
+        "mavpackettype": "EV"
+      },
+      "time_s": 146.489714
+    },
+    {
+      "id": 56,
+      "name": "MOTORS_INTERLOCK_DISABLED",
+      "raw": {
+        "Id": 56,
+        "TimeUS": 148779631,
+        "mavpackettype": "EV"
+      },
+      "time_s": 146.492213
+    }
+  ],
+  "fence_breach_detected": true,
+  "fence_breach_latency_from_cross_s": 0.08216978664471242,
+  "fence_breach_time_s": 88.76697899999999,
+  "fence_events": [
+    {
+      "ecode": 2,
+      "ecode_name": "2",
+      "raw": {
+        "ECode": 2,
+        "Subsys": 9,
+        "TimeUS": 91054397,
+        "mavpackettype": "ERR"
+      },
+      "subsys": 9,
+      "subsys_name": "FAILSAFE_FENCE",
+      "time_s": 88.76697899999999
+    }
+  ],
+  "fence_margin_m": 1.0,
+  "fence_messages": [
+    {
+      "raw": {
+        "Message": "New fence",
+        "TimeUS": 2287418,
+        "mavpackettype": "MSG"
+      },
+      "text": "New fence",
+      "time_s": 0.0
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 8709848,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 6.4224299999999985
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 25059139,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 22.771721
+    },
+    {
+      "raw": {
+        "Message": "PreArm: Fence requires position",
+        "TimeUS": 30277051,
+        "mavpackettype": "MSG"
+      },
+      "text": "PreArm: Fence requires position",
+      "time_s": 27.989633
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 41069399,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 38.781980999999995
+    },
+    {
+      "raw": {
+        "Message": "Fence Breached",
+        "TimeUS": 91054397,
+        "mavpackettype": "MSG"
+      },
+      "text": "Fence Breached",
+      "time_s": 88.76697899999999
+    }
+  ],
+  "fence_radius_m": 100.0,
+  "interface_path": "GUIDED + SET_ATTITUDE_TARGET body roll-rate; attitude quaternion ignored",
+  "kind": "bodyrate",
+  "max_depth_before_action_m": 0.05674249010283461,
+  "max_depth_before_arrest_m": 22.194897069893386,
+  "max_depth_m": 22.200258136220896,
+  "max_depth_until_reentry_m": 22.200258136220896,
+  "max_distance_m": 122.2002581362209,
+  "messages_tail": [
+    {
+      "raw": {
+        "Message": "RC7: SaveWaypoint LOW",
+        "TimeUS": 2577302,
+        "mavpackettype": "MSG"
+      },
+      "text": "RC7: SaveWaypoint LOW",
+      "time_s": 0.2898839999999998
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU0 initialised",
+        "TimeUS": 4284119,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU0 initialised",
+      "time_s": 1.9967009999999994
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU1 initialised",
+        "TimeUS": 4284119,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU1 initialised",
+      "time_s": 1.9967009999999994
+    },
+    {
+      "raw": {
+        "Message": "AHRS: EKF3 active",
+        "TimeUS": 4286618,
+        "mavpackettype": "MSG"
+      },
+      "text": "AHRS: EKF3 active",
+      "time_s": 1.9991999999999996
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU1 tilt alignment complete",
+        "TimeUS": 5629414,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU1 tilt alignment complete",
+      "time_s": 3.3419959999999995
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU0 tilt alignment complete",
+        "TimeUS": 5634412,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU0 tilt alignment complete",
+      "time_s": 3.346994
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU0 MAG0 initial yaw alignment complete",
+        "TimeUS": 5719378,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU0 MAG0 initial yaw alignment complete",
+      "time_s": 3.4319599999999997
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU1 MAG0 initial yaw alignment complete",
+        "TimeUS": 5726875,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU1 MAG0 initial yaw alignment complete",
+      "time_s": 3.4394569999999995
+    },
+    {
+      "raw": {
+        "Message": "No ap_message for mavlink id (253)",
+        "TimeUS": 7374549,
+        "mavpackettype": "MSG"
+      },
+      "text": "No ap_message for mavlink id (253)",
+      "time_s": 5.087130999999999
+    },
+    {
+      "raw": {
+        "Message": "GPS 1: detected as u-blox at 230400 baud",
+        "TimeUS": 8376648,
+        "mavpackettype": "MSG"
+      },
+      "text": "GPS 1: detected as u-blox at 230400 baud",
+      "time_s": 6.089229999999999
+    },
+    {
+      "raw": {
+        "Message": "Arm: Accels inconsistent",
+        "TimeUS": 8709848,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Accels inconsistent",
+      "time_s": 6.4224299999999985
+    },
+    {
+      "raw": {
+        "Message": "Arm: AHRS: waiting for home",
+        "TimeUS": 8709848,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: AHRS: waiting for home",
+      "time_s": 6.4224299999999985
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 8709848,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 6.4224299999999985
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU0 origin set",
+        "TimeUS": 18581731,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU0 origin set",
+      "time_s": 16.294313000000002
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU1 origin set",
+        "TimeUS": 18584230,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU1 origin set",
+      "time_s": 16.296812000000003
+    },
+    {
+      "raw": {
+        "Message": "Field Elevation Set: 16m",
+        "TimeUS": 18676693,
+        "mavpackettype": "MSG"
+      },
+      "text": "Field Elevation Set: 16m",
+      "time_s": 16.389275
+    },
+    {
+      "raw": {
+        "Message": "Arm: Need Position Estimate",
+        "TimeUS": 25059139,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Need Position Estimate",
+      "time_s": 22.771721
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 25059139,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 22.771721
+    },
+    {
+      "raw": {
+        "Message": "PreArm: Need Position Estimate",
+        "TimeUS": 30277051,
+        "mavpackettype": "MSG"
+      },
+      "text": "PreArm: Need Position Estimate",
+      "time_s": 27.989633
+    },
+    {
+      "raw": {
+        "Message": "PreArm: Fence requires position",
+        "TimeUS": 30277051,
+        "mavpackettype": "MSG"
+      },
+      "text": "PreArm: Fence requires position",
+      "time_s": 27.989633
+    },
+    {
+      "raw": {
+        "Message": "Arm: Need Position Estimate",
+        "TimeUS": 41069399,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Need Position Estimate",
+      "time_s": 38.781980999999995
+    },
+    {
+      "raw": {
+        "Message": "Arm: Fence requires position",
+        "TimeUS": 41069399,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arm: Fence requires position",
+      "time_s": 38.781980999999995
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU1 is using GPS",
+        "TimeUS": 41384273,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU1 is using GPS",
+      "time_s": 39.096855
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU0 is using GPS",
+        "TimeUS": 41389271,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU0 is using GPS",
+      "time_s": 39.101853
+    },
+    {
+      "raw": {
+        "Message": "Arming motors",
+        "TimeUS": 58064265,
+        "mavpackettype": "MSG"
+      },
+      "text": "Arming motors",
+      "time_s": 55.776847
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU0 MAG0 in-flight yaw alignment complete",
+        "TimeUS": 63617043,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU0 MAG0 in-flight yaw alignment complete",
+      "time_s": 61.329625
+    },
+    {
+      "raw": {
+        "Message": "EKF3 IMU1 MAG0 in-flight yaw alignment complete",
+        "TimeUS": 63617043,
+        "mavpackettype": "MSG"
+      },
+      "text": "EKF3 IMU1 MAG0 in-flight yaw alignment complete",
+      "time_s": 61.329625
+    },
+    {
+      "raw": {
+        "Message": "Fence Breached",
+        "TimeUS": 91054397,
+        "mavpackettype": "MSG"
+      },
+      "text": "Fence Breached",
+      "time_s": 88.76697899999999
+    },
+    {
+      "raw": {
+        "Message": "SIM Hit ground at 0.413741 m/s",
+        "TimeUS": 146685469,
+        "mavpackettype": "MSG"
+      },
+      "text": "SIM Hit ground at 0.413741 m/s",
+      "time_s": 144.398051
+    },
+    {
+      "raw": {
+        "Message": "Disarming motors",
+        "TimeUS": 148777132,
+        "mavpackettype": "MSG"
+      },
+      "text": "Disarming motors",
+      "time_s": 146.489714
+    }
+  ],
+  "modes": [
+    {
+      "mode": "STABILIZE",
+      "raw": {
+        "Mode": 0,
+        "ModeNum": 0,
+        "Rsn": 26,
+        "TimeUS": 2287418,
+        "mavpackettype": "MODE"
+      },
+      "reason": 26,
+      "reason_name": "INITIALISED",
+      "time_s": 0.0
+    },
+    {
+      "mode": "GUIDED",
+      "raw": {
+        "Mode": 4,
+        "ModeNum": 4,
+        "Rsn": 2,
+        "TimeUS": 8679860,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "reason_name": "GCS_COMMAND",
+      "time_s": 6.392441999999999
+    },
+    {
+      "mode": "GUIDED",
+      "raw": {
+        "Mode": 4,
+        "ModeNum": 4,
+        "Rsn": 2,
+        "TimeUS": 58064265,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "reason_name": "GCS_COMMAND",
+      "time_s": 55.776847
+    },
+    {
+      "mode": "RTL",
+      "raw": {
+        "Mode": 6,
+        "ModeNum": 6,
+        "Rsn": 10,
+        "TimeUS": 91054397,
+        "mavpackettype": "MODE"
+      },
+      "reason": 10,
+      "reason_name": "FENCE_BREACHED",
+      "time_s": 88.76697899999999
+    },
+    {
+      "mode": "LAND",
+      "raw": {
+        "Mode": 9,
+        "ModeNum": 9,
+        "Rsn": 2,
+        "TimeUS": 103117070,
+        "mavpackettype": "MODE"
+      },
+      "reason": 2,
+      "reason_name": "GCS_COMMAND",
+      "time_s": 100.829652
+    }
+  ],
+  "oracle_path": "/mnt/nvme/px4_work/uav_sparse/planc/logs/geofbodyBv1_stratify_r120_w03_m010_n00_parsed.oracle.json",
+  "outside_duration_s": 9.405105786644711,
+  "position_source": "XKF1",
+  "preventive_contract": {
+    "bad_messages": [],
+    "destination_guard_has_no_position_target_on_bodyrate_path": true,
+    "fence_action_is_reactive_not_violation": true,
+    "preventive_errors": [],
+    "preventive_modes": [],
+    "violated": false
+  },
+  "reentry_time_s": 98.08991499999999,
+  "samples": {
+    "att": 1466,
+    "pos": 1404,
+    "rate": 1466,
+    "xkf1": 1456
+  },
+  "speed_audit": {
+    "inside_window_m": [
+      50.0,
+      98.0
+    ],
+    "max_radial_speed_m_s": 12.228136383363882,
+    "mean_radial_speed_m_s": 12.13406531317089,
+    "median_ground_speed_m_s": 12.145030438170824,
+    "median_radial_speed_m_s": 12.145011161265828,
+    "samples": 40,
+    "source": "XKF1 primary-core radial velocity in the inside approach window"
+  },
+  "wind_m_s": 3.0,
+  "wind_turbulence": 2.0
+}

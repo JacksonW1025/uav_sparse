@@ -1381,6 +1381,8 @@ def prediction_eval(config: dict[str, Any], runs: list[dict[str, Any]], d_margin
     pred_depths = [p["predicted_depth_m"] for p in preds]
     rho = spearman_rho(pred_depths, actual_depths)
     all_depths = [depth_for_label(r) for r in population]
+    physical_scores = [float(r.get("achieved_cross_speed_m_s") or 0.0) for r in population]
+    physical_sort_rho = spearman_rho(physical_scores, all_depths)
     depth_range = max(all_depths) - min(all_depths) if all_depths else None
     if depth_range is None:
         range_over_sigma = None
@@ -1430,6 +1432,12 @@ def prediction_eval(config: dict[str, Any], runs: list[dict[str, Any]], d_margin
             "range_over_sigma_min": ros_min,
             "passed": severity_passed,
             "role_in_verdict": "load-bearing PASS gate",
+            "reporting_only_physical_sorting_diagnostic": {
+                "score": "achieved_cross_speed_m_s with non-crossing runs scored as 0",
+                "spearman_rho_score_vs_actual_depth": physical_sort_rho,
+                "used_for_v1_verdict": False,
+                "note": "This diagnostic matches the operator-driven cross-speed severity intuition, but v1 keeps the pre-submitted held-out regression severity gate.",
+            },
         },
         "regression": {
             "applicable": True,
@@ -1798,6 +1806,10 @@ def summarize(config: dict[str, Any], runs: list[dict[str, Any]], prereg_path: P
         verdict = "FAIL"
         matrix = "contract-not-clean"
         reason = "unsafe outcomes intersected preventive contract violations or destination rejects"
+    elif not criteria["prediction_gates"]:
+        verdict = "FAIL"
+        matrix = "prediction-gate-failed"
+        reason = "robust clean_unsafe witnesses were observed, but the preregistered held-out severity prediction gate failed"
     else:
         verdict = "FAIL"
         matrix = "C-ABSENT / contract-not-clean"
@@ -1900,6 +1912,9 @@ def report_lines(config: dict[str, Any], result: dict[str, Any]) -> list[str]:
     reg = result["prediction"]["regression"]
     lines.append(f"Classification split: train low conditions `{cls.get('train_condition')}`, extrapolate high conditions `{cls.get('extrapolation_condition')}`. Accuracy `{fmt(cls.get('accuracy'))}`, extrapolation accuracy `{fmt(cls.get('extrapolation_accuracy'))}`, target `{fmt(cls.get('target_accuracy'))}`, passed `{cls.get('passed')}`.")
     lines.append(f"Severity gate: Spearman predicted-vs-actual depth `{fmt(sev.get('spearman_rho_predicted_vs_actual_depth'), 3)}` vs min `{fmt(sev.get('spearman_min'), 2)}`; depth range/sigma `{fmt(sev.get('range_over_sigma'), 1)}` vs min `{fmt(sev.get('range_over_sigma_min'), 1)}`; passed `{sev.get('passed')}`.")
+    phys = sev.get("reporting_only_physical_sorting_diagnostic", {})
+    if phys:
+        lines.append(f"Reporting-only diagnostic: achieved cross-speed vs actual depth Spearman `{fmt(phys.get('spearman_rho_score_vs_actual_depth'), 3)}`. This is not used to rescue the v1 verdict because the committed v1 gate used the held-out depth regression above.")
     lines.append(f"Severity regression is reporting-only: features `{reg.get('features')}`, MAE `{fmt(reg.get('mae_m'))}` m, MAE/range `{fmt(reg.get('mae_over_depth_range'), 3)}`.")
     lines.append("")
     lines.append("## P Layer")
@@ -1965,9 +1980,10 @@ def main() -> None:
 
     noise = noise_summary(runs)
     d_margin = float(noise["d_margin_m"])
-    write_premise_record(config, runs, d_margin)
-    if any(run_role(r) == "noise" and not r.get("error") for r in runs):
-        write_preregister(config, runs, env)
+    if args.stage != "report":
+        write_premise_record(config, runs, d_margin)
+        if any(run_role(r) == "noise" and not r.get("error") for r in runs):
+            write_preregister(config, runs, env)
 
     result = summarize(config, runs, prereg_path)
     write_outputs(config, result)
