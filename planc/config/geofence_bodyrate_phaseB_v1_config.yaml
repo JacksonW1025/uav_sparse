@@ -1,0 +1,174 @@
+# geofence_bodyrate Phase-B v1: horizontal geofence x GUIDED body-rate.
+
+experiment:
+  name: geofence_bodyrate_phaseB_v1
+  scenario_id: geofence_bodyrate
+  phase: B_dynamic
+  version: v1
+  artifact_stem: geofence_bodyrate_phaseB_v1
+  run_prefix: geofbodyBv1
+  date: "2026-06-22"
+  home:
+    lat: 37.4275
+    lon: -122.1697
+    alt_m: 16.0
+    yaw_deg: 0.0
+  target_bearing_deg: 90.0
+  yaw_deg: 0.0
+  takeoff_alt_m: 45.0
+  speedup: 8
+  stream_hz: 50
+  telemetry_rate_hz: 20
+  min_required_setpoint_hz: 20
+  pre_stream_hold_s: 2.0
+  max_bodyrate_stream_s: 12.0
+  post_action_observation_s: 12.0
+  cleanup_land_timeout_s: 35.0
+
+sitl:
+  ardupilot_root_candidates:
+    - /home/car/ardupilot
+    - /mnt/nvme/UAVFuzzing/ardupilot-home
+  vehicle_binary_candidates:
+    - /home/car/ardupilot/build/sitl/bin/arducopter
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/build/sitl/bin/arducopter
+  sim_vehicle_candidates:
+    - /home/car/ardupilot/Tools/autotest/sim_vehicle.py
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/sim_vehicle.py
+  model: quad
+  connection: tcp:127.0.0.1:5760
+  synthetic_clock: true
+  defaults_candidates:
+    - /home/car/ardupilot/Tools/autotest/default_params/copter.parm
+    - /mnt/nvme/UAVFuzzing/ardupilot-home/Tools/autotest/default_params/copter.parm
+
+firmware_anchor:
+  expected_tag: Copter-4.4.1
+  expected_sha: e010f97906087a3a1975e1c4fcc1f88a249599ce
+  source_tree: /home/car/ardupilot
+  source_guided_bodyrate_route: /home/car/ardupilot/ArduCopter/GCS_Mavlink.cpp:1122-1192,/home/car/ardupilot/ArduCopter/mode_guided.cpp:964-967
+  source_bodyrate_control: /home/car/ardupilot/libraries/AC_AttitudeControl/AC_AttitudeControl.cpp:421-455
+  source_destination_guard: /home/car/ardupilot/libraries/AC_Fence/AC_Fence.cpp:590-628
+  source_fence_check: /home/car/ardupilot/libraries/AC_Fence/AC_Fence.cpp:542-588
+  source_fence_circle_check: /home/car/ardupilot/libraries/AC_Fence/AC_Fence.cpp:494-536
+  source_fence_action: /home/car/ardupilot/ArduCopter/fence.cpp:23-82
+
+param_metadata:
+  fence_type_circle: 2
+  fence_action_report_only: 0
+  fence_action_rtl_and_land: 1
+  fence_action_brake: 4
+  guided_options_climb_rate_semantics: 0
+  set_attitude_target_bodyrate_type_mask: 134
+
+baseline_params:
+  LOG_BACKEND_TYPE: 1
+  LOG_DISARMED: 1
+  SYSID_MYGCS: 255
+  SIM_SPEEDUP: 8
+  SIM_WIND_DIR: 270
+  SIM_WIND_SPD: 0
+  SIM_WIND_TURB: 0
+  SIM_RC_FAIL: 0
+  FS_GCS_ENABLE: 0
+  FS_THR_ENABLE: 0
+  FS_OPTIONS: 0
+  BATT_LOW_VOLT: 0
+  BATT_CRT_VOLT: 0
+  BATT_LOW_MAH: 0
+  BATT_CRT_MAH: 0
+  BATT_FS_LOW_ACT: 0
+  BATT_FS_CRT_ACT: 0
+  FENCE_ENABLE: 1
+  FENCE_TYPE: 2
+  FENCE_RADIUS: 100
+  FENCE_ACTION: 1
+  FENCE_MARGIN: 2
+  AVOID_ENABLE: 0
+  ANGLE_MAX: 8000
+  GUID_OPTIONS: 0
+  ATC_ACCEL_R_MAX: 360000
+  ATC_ACCEL_P_MAX: 360000
+  ATC_RATE_R_MAX: 0
+  ATC_RATE_P_MAX: 0
+
+command:
+  interface: GUIDED_SET_ATTITUDE_TARGET_BODY_ROLL_RATE
+  axis: roll
+  outward_roll_sign: 1
+  rate_ramp_s: 0.08
+  rate_pulse_s: 0.30
+  recovery_zero_hold_s: 1.0
+  thrust_field: 0.5
+  thrust_semantics: climb_rate_zero_when_GUID_OPTIONS_0
+  type_mask: 134
+
+geometry:
+  fence_radius_m: 100.0
+  danger_space: boundary_outside_horizontal_circle
+  position_target_outside_distance_m: 150.0
+
+oracle:
+  arrest_radial_speed_m_s: 0.5
+  arrest_sustain_s: 0.5
+  premise_min_outward_speed_m_s: 2.0
+  premise_min_cross_speed_m_s: 3.0
+  speed_audit_inside_window_m: [50.0, 98.0]
+  action_latency_s: 3.0
+  reentry_margin_m: 0.5
+  min_altitude_agl_m: 5.0
+  rate_tracking_ratio_bounds: [0.60, 1.45]
+  expected_action_modes_for_rtl:
+    - RTL
+    - LAND
+  expected_action_modes_for_brake:
+    - BRAKE
+    - LAND
+  preventive_failsafe_subsystems:
+    - FAILSAFE_RADIO
+    - FAILSAFE_BATT
+    - FAILSAFE_GPS
+    - FAILSAFE_GCS
+    - EKFCHECK
+    - FAILSAFE_EKFINAV
+    - FAILSAFE_ADSB
+    - FAILSAFE_TERRAIN
+    - FAILSAFE_VIBE
+    - FAILSAFE_DEADRECKON
+  preventive_mode_reasons:
+    - RADIO_FAILSAFE
+    - BATTERY_FAILSAFE
+    - GCS_FAILSAFE
+    - EKF_FAILSAFE
+    - GPS_GLITCH
+    - TERRAIN_FAILSAFE
+    - AVOIDANCE
+    - TERMINATE
+    - FAILSAFE
+    - DEADRECKON_FAILSAFE
+
+sweep:
+  premise_rate_deg_s: 120.0
+  premise_wind_m_s: 0.0
+  noise_rate_deg_s: 120.0
+  noise_wind_m_s: 6.0
+  noise_turbulence: 2.0
+  noise_repetitions: 15
+  scan_rates_deg_s: [20.0, 40.0, 60.0, 90.0, 120.0, 180.0]
+  scan_winds_m_s: [0.0, 3.0, 6.0, 9.0]
+  scan_repetitions: 2
+  boundary_rates_deg_s: [20.0, 40.0, 60.0]
+  boundary_winds_m_s: [0.0, 3.0]
+  boundary_extra_repetitions: 1
+  margin_layers_m: [1.0, 4.0, 8.0]
+  margin_layer_repetitions: 1
+
+prediction:
+  target_classification_accuracy: 0.90
+  train_rate_max_deg_s: 90.0
+  train_wind_max_m_s: 6.0
+  extrapolate_rate_min_deg_s: 120.0
+  extrapolate_wind_min_m_s: 6.0
+  severity_spearman_min: 0.90
+  severity_range_over_sigma_min: 10.0
+  regression_relative_reference_max: 0.15
