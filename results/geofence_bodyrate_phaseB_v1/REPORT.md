@@ -1,9 +1,9 @@
 VERDICT: FAIL
-MATRIX: prediction-gate-failed
+MATRIX: C-ABSENT / contract-not-clean
 
 # geofence_bodyrate Phase-B v1 Report
 
-Reason: robust clean_unsafe witnesses were observed, but the preregistered held-out severity prediction gate failed.
+Reason: robust clean_unsafe witnesses were observed, but the preregistered held-out severity prediction gate failed. This is the v1 FAIL bucket, not evidence that horizontal breach was physically absent.
 Firmware: actual `Copter-4.4.1` / `e010f97906087a3a1975e1c4fcc1f88a249599ce`, expected `Copter-4.4.1` / `e010f97906087a3a1975e1c4fcc1f88a249599ce`. SITL binary `/home/car/ardupilot/build/sitl/bin/arducopter`.
 Interface path: supported MAVLink `GUIDED + SET_ATTITUDE_TARGET` with `ATTITUDE_IGNORE`, body roll-rate field active, thrust field `0.5` as zero climb-rate. No ACRO fallback and no RC override were used.
 
